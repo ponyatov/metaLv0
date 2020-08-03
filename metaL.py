@@ -489,6 +489,7 @@ import ply.lex as lex
 tokens = ['symbol',
           'number', 'integer', 'hex', 'bin',
           'lp', 'rp', 'lq', 'rq', 'lc', 'rc',
+          'comma',
           'exit']
 
 ## @ingroup lexer
@@ -541,6 +542,15 @@ def t_rc(t):
 
 ## @}
 
+## @name operator
+## @{
+
+## @ingroup lexer
+def t_comma(t):
+    r','
+    return t
+
+## @}
 
 ## @name lexeme
 ## @{
@@ -661,6 +671,10 @@ def p_vector_empty(p):
 def p_vector_single(p):
     ' vector : vector ex '
     p[0] = p[1] // p[2]
+## @ingroup parser
+def p_vector_many(p):
+    ' vector : vector comma ex '
+    p[0] = p[1] // p[3]
 
 ## @}
 

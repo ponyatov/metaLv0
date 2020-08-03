@@ -119,3 +119,17 @@ class TestParser:
             '\n\t0: <vector:>' +\
             '\n\t\t0: <module:metaL>'
 
+    def test_vector_multy(self):
+        multy = parser.parse('[1,2.3,MODULE]')
+        assert multy.test() ==\
+            '\n<ast:>\n\t0: <vector:>' +\
+            '\n\t\t0: <integer:1>' +\
+            '\n\t\t1: <number:2.3>' +\
+            '\n\t\t2: <symbol:MODULE>'
+        assert multy.eval(vm).test() ==\
+            '\n<ast:>\n\t0: <vector:>' +\
+            '\n\t\t0: <integer:1>' +\
+            '\n\t\t1: <number:2.3>' +\
+            '\n\t\t2: <module:metaL>'
+
+

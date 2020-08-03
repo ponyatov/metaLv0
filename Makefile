@@ -65,7 +65,7 @@ $(PYT):
 
 .PHONY: requirements.txt
 requirements.txt: $(PIP)
-	$< freeze | grep -v 0.0.0 > $@
+	$< freeze | egrep "py(lint|test)|autopep8|ply|xxhash" > $@
 
 
 .PHONY: Linux_install Linux_update
@@ -78,15 +78,15 @@ Linux_install Linux_update:
 
 .PHONY: master shadow release
 
-MERGE  = Makefile README.md .vscode apt.txt requirements.txt doxy.gen
+MERGE  = Makefile README.md .vscode apt.txt doxy.gen
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
-MERGE += doc pyproject.toml .replit
+MERGE += requirements.txt pyproject.toml .replit doc metacircular.py
 
 master:
 	git checkout $@
 	git pull -v
 	git checkout shadow -- $(MERGE)
-	-$(MAKE) doxy
+	$(MAKE) doxy
 
 shadow:
 	git checkout docs
