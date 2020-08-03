@@ -79,7 +79,7 @@ Linux_install Linux_update:
 .PHONY: master shadow release
 
 MERGE  = Makefile README.md .vscode apt.txt requirements.txt doxy.gen
-MERGE += $(MODULE).py $(MODULE).ini static doc
+MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static doc pyproject.toml
 
 master:
 	git checkout $@
