@@ -90,6 +90,7 @@ MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
 MERGE += requirements.txt pyproject.toml .replit doc
 MERGE += $(MODULE) metacircular.py
 MERGE += dja dja.py
+MERGE += demos demos.py
 
 master:
 	git checkout $@
@@ -101,6 +102,7 @@ shadow:
 	git checkout docs
 	git checkout $@
 	git pull -v
+	$(MAKE) doxy
 
 release:
 	git tag $(NOW)-$(REL)

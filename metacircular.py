@@ -1,5 +1,5 @@
 ## @file
-## metacircular implementation in metaL/py
+## @brief metacircular implementation in metaL/py
 
 ## @defgroup circ Metacircular
 ## @brief `implementation in metaL/py`
