@@ -1,5 +1,6 @@
 <map id="metaL.Active" name="metaL.Active">
 <area shape="rect" id="node3" href="$classmetaL_1_1Fn.html" title="function " alt="" coords="5,155,83,181"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="107,155,189,181"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="46,5,146,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Op.html" title="operator " alt="" coords="107,155,186,181"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="211,155,293,181"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="97,5,197,32"/>
 </map>
