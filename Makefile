@@ -19,12 +19,16 @@ XMAKE = $(MAKE) -j$(CORES)
 .PHONY: all
 all: repl
 
+.PHONY: repl
 repl: $(PY) $(MODULE).py $(MODULE).ini config.py
 	$(MAKE) doxy
 	$(MAKE) test
-	$^
+	$(PY) -i $(MODULE).py $(MODULE).ini
 	$(MAKE) $@
 
+.PHONY: test
+test: $(PYT) test_$(MODULE).py $(MODULE).py $(MODULE).ini config.py
+	$(PYT) test_$(MODULE).py
 
 
 SRC = $(shell find $(CWD) -maxdepth 1 -type f -regex .+.py$$)
@@ -74,7 +78,7 @@ Linux_install Linux_update:
 
 .PHONY: master shadow release
 
-MERGE  = Makefile README.md .gitignore .vscode apt.txt requirements.txt doxy.gen
+MERGE  = Makefile README.md .vscode apt.txt requirements.txt doxy.gen
 MERGE += $(MODULE).py $(MODULE).ini static
 
 master:

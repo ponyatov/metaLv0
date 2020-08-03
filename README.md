@@ -285,6 +285,20 @@ data elements.
   * Paul Chiusano [Unison: a new distributed programming language](https://www.youtube.com/watch?v=gCWtkvDQ2ZI) Strange Loop '19
   * [Unison: An Introduction and Q&A with Rúnar Bjarnason](https://www.youtube.com/watch?v=yicXcdLI2YA)
 
+### Literate Programming
+
+Literate Programming concept targets on mixing code with documentation, but
+shows the original method is not alive due to limits forced by sequential code.
+Most programming languages are sequential by its nature, so original `cweb`
+forces you to write manual in order of your code, starting from `include` etc.
+Disjoining code from documentation elements allows doing arbitrary structure of
+the manual, and include parts of code as interactive elements.
+
+* https://en.wikipedia.org/wiki/Literate_programming
+* [Roam Athens Research](https://roamresearch.com)
+  * https://www.notion.so/MVP-Update-Funding-and-Why-I-Started-Athens-e68822f0c3654660ae621cdcbf932bc4
+    * https://github.com/athensresearch/athens
+
 ### Smalltalk language and pure OOP
 
 `metaL` does not follow the Smalltalk language semantics, and especially its
