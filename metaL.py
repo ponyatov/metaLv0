@@ -347,6 +347,33 @@ class Fn(Active):
     pass
 
 ## @ingroup active
+## operator
+class Op(Active):
+    def eval(self, ctx):
+        # greedy computation for all subtrees
+        greedy = list(map(lambda i: i.eval(ctx), self.nest))
+        # unary
+        if len(greedy) == 1:
+            if self.val == '+':
+                return greedy[0].plus(ctx)
+            if self.val == '-':
+                return greedy[0].minus(ctx)
+        # binary
+        if len(greedy) == 2:
+            if self.val == '+':
+                return greedy[0].add(greedy[1], ctx)
+            if self.val == '-':
+                return greedy[0].sub(greedy[1], ctx)
+            if self.val == '*':
+                return greedy[0].mul(greedy[1], ctx)
+            if self.val == '/':
+                return greedy[0].div(greedy[1], ctx)
+            if self.val == '^':
+                return greedy[0].pow(greedy[1], ctx)
+        # unknown
+        raise Error((self))
+
+## @ingroup active
 ## Virtual Machine (environment + stack + message queue)
 class VM(Active):
     pass
@@ -489,6 +516,7 @@ import ply.lex as lex
 tokens = ['symbol',
           'number', 'integer', 'hex', 'bin',
           'lp', 'rp', 'lq', 'rq', 'lc', 'rc',
+          'add', 'sub', 'mul', 'div', 'pow',
           'comma',
           'exit']
 
@@ -516,28 +544,45 @@ def t_exit(t):
 ## @{
 
 ## @ingroup lexer
+## `(`
 def t_lp(t):
     r'\('
     return t
 ## @ingroup lexer
+## `)`
 def t_rp(t):
     r'\)'
     return t
 ## @ingroup lexer
+## `[`
 def t_lq(t):
     r'\['
     return t
 ## @ingroup lexer
+## `]`
 def t_rq(t):
     r'\]'
     return t
 ## @ingroup lexer
+## `{`
 def t_lc(t):
     r'\{'
     return t
 ## @ingroup lexer
+## `}`
 def t_rc(t):
     r'\}'
+    return t
+
+## @}
+
+## @name delimiter
+## @{
+
+## @ingroup lexer
+## `,` split vector elements
+def t_comma(t):
+    r','
     return t
 
 ## @}
@@ -546,8 +591,34 @@ def t_rc(t):
 ## @{
 
 ## @ingroup lexer
-def t_comma(t):
-    r','
+## `+`
+def t_add(t):
+    r'\+'
+    t.value = Op(t.value)
+    return t
+## @ingroup lexer
+## `-`
+def t_sub(t):
+    r'\-'
+    t.value = Op(t.value)
+    return t
+## @ingroup lexer
+## `*`
+def t_mul(t):
+    r'\*'
+    t.value = Op(t.value)
+    return t
+## @ingroup lexer
+## `/`
+def t_div(t):
+    r'\/'
+    t.value = Op(t.value)
+    return t
+## @ingroup lexer
+## `^`
+def t_pow(t):
+    r'\^'
+    t.value = Op(t.value)
     return t
 
 ## @}
@@ -640,6 +711,57 @@ def p_REPL_recursion(p):
 def p_REPL_exit(p):
     ' REPL : exit '
     p[0] = None
+
+## @name operator
+## @{
+
+
+## @ingroup parser
+precedence = (
+    ('left', 'add', 'sub'),
+    ('left', 'mul', 'div'),
+    ('left', 'pow', ),
+    ('left', 'pfx', ),
+)
+
+## @ingroup parser
+##    ' ex : add ex %prec pfx ' `+A`
+def p_ex_plus(p):
+    ' ex : add ex %prec pfx '
+    p[0] = p[1] // p[2]
+## @ingroup parser
+##    ' ex : sub ex %prec pfx ' `-A`
+def p_ex_minus(p):
+    ' ex : sub ex %prec pfx '
+    p[0] = p[1] // p[2]
+
+## @ingroup parser
+##    ' ex : ex add ex '
+def p_ex_add(p):
+    ' ex : ex add ex '
+    p[0] = p[2] // p[1] // p[3]
+## @ingroup parser
+##    ' ex : ex sub ex '
+def p_ex_sub(p):
+    ' ex : ex sub ex '
+    p[0] = p[2] // p[1] // p[3]
+## @ingroup parser
+##    ' ex : ex mul ex '
+def p_ex_mul(p):
+    ' ex : ex mul ex '
+    p[0] = p[2] // p[1] // p[3]
+## @ingroup parser
+##    ' ex : ex div ex '
+def p_ex_div(p):
+    ' ex : ex div ex '
+    p[0] = p[2] // p[1] // p[3]
+## @ingroup parser
+##    ' ex : ex pow ex '
+def p_ex_pow(p):
+    ' ex : ex pow ex '
+    p[0] = p[2] // p[1] // p[3]
+
+## @}
 
 ## @name parens
 ## @{
