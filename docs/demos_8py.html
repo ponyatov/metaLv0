@@ -68,7 +68,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><code>unikernel</code> OS model  
+<p><a class="el" href="unikernel.html">unikernel</a> OS model  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -93,12 +93,36 @@ Variables</h2></td></tr>
 <tr class="memitem:ga0267e2db028dd18637e545688c07a930"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga0267e2db028dd18637e545688c07a930">demos.mk</a> = Makefile()</td></tr>
 <tr class="memdesc:ga0267e2db028dd18637e545688c07a930"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>Makefile</code> for target project build/run  <a href="group__demos.html#ga0267e2db028dd18637e545688c07a930">More...</a><br /></td></tr>
 <tr class="separator:ga0267e2db028dd18637e545688c07a930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadf79e78814985bc49a106ae07222167c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#gadf79e78814985bc49a106ae07222167c">demos.mksection</a> = Section(MODULE)</td></tr>
+<tr class="separator:gadf79e78814985bc49a106ae07222167c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga70547a03e5e60bb78dee0283787c4654"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga70547a03e5e60bb78dee0283787c4654">demos.mktools</a> = Section('backend tools: TCC magic')</td></tr>
+<tr class="separator:ga70547a03e5e60bb78dee0283787c4654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafd9c464434014164c6345b237d7d23b7"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#gafd9c464434014164c6345b237d7d23b7">demos.objdump</a> = '$(OBJDUMP) -xdas $@ &gt; $@.dump'</td></tr>
+<tr class="separator:gafd9c464434014164c6345b237d7d23b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga814da2f0f126a3068af6aa780d10b19e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga814da2f0f126a3068af6aa780d10b19e">demos.mkrules</a> = Section('macro rules')</td></tr>
+<tr class="separator:ga814da2f0f126a3068af6aa780d10b19e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga22965077986ce8f6fb19fc526b2c4276"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga22965077986ce8f6fb19fc526b2c4276">demos.compiler</a> = ('%%.o: %%.%s $(H) Makefile\n\t$(CC) -o $@ -c $&lt; &amp;&amp; ' + objdump)</td></tr>
+<tr class="separator:ga22965077986ce8f6fb19fc526b2c4276"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa6bcb7efcf987e75c578eb6009f6b49d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#gaa6bcb7efcf987e75c578eb6009f6b49d">demos.readme</a> = File('README.md')</td></tr>
 <tr class="memdesc:gaa6bcb7efcf987e75c578eb6009f6b49d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code><a class="el" href="README_8md.html">README.md</a></code>  <a href="group__demos.html#gaa6bcb7efcf987e75c578eb6009f6b49d">More...</a><br /></td></tr>
 <tr class="separator:gaa6bcb7efcf987e75c578eb6009f6b49d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga464e6a507d61756865bc822f7c80d83d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga464e6a507d61756865bc822f7c80d83d">demos.ldfile</a> = File('multiboot.ld')</td></tr>
+<tr class="separator:ga464e6a507d61756865bc822f7c80d83d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa8ad432ef2bd72ae705f91830306800f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#gaa8ad432ef2bd72ae705f91830306800f">demos.header</a> = cFile('%s.h'%MODULE.val)</td></tr>
+<tr class="separator:gaa8ad432ef2bd72ae705f91830306800f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac234e4eaf9ffa8b1a2ccd18f180bd353"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#gac234e4eaf9ffa8b1a2ccd18f180bd353">demos.bootheader</a></td></tr>
+<tr class="separator:gac234e4eaf9ffa8b1a2ccd18f180bd353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7b29cc76a05a38b715c2dad7f45d11fd"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga7b29cc76a05a38b715c2dad7f45d11fd">demos.incheader</a> = ('#include &quot;%s.h&quot;' % MODULE.val)</td></tr>
+<tr class="separator:ga7b29cc76a05a38b715c2dad7f45d11fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29da29d12a88ab7babb652383bcf407e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga29da29d12a88ab7babb652383bcf407e">demos.booth</a> = cFile('multiboot.h')</td></tr>
+<tr class="separator:ga29da29d12a88ab7babb652383bcf407e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga648d048e198e83e64f88f7fd3adbef0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga648d048e198e83e64f88f7fd3adbef0d">demos.bootc</a> = cFile('multiboot.c')</td></tr>
+<tr class="separator:ga648d048e198e83e64f88f7fd3adbef0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1fd19d41072822d99c30730e6c641d20"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__demos.html#ga1fd19d41072822d99c30730e6c641d20">demos.kernel</a> = cFile('%s.c'%MODULE.val)</td></tr>
+<tr class="separator:ga1fd19d41072822d99c30730e6c641d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><code>unikernel</code> OS model </p>
+<div class="textblock"><p><a class="el" href="unikernel.html">unikernel</a> OS model </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

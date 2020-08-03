@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['year',['YEAR',['../group__info.html#gacb120c42f4e8cf65d5b0dbf0cd24065f',1,'metaL']]]
+  ['parser',['parser',['../group__parser.html#gaff73940099573f5b838a1c71331ad4f9',1,'metaL']]],
+  ['precedence',['precedence',['../group__parser.html#gadfff79106ef6047a82ed5d9e6849c2f7',1,'metaL']]]
 ];

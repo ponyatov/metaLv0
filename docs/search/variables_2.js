@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['diroot',['diroot',['../group__circ.html#ga87cfbb9d5218d0de79b2c2771a1e2696',1,'metacircular.diroot()'],['../group__dja.html#ga14d231e319ec62e001823b61c1ac11c6',1,'dja.diroot()'],['../group__demos.html#ga85e4a7b978fa429723847718a21933f2',1,'demos.diroot()']]]
+  ['comment',['comment',['../classmetaL_1_1File.html#ab35482a76932f865ba9396c5bc8207f8',1,'metaL::File']]],
+  ['compiler',['compiler',['../group__demos.html#ga22965077986ce8f6fb19fc526b2c4276',1,'demos']]]
 ];

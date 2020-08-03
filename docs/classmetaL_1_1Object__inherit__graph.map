@@ -4,8 +4,8 @@
 <area shape="rect" id="node11" href="$classmetaL_1_1Doc.html" title="metaL.Doc" alt="" coords="169,367,256,393"/>
 <area shape="rect" id="node15" href="$classmetaL_1_1Error.html" title="metaL.Error" alt="" coords="167,424,258,451"/>
 <area shape="rect" id="node16" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="175,487,251,513"/>
-<area shape="rect" id="node30" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="167,613,258,640"/>
-<area shape="rect" id="node33" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="156,765,269,792"/>
+<area shape="rect" id="node31" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="167,651,258,677"/>
+<area shape="rect" id="node34" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="156,815,269,841"/>
 <area shape="rect" id="node3" href="$classmetaL_1_1Fn.html" title="function " alt="" coords="335,5,413,32"/>
 <area shape="rect" id="node4" href="$classmetaL_1_1Op.html" title="operator " alt="" coords="335,56,413,83"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="333,107,415,133"/>
@@ -18,23 +18,24 @@
 <area shape="rect" id="node14" href="$classmetaL_1_1Title.html" title="metaL.Title" alt="" coords="331,411,417,437"/>
 <area shape="rect" id="node17" href="$classmetaL_1_1Dir.html" title="metaL.Dir" alt="" coords="335,461,413,488"/>
 <area shape="rect" id="node18" href="$classmetaL_1_1File.html" title="metaL.File" alt="" coords="333,512,415,539"/>
-<area shape="rect" id="node23" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="333,563,415,589"/>
-<area shape="rect" id="node19" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="476,360,588,387"/>
-<area shape="rect" id="node21" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="477,411,587,437"/>
-<area shape="rect" id="node20" href="$classmetaL_1_1pygIgnore.html" title="metaL.pygIgnore" alt="" coords="639,360,758,387"/>
-<area shape="rect" id="node22" href="$classmetaL_1_1pyMakefile.html" title="metaL.pyMakefile" alt="" coords="636,411,761,437"/>
-<area shape="rect" id="node24" href="$classmetaL_1_1Email.html" title="metaL.Email" alt="" coords="485,461,579,488"/>
-<area shape="rect" id="node25" href="$classmetaL_1_1Ip.html" title="TCP/IP address. " alt="" coords="495,512,569,539"/>
-<area shape="rect" id="node26" href="$classmetaL_1_1Port.html" title="TCP/IP port. " alt="" coords="489,563,575,589"/>
-<area shape="rect" id="node27" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="485,613,579,640"/>
-<area shape="rect" id="node28" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="493,664,571,691"/>
-<area shape="rect" id="node29" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="487,715,577,741"/>
-<area shape="rect" id="node31" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="322,613,426,640"/>
-<area shape="rect" id="node32" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="321,664,427,691"/>
-<area shape="rect" id="node34" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="320,740,428,767"/>
-<area shape="rect" id="node38" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="326,791,422,817"/>
-<area shape="rect" id="node39" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="321,841,427,868"/>
-<area shape="rect" id="node35" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="481,765,583,792"/>
-<area shape="rect" id="node36" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="658,740,739,767"/>
-<area shape="rect" id="node37" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="655,791,742,817"/>
+<area shape="rect" id="node24" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="333,600,415,627"/>
+<area shape="rect" id="node19" href="$classmetaL_1_1cFile.html" title="metaL.cFile" alt="" coords="487,372,577,399"/>
+<area shape="rect" id="node20" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="476,423,588,449"/>
+<area shape="rect" id="node22" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="477,473,587,500"/>
+<area shape="rect" id="node21" href="$classmetaL_1_1pygIgnore.html" title="metaL.pygIgnore" alt="" coords="639,423,758,449"/>
+<area shape="rect" id="node23" href="$classmetaL_1_1pyMakefile.html" title="metaL.pyMakefile" alt="" coords="636,473,761,500"/>
+<area shape="rect" id="node25" href="$classmetaL_1_1Email.html" title="metaL.Email" alt="" coords="485,524,579,551"/>
+<area shape="rect" id="node26" href="$classmetaL_1_1Ip.html" title="TCP/IP address. " alt="" coords="495,575,569,601"/>
+<area shape="rect" id="node27" href="$classmetaL_1_1Port.html" title="TCP/IP port. " alt="" coords="489,625,575,652"/>
+<area shape="rect" id="node28" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="485,676,579,703"/>
+<area shape="rect" id="node29" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="493,727,571,753"/>
+<area shape="rect" id="node30" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="487,777,577,804"/>
+<area shape="rect" id="node32" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="322,651,426,677"/>
+<area shape="rect" id="node33" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="321,701,427,728"/>
+<area shape="rect" id="node35" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="320,789,428,816"/>
+<area shape="rect" id="node39" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="326,840,422,867"/>
+<area shape="rect" id="node40" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="321,891,427,917"/>
+<area shape="rect" id="node36" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="481,828,583,855"/>
+<area shape="rect" id="node37" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="658,803,739,829"/>
+<area shape="rect" id="node38" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="655,853,742,880"/>
 </map>
