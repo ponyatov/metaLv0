@@ -238,6 +238,8 @@ class String(Primitive):
                 s += c
         return s
 
+    def file(self): return self.val
+
 ## @ingroup prim
 ## floating point
 class Number(Primitive):
@@ -848,7 +850,8 @@ parser = yacc.yacc(debug=False, write_tables=False)
 
 ## @ingroup repl
 ## process command/script (in optional DDL/DML syntax)
-## @exception TypeError on `exit()` in CLI
+## @param[in] src source code string
+## @exception TypeError on `"exit()"` in CLI
 ## (to be compatible with Python interactive session & VSCode)
 def metaL(src):
     import traceback

@@ -30,6 +30,13 @@ repl: $(PY) $(MODULE).py $(MODULE).ini config.py
 test: $(PYT) test_$(MODULE).py $(MODULE).py $(MODULE).ini config.py
 	$(PYT) test_$(MODULE).py
 
+%/repl: %.py $(PY)
+	-$(MAKE) doxy
+	$(MAKE) test
+	$(PY) -i $<
+	$(MAKE) $@
+
+
 
 SRC = $(shell find $(CWD) -maxdepth 1 -type f -regex .+.py$$)
 
@@ -78,9 +85,10 @@ Linux_install Linux_update:
 
 .PHONY: master shadow release
 
-MERGE  = Makefile README.md .vscode apt.txt doxy.gen
+MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
-MERGE += requirements.txt pyproject.toml .replit doc metacircular.py
+MERGE += requirements.txt pyproject.toml .replit doc
+MERGE += metacircular.py dja.py
 
 master:
 	git checkout $@

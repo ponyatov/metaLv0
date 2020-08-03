@@ -1,9 +1,9 @@
 #  ![logo](static/logo.png) `metaL`
 ## version for Repl.it Language Jam contest
 
-https://repl.it/@metaLmasters
+https://repl.it/@metaLmasters/metaL
 
-doxygen manual: https://ponyatov.github.io/metaL/pages.html
+doxygen manual: https://ponyatov.github.io/metaL
 
 * https://blog.repl.it/langjam
 * https://repl.it/talk/share/metaL-for-replit-Language-Jam-contest/46470
