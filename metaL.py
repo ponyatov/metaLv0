@@ -133,8 +133,10 @@ class Object:
             hdr += ' #%.8x @%x' % (self.gid, id(self))
         return hdr
 
+    ## object class name (lowercased as marker of instance)
     def _type(self): return self.__class__.__name__.lower()
 
+    ## `.val` output for dumps (limited length, escaped control chars)
     def _val(self): return '%s' % self.val
 
     ## @}
@@ -169,11 +171,16 @@ class Object:
         return self.__setitem__(that.val, that)
 
     ## `A // B -> A.push(B)`
-    def __floordiv__(self, that):
+    ## @param[in] that `B`
+    ## @param[in] sync add object with sync
+    ## (hash/storage update, use `False` for massive & IO pushes)
+    def __floordiv__(self, that, sync=True):
         if isinstance(that, str):
             that = String(that)
         self.nest.append(that)
-        return self.sync()
+        if sync:
+            return self.sync()
+        return self
 
     ## @}
 
@@ -182,6 +189,7 @@ class Object:
 
     ## evaluate in context
     ## @param[in] ctx context
+
     def eval(self, ctx): raise Error((self))
 
     ## apply as function
@@ -195,8 +203,11 @@ class Object:
     ## @{
 
     ## to generic text file: use `.json` in place of `Error`
-    def file(self): return self.json()
+    ## @ingroup gen
+    def file(self, comment=None): return self.json()
+
     ## to Python code: use `.json` in place of `Error`
+    ## @ingroup py
     def py(self): return self.json()
 
     ## @}
@@ -398,6 +409,15 @@ class Meta(Object):
 class Module(Meta):
     pass
 
+## @ingroup meta
+class Section(Meta):
+    def file(self, comment='#'):
+        ret = '\n%s \\ %s\n\n' % (comment, self.head(test=True))
+        for i in self.nest:
+            ret += i.file() + '\n'
+        ret += '\n%s / %s\n\n' % (comment, self.head(test=True))
+        return ret
+
 
 ## @defgroup io IO
 ## @ingroup object
@@ -425,18 +445,23 @@ class Dir(IO):
 
 ## @ingroup io
 class File(IO):
-    def __init__(self, V):
-        IO.__init__(self, V)
+    def __init__(self, V, comment='#'):
         self.fh = None
+        self.comment = comment
+        IO.__init__(self, V)
 
-    def __floordiv__(self, that):
-        if isinstance(that, str):
-            that = String(that)
-        IO.__floordiv__(self, that)
+    def sync(self):
         if self.fh:
-            self.fh.write('%s\n' % that.file())
+            self.fh.seek(0)
+            for i in self.nest:
+                self.fh.write(i.file() + '\n')
             self.fh.flush()
-        return self
+        return IO.sync(self)
+
+    ## push object/line
+    ## @param[in] sync `=False` default w/o flush to disk (via `sync()``)
+    def __floordiv__(self, that, sync=False):
+        return IO.__floordiv__(self, that, sync)
 
 ## @defgroup net Networking
 ## @ingroup io
@@ -506,6 +531,75 @@ vm['LICENSE'] = LICENSE = License(LICENSE)
 vm['GITHUB'] = GITHUB = Url(GITHUB)
 vm['LOGO'] = LOGO = File(LOGO)
 ## @}
+
+
+## @defgroup gen CodeGen
+## @brief Code generators
+
+## @ingroup gen
+class gitIgnore(File):
+    def __init__(self, V='.gitignore'):
+        File.__init__(self, V)
+        self // '*~\n*.swp'
+        self // ''
+        self // '*.log\n*.exe\n*.o'
+
+## @defgroup mk Makefile
+## @ingroup gen
+
+## @ingroup mk
+class Makefile(File):
+    def __init__(self, V='Makefile'):
+        File.__init__(self, V, comment='#')
+        h = Section('head')
+        h // 'CWD     = $(CURDIR)'
+        h // 'MODULE  = $(notdir $(CWD))'
+        h // 'OS     ?= $(shell uname -s)'
+        h // ''
+        h // 'NOW = $(shell date +%d%m%y)'
+        h // 'REL = $(shell git rev-parse --short=4 HEAD)'
+        self >> h
+        t = Section('tail')
+        self >> t
+
+    def sync(self):
+        if self.fh:
+            self.fh.seek(0)
+            self.fh.write(self['head'].file(self.comment))
+            for i in self.nest:
+                self.fh.write(i.file() + '\n')
+            self.fh.write(self['tail'].file(self.comment))
+            self.fh.flush()
+        return IO.sync(self)
+
+## @defgroup py Python
+## @ingroup gen
+
+## @ingroup py
+class pyMakefile(Makefile):
+    def __init__(self, V='Makefile'):
+        Makefile.__init__(self, V)
+        h = Section('python tools')
+        self['head'] // h
+        h // 'PIP = $(CWD)/bin/pip3'
+        h // 'PY  = $(CWD)/bin/python3'
+        h // 'PYT = $(CWD)/bin/pytest'
+        h // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
+
+
+## @ingroup py
+class pygIgnore(gitIgnore):
+    def __init__(self, V='.gitignore'):
+        gitIgnore.__init__(self, V)
+        self // '''
+*.pyc
+/bin/
+/include/
+/lib/
+/lib64/
+/share/
+pyvenv.cfg
+config.py'''
 
 
 ## @defgroup lexer lexer

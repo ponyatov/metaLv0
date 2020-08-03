@@ -4,27 +4,39 @@
 from metaL import *
 
 ## @defgroup dja Dja
+## @ingroup py
 ## @brief Django Apps Generator
+## @{
 
-vm['MODULE'] = MODULE = dja = Module('dja')
-vm['TITLE'] = TITLE = Title('Django Apps Generator')
+MODULE = Module('dja')
+vm['MODULE'] = MODULE
 
-vm['dir'] = dirfile = Dir(MODULE)
+TITLE = Title('Django Apps Generator')
+vm['TITLE'] = TITLE
 
-vm['gitignore'] = gitignore = File('.gitignore')
-dirfile // gitignore
-gitignore // '*~\n*.swp'
-gitignore // ''
-gitignore // '*.log\n*.exe\n*.o'
-gitignore // '''
-*.pyc
-/bin/
-/include/
-/lib/
-/lib64/
-/share/
-pyvenv.cfg
-config.py'''
+ABOUT = String('''
+Automatic (generative) programming approach to building intranet business systems:
+* Python/Django/PostgreSQL stack
+* powered by `metaL`
+''')
+vm['ABOUT'] = ABOUT
+
+## `~/metaL/$MODULE` target directory for code generation
+diroot = Dir(MODULE)
+vm['dir'] = diroot
+
+## file masks will be ignored by `git` version manager
+gitignore = pygIgnore('.gitignore')
+vm['gitignore'] = gitignore
+diroot // gitignore
+gitignore.sync()
+
+## `Makefile` for target project build/run
+mk = pyMakefile()
+vm['mk'] = mk
+diroot // mk
+mk // Section(MODULE)
+mk.sync()
 
 print(vm)
 

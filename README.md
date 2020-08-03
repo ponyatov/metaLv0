@@ -16,12 +16,14 @@ github: https://github.com/ponyatov/replit
 
 * take Lisp homoiconic nature and port it to CPython3 stack (VM & libs)
 * provide a light environment for **metaprogramming by code generation**
-  * `metaL` is a special language for writing programs that write other programs (in C & Python)
-  * interactive REPL with generated code copying as system bootstrap & circular redefinition is a primary method of work
+  * `metaL` is a special language for writing programs that write other programs (in C & Python as *target languages*)
+  * interactive REPL with pushing generated code into files is a primary method of work
+  * system bootstrap via @ref circ redefinition 
 * protect people from the parens soup by using infix syntax
   and AST-friendly data structure in place of classic lists
 * integrate best features from Python, Lisp/Clojure, and Smalltalk
 * targets on IoT programming:
+  * server-side @ref dja in Python/Django/PostgreSQL (todo: highly optimized C/C++/Rust? code)
   * ANSI C code generation is required by design
     * uses amazing [TCC](https://bellard.org/tcc/) host compiler backend for fast debug
   * cross-compiling to many embedded devices including

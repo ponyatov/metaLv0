@@ -88,7 +88,8 @@ Linux_install Linux_update:
 MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
 MERGE += requirements.txt pyproject.toml .replit doc
-MERGE += metacircular.py dja.py
+MERGE += $(MODULE) metacircular.py
+MERGE += dja dja.py
 
 master:
 	git checkout $@
