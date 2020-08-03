@@ -5,9 +5,9 @@ version = "0.0.1"
 description = "[meta]programming [L]anguage"
 authors = ["Dmitry Ponyatov <dponyatov@gmail.com>"]
 [tool.poetry.dependencies]
-python = "^3.7"
-ply = ""
-xxhash = ""
+#python = "^3.7"
+#ply = ""
+#xxhash = ""
 [tool.poetry.dev-dependencies]
-autopep8 = ""
-pytest = ""
+#autopep8 = ""
+#pytest = ""
