@@ -1,2 +1,2 @@
 language = "python3"
-run = "make repl"
+run = "pytest test_metaL.py"
