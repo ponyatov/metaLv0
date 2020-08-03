@@ -53,7 +53,7 @@ var searchData=
   ['testobject',['TestObject',['../classtest__metaL_1_1TestObject.html',1,'test_metaL']]],
   ['testparser',['TestParser',['../classtest__metaL_1_1TestParser.html',1,'test_metaL']]],
   ['testprimitive',['TestPrimitive',['../classtest__metaL_1_1TestPrimitive.html',1,'test_metaL']]],
-  ['title',['Title',['../classmetaL_1_1Title.html',1,'metaL.Title'],['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()']]],
+  ['title',['Title',['../classmetaL_1_1Title.html',1,'metaL.Title'],['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()'],['../namespacedja.html#a718ab616de94c084fcb02c692fe93cf3',1,'dja.TITLE()']]],
   ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]],
   ['tutorial',['Tutorial',['../tutorial.html',1,'']]],
   ['tutorial_2emd',['tutorial.md',['../tutorial_8md.html',1,'']]]

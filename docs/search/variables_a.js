@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['val',['val',['../classmetaL_1_1Object.html#a9b02710def0f3c8be8d7c04de1395603',1,'metaL.Object.val()'],['../classmetaL_1_1Op.html#afaa300c8faa768a8c838abe276d97377',1,'metaL.Op.val()']]],
-  ['vm',['vm',['../group__active.html#ga330ae76472d10c90fed7882323c1eab6',1,'metaL']]]
+  ['t_5fignore',['t_ignore',['../group__lexer.html#gace3d26619631fd6fdbb32261e904167a',1,'metaL']]],
+  ['t_5fignore_5fcomment',['t_ignore_comment',['../group__lexer.html#ga88d3b2297708e87d8876f2ba12b96bab',1,'metaL']]],
+  ['title',['TITLE',['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()'],['../namespacedja.html#a718ab616de94c084fcb02c692fe93cf3',1,'dja.TITLE()']]],
+  ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]]
 ];

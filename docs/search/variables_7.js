@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['parser',['parser',['../group__parser.html#gaff73940099573f5b838a1c71331ad4f9',1,'metaL']]],
-  ['precedence',['precedence',['../group__parser.html#gadfff79106ef6047a82ed5d9e6849c2f7',1,'metaL']]]
+  ['nest',['nest',['../classmetaL_1_1Object.html#aaf6e815fc107a136f5625039ed1e0a5c',1,'metaL::Object']]]
 ];
