@@ -1,4 +1,8 @@
 <map id="metaL.File" name="metaL.File">
-<area shape="rect" id="node2" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="17,80,93,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,5,105,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="14,229,126,256"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="153,229,264,256"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="100,80,176,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="88,5,188,32"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1pygIgnore.html" title="metaL.pygIgnore" alt="" coords="5,304,124,331"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1pyMakefile.html" title="metaL.pyMakefile" alt="" coords="149,304,274,331"/>
 </map>

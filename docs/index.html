@@ -77,13 +77,15 @@ $(function() {
 <ul>
 <li>take Lisp homoiconic nature and port it to CPython3 stack (VM &amp; libs)</li>
 <li>provide a light environment for <b>metaprogramming by code generation</b><ul>
-<li><code><a class="el" href="namespacemetaL.html">metaL</a></code> is a special language for writing programs that write other programs (in C &amp; Python)</li>
-<li>interactive REPL with generated code copying as system bootstrap &amp; circular redefinition is a primary method of work</li>
+<li><code><a class="el" href="namespacemetaL.html">metaL</a></code> is a special language for writing programs that write other programs (in C &amp; Python as <em>target languages</em>)</li>
+<li>interactive REPL with pushing generated code into files is a primary method of work</li>
+<li>system bootstrap via <a class="el" href="group__circ.html">Metacircular</a> redefinition</li>
 </ul>
 </li>
 <li>protect people from the parens soup by using infix syntax and AST-friendly data structure in place of classic lists</li>
 <li>integrate best features from Python, Lisp/Clojure, and Smalltalk</li>
 <li>targets on IoT programming:<ul>
+<li>server-side <a class="el" href="group__dja.html">Dja</a> in Python/Django/PostgreSQL (todo: highly optimized C/C++/Rust? code)</li>
 <li>ANSI C code generation is required by design<ul>
 <li>uses amazing <a href="https://bellard.org/tcc/">TCC</a> host compiler backend for fast debug</li>
 </ul>

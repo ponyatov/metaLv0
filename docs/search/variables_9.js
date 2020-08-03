@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['slot',['slot',['../classmetaL_1_1Object.html#a8ec1ff04d05d52ef03fbb84d15d54f0d',1,'metaL::Object']]]
+  ['parser',['parser',['../group__parser.html#gaff73940099573f5b838a1c71331ad4f9',1,'metaL']]],
+  ['precedence',['precedence',['../group__parser.html#gadfff79106ef6047a82ed5d9e6849c2f7',1,'metaL']]]
 ];

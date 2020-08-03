@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hex',['Hex',['../classmetaL_1_1Hex.html',1,'metaL']]]
+  ['gitignore',['gitIgnore',['../classmetaL_1_1gitIgnore.html',1,'metaL']]]
 ];

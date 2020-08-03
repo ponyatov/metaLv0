@@ -1,12 +1,16 @@
 <map id="metaL.IO" name="metaL.IO">
-<area shape="rect" id="node3" href="$classmetaL_1_1Dir.html" title="metaL.Dir" alt="" coords="71,155,149,181"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1File.html" title="metaL.File" alt="" coords="174,155,257,181"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="281,155,363,181"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="165,5,265,32"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1Email.html" title="metaL.Email" alt="" coords="5,229,100,256"/>
-<area shape="rect" id="node7" href="$classmetaL_1_1Ip.html" title="TCP/IP address. " alt="" coords="124,229,197,256"/>
-<area shape="rect" id="node8" href="$classmetaL_1_1Port.html" title="TCP/IP port. " alt="" coords="221,229,308,256"/>
-<area shape="rect" id="node9" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="332,229,427,256"/>
-<area shape="rect" id="node10" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="451,229,529,256"/>
-<area shape="rect" id="node11" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="554,229,645,256"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Dir.html" title="metaL.Dir" alt="" coords="279,5,358,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1File.html" title="metaL.File" alt="" coords="277,56,360,83"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="277,208,360,235"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,56,105,83"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="408,5,520,32"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="409,56,519,83"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1pygIgnore.html" title="metaL.pygIgnore" alt="" coords="571,5,690,32"/>
+<area shape="rect" id="node8" href="$classmetaL_1_1pyMakefile.html" title="metaL.pyMakefile" alt="" coords="568,56,693,83"/>
+<area shape="rect" id="node10" href="$classmetaL_1_1Email.html" title="metaL.Email" alt="" coords="417,107,511,133"/>
+<area shape="rect" id="node11" href="$classmetaL_1_1Ip.html" title="TCP/IP address. " alt="" coords="427,157,501,184"/>
+<area shape="rect" id="node12" href="$classmetaL_1_1Port.html" title="TCP/IP port. " alt="" coords="421,208,507,235"/>
+<area shape="rect" id="node13" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="417,259,511,285"/>
+<area shape="rect" id="node14" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="425,309,503,336"/>
+<area shape="rect" id="node15" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="419,360,509,387"/>
 </map>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['lexer',['lexer',['../group__lexer.html#ga101babfc77a2eedfd55778d01fde6dfe',1,'metaL']]],
-  ['license',['LICENSE',['../group__info.html#ga36d3a1c3b0418fdd07e3108114d234a2',1,'metaL']]],
-  ['logo',['LOGO',['../group__info.html#gae22276e2db3abdb709253a50b2346a42',1,'metaL']]]
+  ['gid',['gid',['../group__persist.html#gae3fe73faf777dfa60bb38c1eb2cd78b8',1,'metaL::Object']]],
+  ['github',['GITHUB',['../group__info.html#ga69eb0ed0890fc7cffabfaf8ad4d9f030',1,'metaL']]],
+  ['gitignore',['gitignore',['../group__circ.html#ga37a5669bb930ff6e34ec37a15e298ee0',1,'metacircular.gitignore()'],['../group__dja.html#ga579f566f4c4635b530f1f9295a71bb72',1,'dja.gitignore()']]]
 ];

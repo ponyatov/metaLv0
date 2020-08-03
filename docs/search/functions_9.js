@@ -24,5 +24,5 @@ var searchData=
   ['p_5fvector_5fsingle',['p_vector_single',['../group__parser.html#gaf635930c2580c6d889ec28d68bcb8563',1,'metaL']]],
   ['plus',['plus',['../classmetaL_1_1Number.html#a222886e633e358c6e3c89925108a7848',1,'metaL::Number']]],
   ['pow',['pow',['../classmetaL_1_1Number.html#a61bc50951e45db87460da4c2d9e0192c',1,'metaL::Number']]],
-  ['py',['py',['../classmetaL_1_1Object.html#a3eff530688be7b4edcac1f85abeda683',1,'metaL::Object']]]
+  ['py',['py',['../group__gen.html#ga3eff530688be7b4edcac1f85abeda683',1,'metaL::Object']]]
 ];
