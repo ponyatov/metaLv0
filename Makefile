@@ -21,7 +21,7 @@ all: repl
 
 .PHONY: repl
 repl: $(PY) $(MODULE).py $(MODULE).ini config.py
-	$(MAKE) doxy
+	-$(MAKE) doxy
 	$(MAKE) test
 	$(PY) -i $(MODULE).py $(MODULE).ini
 	$(MAKE) $@
@@ -79,14 +79,16 @@ Linux_install Linux_update:
 .PHONY: master shadow release
 
 MERGE  = Makefile README.md .vscode apt.txt requirements.txt doxy.gen
-MERGE += $(MODULE).py $(MODULE).ini static
+MERGE += $(MODULE).py $(MODULE).ini static doc
 
 master:
 	git checkout $@
 	git pull -v
 	git checkout shadow -- $(MERGE)
+	-$(MAKE) doxy
 
 shadow:
+	git checkout docs
 	git checkout $@
 	git pull -v
 

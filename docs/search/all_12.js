@@ -21,5 +21,7 @@ var searchData=
   ['test_5fmetal',['test_metaL',['../namespacetest__metaL.html',1,'']]],
   ['test_5fmetal_2epy',['test_metaL.py',['../test__metaL_8py.html',1,'']]],
   ['title',['Title',['../classmetaL_1_1Title.html',1,'metaL.Title'],['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()']]],
-  ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]]
+  ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]],
+  ['tutorial',['Tutorial',['../tutorial.html',1,'']]],
+  ['tutorial_2emd',['tutorial.md',['../tutorial_8md.html',1,'']]]
 ];
