@@ -7,11 +7,6 @@
             "label": "test",
             "type": "shell",
             "command": "make test",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
         },
         {
             "label": "doxygen",
@@ -27,6 +22,16 @@
             "label": "update packages",
             "type": "shell",
             "command": "make update",
+        },
+        {
+            "label": "demos build/run",
+            "type": "shell",
+            "command": "make -C demos",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
     ]
 }

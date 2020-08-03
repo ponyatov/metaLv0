@@ -412,7 +412,7 @@ class Module(Meta):
 ## @ingroup meta
 class Section(Meta):
     def file(self, comment='#'):
-        ret = '\n%s \\ %s\n\n' % (comment, self.head(test=True))
+        ret = '%s \\ %s\n\n' % (comment, self.head(test=True))
         for i in self.nest:
             ret += i.file() + '\n'
         ret += '\n%s / %s\n\n' % (comment, self.head(test=True))
@@ -571,6 +571,14 @@ class Makefile(File):
             self.fh.write(self['tail'].file(self.comment))
             self.fh.flush()
         return IO.sync(self)
+
+## @defgroup cc C99
+## @ingroup gen
+
+## @ingroup py
+class cFile(File):
+    def __init__(self, V, comment='//'):
+        File.__init__(self, V, comment)
 
 ## @defgroup py Python
 ## @ingroup gen
