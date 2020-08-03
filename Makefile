@@ -47,10 +47,10 @@ doxy:
 .PHONY: install update
 
 install: $(PIP)
-	-$(MAKE) $(OS)_install
+	$(MAKE) $(OS)_install
 	$(PIP)   install    -r requirements.txt
 update: $(PIP)
-	-$(MAKE) $(OS)_update
+	$(MAKE) $(OS)_update
 	$(PIP)   install -U    pip
 	$(PIP)   install -U -r requirements.txt
 	$(MAKE)  requirements.txt
