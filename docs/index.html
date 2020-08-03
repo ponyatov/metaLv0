@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>metaL: ![logo](static/logo.png) `metaL`</title>
+<title>metaL/py: ![logo](static/logo.png) `metaL`</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,9 +22,9 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">metaL
+   <div id="projectname">metaL/py
    </div>
-   <div id="projectbrief">Repl.it Language Jam</div>
+   <div id="projectbrief">Repl.it Programming Language Jam</div>
   </td>
  </tr>
  </tbody>
@@ -77,7 +77,7 @@ $(function() {
 <ul>
 <li>take Lisp homoiconic nature and port it to CPython3 stack (VM &amp; libs)</li>
 <li>provide a light environment for <b>metaprogramming by code generation</b><ul>
-<li><code>metaL</code> is a special language for writing programs that write other programs (in C &amp; Python)</li>
+<li><code><a class="el" href="namespacemetaL.html">metaL</a></code> is a special language for writing programs that write other programs (in C &amp; Python)</li>
 <li>interactive REPL with generated code copying as system bootstrap &amp; circular redefinition is a primary method of work</li>
 </ul>
 </li>
@@ -95,19 +95,19 @@ $(function() {
 </ul>
 </li>
 </ul>
-<h2><code>metaL</code> is not a programming language</h2>
-<p><code>metaL</code> <b>is a method of programming</b> in Python (or any other language you prefer: JS, PHP,...)</p>
-<p><code>metaL</code> works over two key features:</p><ul>
+<h2><code><a class="el" href="namespacemetaL.html">metaL</a></code> is not a programming language</h2>
+<p><code><a class="el" href="namespacemetaL.html">metaL</a></code> <b>is a method of programming</b> in Python (or any other language you prefer: JS, PHP,...)</p>
+<p><code><a class="el" href="namespacemetaL.html">metaL</a></code> works over two key features:</p><ul>
 <li>homoiconic self-modifying data structures</li>
 <li>metaprogramming via code generation</li>
 </ul>
-<p>That's why DML/DDL syntax parser is not required and is the only an optional feature: parser was left there just to be a demo of the third magic feature of the <code>metaL</code>:</p><ul>
+<p>That's why DML/DDL syntax parser is not required and is the only an optional feature: parser was left there just to be a demo of the third magic feature of the <code><a class="el" href="namespacemetaL.html">metaL</a></code>:</p><ul>
 <li>custom user-defined syntax</li>
 </ul>
-<p>All <code>metaL</code> structures can be defined directly in the <em>host language</em> (Python), the syntax parser is only a way to do it more simplified and to work in symbiosis with Python REPL + VSCode. VSCode has the ability to send selected parts of code from a text editor to a terminal with running REPL. This sending has some disadvantage: Python's <code>input()</code> function can input only a single string, so when we send a text from a VSCode, we can't detect was it a single line or multiple lines text block. So, the syntax was chosen single-lined. It also points, that DML/DDL in <code>metaL</code> is not a programming language, it's a language of CLI commands.</p>
-<p>As we can use code generation for producing transformations in a host language, <em>it is possible to leave <code>metaL</code> without user-defined functions</em> and continuations, which are complex to understand and implement for the newbie language designer. User function (method, new user type class) can be specified, translated into host language without its execution, resulting code should be pasted into <code>metaL.py</code>, and finally system restarts with this new working transformation. As <code>metaL</code> were primarily designed for work with interactive code generation, such system redefinition method is suitable for use, especially if we'll have <code>metaL</code> <a href="https://stackoverflow.com/questions/1481053/what-is-the-exact-definition-of-a-metacircular-interpreter">metacircular implementation</a> in the system release.</p>
+<p>All <code><a class="el" href="namespacemetaL.html">metaL</a></code> structures can be defined directly in the <em>host language</em> (Python), the syntax parser is only a way to do it more simplified and to work in symbiosis with Python REPL + VSCode. VSCode has the ability to send selected parts of code from a text editor to a terminal with running REPL. This sending has some disadvantage: Python's <code>input()</code> function can input only a single string, so when we send a text from a VSCode, we can't detect was it a single line or multiple lines text block. So, the syntax was chosen single-lined. It also points, that DML/DDL in <code><a class="el" href="namespacemetaL.html">metaL</a></code> is not a programming language, it's a language of CLI commands.</p>
+<p>As we can use code generation for producing transformations in a host language, <em>it is possible to leave <code><a class="el" href="namespacemetaL.html">metaL</a></code> without user-defined functions</em> and continuations, which are complex to understand and implement for the newbie language designer. User function (method, new user type class) can be specified, translated into host language without its execution, resulting code should be pasted into <code><a class="el" href="metaL_8py.html" title="powered by metaL ">metaL.py</a></code>, and finally system restarts with this new working transformation. As <code><a class="el" href="namespacemetaL.html">metaL</a></code> were primarily designed for work with interactive code generation, such system redefinition method is suitable for use, especially if we'll have <code><a class="el" href="namespacemetaL.html">metaL</a></code> <a href="https://stackoverflow.com/questions/1481053/what-is-the-exact-definition-of-a-metacircular-interpreter">metacircular implementation</a> in the system release.</p>
 <h3>Generic Code Templating</h3>
-<p>The idea of <code>metaL</code> originates from an idea of the <em>generic code templating</em>: any mainstream programming language we're using any day at work or for a hobby is limited by its vendors, the huge community which uses it, and a language stack of tools and libraries. Even if you have enough skills to take something like CPython implementation and hack it to add some language modifications you want, you never can use it in production &ndash; these mods make the language incompatible with the generic branch, and the most important it makes your team developers incompatible with the rest of community. If you try to use your own hacked Python or some homebrewed language for work, you will be kicked by your employer and team as it introduces risk in hiring new developers, adds vendor lock on uncommon language and tools, and dissipates efforts also on custom language support.</p>
+<p>The idea of <code><a class="el" href="namespacemetaL.html">metaL</a></code> originates from an idea of the <em>generic code templating</em>: any mainstream programming language we're using any day at work or for a hobby is limited by its vendors, the huge community which uses it, and a language stack of tools and libraries. Even if you have enough skills to take something like CPython implementation and hack it to add some language modifications you want, you never can use it in production &ndash; these mods make the language incompatible with the generic branch, and the most important it makes your team developers incompatible with the rest of community. If you try to use your own hacked Python or some homebrewed language for work, you will be kicked by your employer and team as it introduces risk in hiring new developers, adds vendor lock on uncommon language and tools, and dissipates efforts also on custom language support.</p>
 <p>The idea about code templating is a way of taking the power of custom highest-level language still having no incompatibles with your production team. In most cases, nobody locks you on the IDE you use for development, so if you also add some shadow tool that generates human-readable code in the mainstream language of your team, you'll have a chance to take the power without risks shown above.</p>
 <p>The problem is how can we make some language especially designed to be such a magic wand. First of all, it must be very flexible and dynamic, and at the same time it must not be effective and fast in terms of computation, it should be just fast enough and not more. Next, it is required that this language must have the highest extensibility to let you describe and implement any method or approach of programming you desire. Lisp language dialects are well known at this position, but they have scary syntax and at the same time are well-known as esoteric. So, to make such a magic language, we can take the Lisp dynamic nature, implement its runtime in any language you prefer (Python), cover it with infix syntax parser which can be extended by a user as he wants, and finally focus on making jigs and features suitable for describing software systems at the highest level and simplifying of code generation.</p>
 <p>The reverse path is the legacy code analysis from source code to high-level models. There is a common problem of moving some old software systems to a new language stack with fixing a lot of architecture bugs. I can't remember any freeware tool or system which able to provide an environment for sucking in source code in arbitrary (ancient) languages, which can provide a handy way for reverse engineering, making software models, detecting used algorithms and methods, and regenerating software from these refurbished models.</p>
@@ -122,7 +122,7 @@ $(function() {
 <p><a href="https://www.youtube.com/watch?v=nXJ_2uGWM-M">https://www.youtube.com/watch?v=nXJ_2uGWM-M</a></p>
 <p>Frames originated as a technology used for knowledge representation in artificial intelligence. They are very close to objects and class hierarchies in object-oriented languages although their fundamental design goals are different. Frames are focused on the explicit and intuitive representation of knowledge whereas objects focus on encapsulation and binding data with processing procedures. Original Marvin Minsky's concept <em>lacks some principal features for software design</em>, so it must be extended with the ability to <em>store sequential collections</em>.</p>
 <p>In practice, the techniques and capabilities of the frame model and object-oriented languages overlap significantly so much as we can treat frames not only a native superset of OOP but they drastically extend object design concepts wider: we can represent any knowledge in frames, and use any programming paradigms as we desire.</p>
-<div class="fragment"><div class="line">class Frame:</div><div class="line">    <span class="keyword">def </span>__init__(self, V):</div><div class="line">        <span class="comment"># scalar data value</span></div><div class="line">        <span class="comment"># mostly names the frame, but also can store things like numbers and strings</span></div><div class="line">        self.val = V</div><div class="line">        <span class="comment"># named slots = attributes = string-keyed associative array</span></div><div class="line">        self.slot = {}</div><div class="line">        <span class="comment"># ordered storage = program AST nested elemens = vector = stack</span></div><div class="line">        self.nest = []</div><div class="line">        <span class="comment"># unique storage id (Redis,RDBMS,..)</span></div><div class="line">        self.sid = <span class="stringliteral">&#39;@%x&#39;</span> % id(self)</div></div><!-- fragment --><p>This data node structure which combines named slots with the ordered collection is definitively required for representing any program source code, as this is very close to classical AST and attribute grammar but uses graph in place of the attributed tree. The object graph (frame) representation of a program as a primary form is effective and <em>native for any work involved with source code transformations</em>: synthesis, modifications, analysis, cross-language translation, etc.</p>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Frame:</div><div class="line">    <span class="keyword">def </span>__init__(self, V):</div><div class="line">        <span class="comment"># scalar data value</span></div><div class="line">        <span class="comment"># mostly names the frame, but also can store things like numbers and strings</span></div><div class="line">        self.val = V</div><div class="line">        <span class="comment"># named slots = attributes = string-keyed associative array</span></div><div class="line">        self.slot = {}</div><div class="line">        <span class="comment"># ordered storage = program AST nested elemens = vector = stack</span></div><div class="line">        self.nest = []</div><div class="line">        <span class="comment"># unique storage id (Redis,RDBMS,..)</span></div><div class="line">        self.sid = <span class="stringliteral">&#39;@%x&#39;</span> % id(self)</div></div><!-- fragment --><p>This data node structure which combines named slots with the ordered collection is definitively required for representing any program source code, as this is very close to classical AST and attribute grammar but uses graph in place of the attributed tree. The object graph (frame) representation of a program as a primary form is effective and <em>native for any work involved with source code transformations</em>: synthesis, modifications, analysis, cross-language translation, etc.</p>
 <p>Factically, <b>we don't require any text programming language at all</b>, as this <em>Executable Data Structure</em> can</p>
 <ul>
 <li>hold any program statically (as storage),</li>
@@ -148,8 +148,8 @@ $(function() {
 <li>provides high-level tools for modifying program/data graph in runtime.</li>
 </ul>
 <p>It is not necessary that this interpreter should include a parser of some scripting language, as <em>graph structure can be generated directly by code in the implementation language</em>, and by structure self-transformation. To create a program in such a system, you only need to have any way to create an <em>executable data structure</em> in memory: it can be GUI-based drawing, text format parser, external graph database, or some C++ code that forces the compiler to include such a structure in the executable file statically.</p>
-<h3><code>metaL</code> is no-syntax language</h3>
-<p>In a long long time, CLI (command-line interface) and scripting show itself very effective from the first days of computing and don't go to become obsolete. So, it is handy to have some lite DDL/DML script language in front of your metaL-based system just to be able to use it for initialization files, and making some interactive queries to the running system. <em>This DDL/DML is not the <code>metaL</code> itself</em>, its just a way to host system snapshot in git-friendly text files and provide very light CLI. But, <code>metaL</code> is the language of live data structures in running computer memory. It specifies common ides</p><ul>
+<h3><code><a class="el" href="namespacemetaL.html">metaL</a></code> is no-syntax language</h3>
+<p>In a long long time, CLI (command-line interface) and scripting show itself very effective from the first days of computing and don't go to become obsolete. So, it is handy to have some lite DDL/DML script language in front of your metaL-based system just to be able to use it for initialization files, and making some interactive queries to the running system. <em>This DDL/DML is not the <code><a class="el" href="namespacemetaL.html">metaL</a></code> itself</em>, its just a way to host system snapshot in git-friendly text files and provide very light CLI. But, <code><a class="el" href="namespacemetaL.html">metaL</a></code> is the language of live data structures in running computer memory. It specifies common ides</p><ul>
 <li>how these structures are presented (unified storage),</li>
 <li>methods of computation (some sort of expression evaluation, close to AST interpretation), and</li>
 <li>set of node types described in the language core, which you can expand next as you want.</li>
@@ -168,7 +168,7 @@ $(function() {
 <p>[priz] <b>Инструментальная система программирования ЕС ЭВМ (ПРИЗ)</b> / М.И. Кахро, А.П. Калья, Энн Харальдович Тыугу . – Изд. 2-е – Москва : Финансы и статистика, 1988 . – 181 с ISBN 5-279-00111-2</p>
 <p>[actor] Hewitt, Meijer and Szyperski <a href="https://www.youtube.com/watch?v=7erJ1DV_Tlo">The Actor Model (everything you wanted to know...)</a></p>
 <h3>UnisonWeb</h3>
-<p><code>metaL</code> grabs a great idea about immutable, homoiconic, and distributed data structures from the <code>Unison</code> language. It is also important to note the method of building the distributed knowledge database using incremental computation of data elements.</p>
+<p><code><a class="el" href="namespacemetaL.html">metaL</a></code> grabs a great idea about immutable, homoiconic, and distributed data structures from the <code>Unison</code> language. It is also important to note the method of building the distributed knowledge database using incremental computation of data elements.</p>
 <ul>
 <li><b>The Unison language</b> <a href="https://www.unisonweb.org">https://www.unisonweb.org</a><ul>
 <li>Paul Chiusano <a href="https://www.youtube.com/watch?v=gCWtkvDQ2ZI">Unison: a new distributed programming language</a> Strange Loop '19</li>
@@ -176,8 +176,20 @@ $(function() {
 </ul>
 </li>
 </ul>
+<h3>Literate Programming</h3>
+<p>Literate Programming concept targets on mixing code with documentation, but shows the original method is not alive due to limits forced by sequential code. Most programming languages are sequential by its nature, so original <code>cweb</code> forces you to write manual in order of your code, starting from <code>include</code> etc. Disjoining code from documentation elements allows doing arbitrary structure of the manual, and include parts of code as interactive elements.</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Literate_programming">https://en.wikipedia.org/wiki/Literate_programming</a></li>
+<li><a href="https://roamresearch.com">Roam Athens Research</a><ul>
+<li><a href="https://www.notion.so/MVP-Update-Funding-and-Why-I-Started-Athens-e68822f0c3654660ae621cdcbf932bc4">https://www.notion.so/MVP-Update-Funding-and-Why-I-Started-Athens-e68822f0c3654660ae621cdcbf932bc4</a><ul>
+<li><a href="https://github.com/athensresearch/athens">https://github.com/athensresearch/athens</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h3>Smalltalk language and pure OOP</h3>
-<p><code>metaL</code> does not follow the Smalltalk language semantics, and especially its strange syntax, but it looks very closely on its message-passing computation model, especially in terms of async messaging in the [actor] model. To understand the nature and the power of Smalltalk without the need of installing or learning it you can see two next intro videos; don't skip a few firsts in [lawson] playlist where you can see the magic of Smalltalk's interactive debugging and persistent memory.</p>
+<p><code><a class="el" href="namespacemetaL.html">metaL</a></code> does not follow the Smalltalk language semantics, and especially its strange syntax, but it looks very closely on its message-passing computation model, especially in terms of async messaging in the [actor] model. To understand the nature and the power of Smalltalk without the need of installing or learning it you can see two next intro videos; don't skip a few firsts in [lawson] playlist where you can see the magic of Smalltalk's interactive debugging and persistent memory.</p>
 <p>[lawson] <a href="https://www.youtube.com/playlist?list=PL6601A198DF14788D">https://www.youtube.com/playlist?list=PL6601A198DF14788D</a></p>
 <p>[kay15] Alan Kay, 2015: <a href="https://www.youtube.com/watch?v=NdSD07U5uBs">Power of Simplicity</a></p>
 <p><a href="http://stephane.ducasse.free.fr/FreeBooks/">http://stephane.ducasse.free.fr/FreeBooks/</a></p>

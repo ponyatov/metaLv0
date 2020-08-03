@@ -1,0 +1,9 @@
+<map id="metaL.Primitive" name="metaL.Primitive">
+<area shape="rect" id="node3" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="45,155,153,181"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="178,155,274,181"/>
+<area shape="rect" id="node8" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="298,155,405,181"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="176,5,276,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="48,229,151,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="5,304,87,331"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="111,304,197,331"/>
+</map>
