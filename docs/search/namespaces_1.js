@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['metacircular',['metacircular',['../namespacemetacircular.html',1,'']]],
-  ['metal',['metaL',['../namespacemetaL.html',1,'']]]
+  ['demos',['demos',['../namespacedemos.html',1,'']]],
+  ['dja',['dja',['../namespacedja.html',1,'']]]
 ];

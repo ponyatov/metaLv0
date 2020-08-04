@@ -23,7 +23,7 @@ var searchData=
   ['t_5frq',['t_rq',['../group__lexer.html#ga2424e0616356509fd625ec691cd20952',1,'metaL']]],
   ['t_5fsub',['t_sub',['../group__parser.html#ga0985eb8bd476a1a7ae62de89b93e7ab0',1,'metaL']]],
   ['t_5fsymbol',['t_symbol',['../group__lexer.html#gaf73bfc3ae105937421391fedb3762239',1,'metaL']]],
-  ['tcc_3a_20tiny_20c_20compiler',['TCC: Tiny C Compiler',['../tcc.html',1,'']]],
+  ['tcc',['TCC',['../group__config.html#ga1f9c1d64bb0e49a6f3caa35843d8ccb0',1,'config.TCC()'],['../tcc.html',1,'(Global Namespace)']]],
   ['tcc_2emd',['tcc.md',['../tcc_8md.html',1,'']]],
   ['test',['test',['../classmetaL_1_1Object.html#a50f823fbe9e5447a8432b5a662eb502f',1,'metaL.Object.test()'],['../group__test.html',1,'(Global Namespace)']]],
   ['test_5fadd',['test_add',['../classtest__metaL_1_1TestIntMath.html#af8539d4b80fb8b64d46f7ab595966c10',1,'test_metaL::TestIntMath']]],
