@@ -2,7 +2,12 @@
 #ifndef _H_DEMOS
 #define _H_DEMOS
 
+#ifdef __TINYC__
+#include <stddef.h>
+#else
 #include <stdint.h>
+#endif
+
 #include "multiboot.h"
 
 extern void init(void);

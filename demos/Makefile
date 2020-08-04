@@ -13,9 +13,9 @@ REL = $(shell git rev-parse --short=4 HEAD)
 
 # \ <section:backend tools: TCC magic>
 
-OPT     = -m32 -fno-pic -mtune=i386 -O0
-CC      = gcc $(OPT)
-AS      = gcc $(OPT)
+CFLAGS  = -m32 -O0
+CC      = tcc
+AS      = tcc
 LD      = ld
 OBJDUMP = LANG=C objdump
 
@@ -35,9 +35,9 @@ $(MODULE).kernel: $(OBJ) multiboot.ld Makefile
 # \ <section:macro rules>
 
 %.o: %.s $(H) Makefile
-	$(CC) -o $@ -c $< && $(OBJDUMP) -xdas $@ > $@.dump
+	$(CC) $(CFLAGS) -o $@ -c $< && $(OBJDUMP) -xdas $@ > $@.dump
 %.o: %.c $(H) Makefile
-	$(CC) -o $@ -c $< && $(OBJDUMP) -xdas $@ > $@.dump
+	$(CC) $(CFLAGS) -o $@ -c $< && $(OBJDUMP) -xdas $@ > $@.dump
 
 # / <section:macro rules>
 
@@ -48,6 +48,17 @@ $(MODULE).kernel: $(OBJ) multiboot.ld Makefile
 
 # \ <section:tail>
 
+.PHONY: install update
+install:
+	$(MAKE) $(OS)_install
+update:
+	$(MAKE) $(OS)_update
+
+.PHONY: Linux_install Linux_update
+
+Linux_install Linux_update:
+	sudo apt update
+	sudo apt install -u `cat apt.txt`
 
 # / <section:tail>
 

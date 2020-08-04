@@ -560,6 +560,13 @@ class Makefile(File):
         h // 'REL = $(shell git rev-parse --short=4 HEAD)'
         self >> h
         t = Section('tail')
+        t // '.PHONY: install update'
+        t // 'install:\n\t$(MAKE) $(OS)_install'
+        t // 'update:\n\t$(MAKE) $(OS)_update'
+        t // '\n.PHONY: Linux_install Linux_update'
+        t // '\nLinux_install Linux_update:'
+        t // '\tsudo apt update'
+        t // '\tsudo apt install -u `cat apt.txt`'
         self >> t
 
     def sync(self):

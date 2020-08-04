@@ -1,6 +1,7 @@
 ## @file
 ## @brief @ref unikernel OS model
 
+import config
 from metaL import *
 
 ## @defgroup demos demos
@@ -51,9 +52,16 @@ mksection = Section(MODULE)
 mk // mksection
 mktools = Section('backend tools: TCC magic')
 mksection // mktools
-mktools // 'OPT     = -m32 -fno-pic -mtune=i386 -O0'
-mktools // 'CC      = gcc $(OPT)'
-mktools // 'AS      = gcc $(OPT)'
+
+if config.TCC:
+    mktools // 'CFLAGS  = -m32 -O0'
+    mktools // 'CC      = tcc'
+    mktools // 'AS      = tcc'
+else:
+    mktools // 'CFLAGS  = -m32 -O0 -fno-pic -mtune=i386'
+    mktools // 'CC      = gcc $(OPT)'
+    mktools // 'AS      = gcc $(OPT)'
+
 mktools // 'LD      = ld'
 mktools // 'OBJDUMP = LANG=C objdump'
 mksection // 'H   += multiboot.h $(MODULE).h'
@@ -65,7 +73,7 @@ mksection // '\n$(MODULE).kernel: $(OBJ) multiboot.ld Makefile'
 mksection // ('\t$(LD) -nostdlib -T multiboot.ld -o $@ $(OBJ) && ' + objdump + '\n')
 mkrules = Section('macro rules')
 mksection // mkrules
-compiler = ('%%.o: %%.%s $(H) Makefile\n\t$(CC) -o $@ -c $< && ' + objdump)
+compiler = ('%%.o: %%.%s $(H) Makefile\n\t$(CC) $(CFLAGS) -o $@ -c $< && ' + objdump)
 mkrules // (compiler % 's')
 mkrules // (compiler % 'c')
 mk.sync()
@@ -83,6 +91,15 @@ readme // ('github: %s/%s/blob/master/%s.py' %
            (GITHUB.val, vm.val, MODULE.val))
 readme // ABOUT
 readme.sync()
+
+apt = File('apt.txt')
+diroot // apt
+apt // 'git make binutils'
+if config.TCC:
+    apt // 'tcc'
+else:
+    apt // 'gcc-multilib'
+apt.sync()
 
 ldfile = File('multiboot.ld')
 diroot // ldfile
@@ -106,7 +123,12 @@ header // '''
 #ifndef _H_DEMOS
 #define _H_DEMOS
 
+#ifdef __TINYC__
+#include <stddef.h>
+#else
 #include <stdint.h>
+#endif
+
 #include "multiboot.h"
 
 extern void init(void);
