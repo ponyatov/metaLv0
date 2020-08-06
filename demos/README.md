@@ -1,10 +1,6 @@
 #  `demos`
 ## `unikernel` OS model in metaL/py
 
-(c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
-
-github: https://github.com/ponyatov/metaL/blob/master/demos.py
-
 It's an operating system model treated as a demo of writing a language-powered
 OS in Python, which was mentioned in https://t.me/osdev channel a few weeks ago.
 It is not something more than just a fun toy, not targets for any practical use
@@ -21,3 +17,7 @@ mainstream OS such as Linux.
 
 * hw: i386/QEMU
 * powered by `metaL`
+
+(c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
+
+github: https://github.com/ponyatov/metaL/blob/master/demos.py

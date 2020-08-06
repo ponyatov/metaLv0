@@ -4,5 +4,6 @@
 *.log
 *.exe
 *.o
+
 *.dump
 *.kernel

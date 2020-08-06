@@ -8,36 +8,64 @@ from metaL import *
 ## @brief Django Apps Generator
 ## @{
 
-MODULE = Module('dja')
-vm['MODULE'] = MODULE
+MODULE = pyModule('dja')
 
-TITLE = Title('Django Apps Generator')
-vm['TITLE'] = TITLE
+TITLE = Title('Generic Django App /metaL-templated/')
+MODULE << TITLE
 
-ABOUT = String('''
+ABOUT = '''
 Automatic (generative) programming approach to building intranet business systems:
 * Python/Django/PostgreSQL stack
 * powered by `metaL`
-''')
-vm['ABOUT'] = ABOUT
+'''
+MODULE['about'] = ABOUT
 
 ## `~/metaL/$MODULE` target directory for code generation
-diroot = Dir(MODULE)
-vm['dir'] = diroot
+diroot = MODULE['dir']
+
+## README
+readme = README(MODULE)
+diroot // readme
+readme.sync()
 
 ## file masks will be ignored by `git` version manager
-gitignore = pygIgnore('.gitignore')
-vm['gitignore'] = gitignore
-diroot // gitignore
+gitignore = diroot['gitignore']
 gitignore.sync()
 
+## Debian Linux packages install
+apt = diroot['apt']
+
 ## `Makefile` for target project build/run
-mk = pyMakefile()
-vm['mk'] = mk
-diroot // mk
-mk // Section(MODULE)
+mk = diroot['mk']
+# mk // (Section(MODULE) // '.PHONY: all\nall: $(PY) $(MODULE).py\n\t$^\n')
 mk.sync()
 
-print(vm)
+## file associations in .vscode
+MODULE['vscode/assoc'] // (' ' * 8 + '"**/templates/*.html": "html",')
+MODULE['vscode/settings'].sync()
+
+## requirements.txt
+reqs = diroot['reqs']
+reqs // 'django'
+reqs.sync()
+
+## main Python file
+py = diroot['py']
+py['head'] // MODULE.py()
+py.sync()
+
+## static files directory
+static = Dir('static')
+diroot // static
+static.sync()
+static // File('.gitignore')
+
+## .html templates directory
+templates = Dir('templates')
+diroot // templates
+templates.sync()
+templates // File('.gitignore')
+
+# print(MODULE)
 
 ## @}

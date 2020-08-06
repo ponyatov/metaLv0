@@ -8,11 +8,10 @@ from metaL import *
 ## @brief @ref unikernel OS model
 ## @{
 
-MODULE = Module('demos')
-vm['MODULE'] = MODULE
+MODULE = anyModule('demos')
 
 TITLE = Title('`unikernel` OS model in metaL/py')
-vm['TITLE'] = TITLE
+MODULE << TITLE
 
 ABOUT = String('''
 It's an operating system model treated as a demo of writing a language-powered
@@ -30,23 +29,30 @@ Python. Also, it should run in a *guest OS* mode as generic application over
 mainstream OS such as Linux.
 
 * hw: i386/QEMU
-* powered by `metaL`''')
-vm['ABOUT'] = ABOUT
+* powered by `metaL`
+''')
+MODULE['about'] = ABOUT
 
 ## `~/metaL/$MODULE` target directory for code generation
-diroot = Dir(MODULE)
-vm['dir'] = diroot
+diroot = MODULE['dir']
+
+## README
+MODULE['github'] = 'metaL/blob/master/demos.py'
+readme = README(MODULE)
+diroot // readme
+# readme // ('github: %s/%s/blob/master/%s.py' %
+#            (GITHUB.val, vm.val, MODULE.val))
+readme.sync()
+
 
 ## file masks will be ignored by `git` version manager
-gitignore = gitIgnore('.gitignore')
-vm['gitignore'] = gitignore
-diroot // gitignore
-gitignore // '*.dump\n*.kernel'
+gitignore = diroot['gitignore']
+gitignore.sync()
+gitignore // '\n*.dump\n*.kernel'
 gitignore.sync()
 
 ## `Makefile` for target project build/run
-mk = Makefile()
-vm['mk'] = mk
+mk = diroot['mk']
 diroot // mk
 mksection = Section(MODULE)
 mk // mksection
@@ -78,23 +84,9 @@ mkrules // (compiler % 's')
 mkrules // (compiler % 'c')
 mk.sync()
 
-## `README.md`
-readme = File('README.md')
-diroot // readme
-readme // ('#  `%s`' % MODULE.val)
-readme // ('## %s' % TITLE.val)
-readme // ''
-readme // ('(c) %s <<%s>> %s %s' %
-           (AUTHOR.val, EMAIL.val, YEAR.val, LICENSE.val))
-readme // ''
-readme // ('github: %s/%s/blob/master/%s.py' %
-           (GITHUB.val, vm.val, MODULE.val))
-readme // ABOUT
-readme.sync()
-
-apt = File('apt.txt')
-diroot // apt
-apt // 'git make binutils'
+## Debian Linux packages install
+apt = diroot['apt']
+apt // 'binutils qemu-system-i386'
 if config.TCC:
     apt // 'tcc'
 else:

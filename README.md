@@ -322,3 +322,6 @@ http://stephane.ducasse.free.fr/FreeBooks/
 XeroxParc lab, Addison-Wesley, 1983
 
 [little] Tim Budd [A Little Smalltalk](http://stephane.ducasse.free.fr/FreeBooks/LittleSmalltalk/ALittleSmalltalk.pdf) Addison-Wesley 1987
+
+[dbms] **Database Systems. The Complete Book** 2nd ed.
+Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom

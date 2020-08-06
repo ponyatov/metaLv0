@@ -7,6 +7,7 @@ OS     ?= $(shell uname -s)
 NOW = $(shell date +%d%m%y)
 REL = $(shell git rev-parse --short=4 HEAD)
 
+
 # / <section:head>
 
 # \ <section:demos>
@@ -48,17 +49,32 @@ $(MODULE).kernel: $(OBJ) multiboot.ld Makefile
 
 # \ <section:tail>
 
-.PHONY: install update
+# \ <section:install>
+
+.PHONY: install
 install:
 	$(MAKE) $(OS)_install
+
+# / <section:install>
+
+
+# \ <section:update>
+
+.PHONY: update
 update:
 	$(MAKE) $(OS)_update
+
+# / <section:update>
+
+
+WGET  = wget -c --no-check-certificate
 
 .PHONY: Linux_install Linux_update
 
 Linux_install Linux_update:
 	sudo apt update
 	sudo apt install -u `cat apt.txt`
+
 
 # / <section:tail>
 
