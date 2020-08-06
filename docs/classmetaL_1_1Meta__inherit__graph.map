@@ -1,5 +1,7 @@
 <map id="metaL.Meta" name="metaL.Meta">
-<area shape="rect" id="node3" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="5,155,109,181"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="133,155,240,181"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="71,5,171,32"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="16,155,120,181"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="144,155,251,181"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="82,5,182,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="5,229,131,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="9,304,127,331"/>
 </map>

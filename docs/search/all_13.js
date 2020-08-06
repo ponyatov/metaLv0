@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['the_20magic_20of_20types',['The Magic of Types',['../md_doc_TypeMagic.html',1,'']]],
   ['t_5fadd',['t_add',['../group__parser.html#gad75170265220c227b64e157389a157da',1,'metaL']]],
   ['t_5fany_5ferror',['t_ANY_error',['../group__lexer.html#ga2e559c97a22b3e9e783ec624a22b2553',1,'metaL']]],
   ['t_5fbin',['t_bin',['../group__lexer.html#ga3577975777efc7af378f6a864cb5c6a3',1,'metaL']]],
@@ -25,6 +26,7 @@ var searchData=
   ['t_5fsymbol',['t_symbol',['../group__lexer.html#gaf73bfc3ae105937421391fedb3762239',1,'metaL']]],
   ['tcc',['TCC',['../group__config.html#ga1f9c1d64bb0e49a6f3caa35843d8ccb0',1,'config.TCC()'],['../tcc.html',1,'(Global Namespace)']]],
   ['tcc_2emd',['tcc.md',['../tcc_8md.html',1,'']]],
+  ['templates',['templates',['../group__dja.html#ga43e427a7440c71bd038e840d368cd052',1,'dja']]],
   ['test',['test',['../classmetaL_1_1Object.html#a50f823fbe9e5447a8432b5a662eb502f',1,'metaL.Object.test()'],['../group__test.html',1,'(Global Namespace)']]],
   ['test_5fadd',['test_add',['../classtest__metaL_1_1TestIntMath.html#af8539d4b80fb8b64d46f7ab595966c10',1,'test_metaL::TestIntMath']]],
   ['test_5fbin',['test_bin',['../classtest__metaL_1_1TestPrimitive.html#afdfc424efdc6ca3a2e7286889b8d9081',1,'test_metaL::TestPrimitive']]],
@@ -58,5 +60,6 @@ var searchData=
   ['title',['Title',['../classmetaL_1_1Title.html',1,'metaL.Title'],['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()'],['../group__dja.html#ga718ab616de94c084fcb02c692fe93cf3',1,'dja.TITLE()'],['../group__demos.html#ga76d04d1fd87b66e20f7d2ce5343711fe',1,'demos.TITLE()']]],
   ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]],
   ['tutorial',['Tutorial',['../tutorial.html',1,'']]],
-  ['tutorial_2emd',['tutorial.md',['../tutorial_8md.html',1,'']]]
+  ['tutorial_2emd',['tutorial.md',['../tutorial_8md.html',1,'']]],
+  ['typemagic_2emd',['TypeMagic.md',['../TypeMagic_8md.html',1,'']]]
 ];

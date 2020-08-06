@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['tcc_3a_20tiny_20c_20compiler',['TCC: Tiny C Compiler',['../tcc.html',1,'']]],
-  ['tutorial',['Tutorial',['../tutorial.html',1,'']]]
+  ['hard_2drealtime_20memory_20management',['Hard-RealTime Memory Management',['../allocator.html',1,'']]]
 ];
