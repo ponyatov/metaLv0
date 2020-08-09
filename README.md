@@ -3,6 +3,8 @@
 
 https://repl.it/@metaLmasters/metaL
 
+tutorial: https://ponyatov.github.io/metaL/tutorial.html
+
 doxygen manual: https://ponyatov.github.io/metaL
 
 * https://blog.repl.it/langjam
