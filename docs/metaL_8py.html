@@ -197,12 +197,17 @@ Functions</h2></td></tr>
 <tr class="memitem:ga064996d7ac3edc410223eace7ad5ced9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parser.html#ga064996d7ac3edc410223eace7ad5ced9">metaL.p_REPL_none</a> (p)</td></tr>
 <tr class="memdesc:ga064996d7ac3edc410223eace7ad5ced9"><td class="mdescLeft">&#160;</td><td class="mdescRight">' REPL : ' create empty <a class="el" href="classmetaL_1_1AST.html" title="Abstract Syntax Tree =~= any metaL graph. ">AST</a> on recursion start  <a href="group__parser.html#ga064996d7ac3edc410223eace7ad5ced9">More...</a><br /></td></tr>
 <tr class="separator:ga064996d7ac3edc410223eace7ad5ced9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c6f10b391b24774fe8f7b35fdedf8f9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemetaL.html#a8c6f10b391b24774fe8f7b35fdedf8f9">metaL.p_REPL_nl</a> (p)</td></tr>
+<tr class="separator:a8c6f10b391b24774fe8f7b35fdedf8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7b9481e299b8a71039c0d5f1c2b3fe35"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parser.html#ga7b9481e299b8a71039c0d5f1c2b3fe35">metaL.p_REPL_recursion</a> (p)</td></tr>
 <tr class="memdesc:ga7b9481e299b8a71039c0d5f1c2b3fe35"><td class="mdescLeft">&#160;</td><td class="mdescRight">' REPL : REPL ex ' collect every parsed [ex]pression  <a href="group__parser.html#ga7b9481e299b8a71039c0d5f1c2b3fe35">More...</a><br /></td></tr>
 <tr class="separator:ga7b9481e299b8a71039c0d5f1c2b3fe35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga189551c54ad619b87686c566ff6b507f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parser.html#ga189551c54ad619b87686c566ff6b507f">metaL.p_REPL_exit</a> (p)</td></tr>
 <tr class="memdesc:ga189551c54ad619b87686c566ff6b507f"><td class="mdescLeft">&#160;</td><td class="mdescRight">' REPL : exit ' process <code>exit()</code> as special CLI command  <a href="group__parser.html#ga189551c54ad619b87686c566ff6b507f">More...</a><br /></td></tr>
 <tr class="separator:ga189551c54ad619b87686c566ff6b507f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga38e419a38a160111d28840611797a016"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parser.html#ga38e419a38a160111d28840611797a016">metaL.p_ex_string</a> (p)</td></tr>
+<tr class="memdesc:ga38e419a38a160111d28840611797a016"><td class="mdescLeft">&#160;</td><td class="mdescRight">' ex : string '  <a href="group__parser.html#ga38e419a38a160111d28840611797a016">More...</a><br /></td></tr>
+<tr class="separator:ga38e419a38a160111d28840611797a016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga061d34404a8488fe523396b913ff7ac8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__parser.html#ga061d34404a8488fe523396b913ff7ac8">metaL.p_ex_symbol</a> (p)</td></tr>
 <tr class="memdesc:ga061d34404a8488fe523396b913ff7ac8"><td class="mdescLeft">&#160;</td><td class="mdescRight">' ex : symbol '  <a href="group__parser.html#ga061d34404a8488fe523396b913ff7ac8">More...</a><br /></td></tr>
 <tr class="separator:ga061d34404a8488fe523396b913ff7ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,6 +332,35 @@ Variables</h2></td></tr>
 <tr class="separator:ga69eb0ed0890fc7cffabfaf8ad4d9f030"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae22276e2db3abdb709253a50b2346a42"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__info.html#gae22276e2db3abdb709253a50b2346a42">metaL.LOGO</a> = 'logo.png'</td></tr>
 <tr class="separator:gae22276e2db3abdb709253a50b2346a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="member-group"></a>
+string lexer state</h2></td></tr>
+<tr class="memitem:gadc487383591bb2dbdc86bd0b1cb7e3ff"><td class="memItemLeft" align="right" valign="top">tuple&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#gadc487383591bb2dbdc86bd0b1cb7e3ff">metaL.states</a> = (('str', 'exclusive'),)</td></tr>
+<tr class="memdesc:gadc487383591bb2dbdc86bd0b1cb7e3ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">lexer states: string parsing mode  <a href="group__lexer.html#gadc487383591bb2dbdc86bd0b1cb7e3ff">More...</a><br /></td></tr>
+<tr class="separator:gadc487383591bb2dbdc86bd0b1cb7e3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga19f900f84ac2ffbfe73be594ad3aaddb"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#ga19f900f84ac2ffbfe73be594ad3aaddb">metaL.t_str_ignore</a> = ''</td></tr>
+<tr class="separator:ga19f900f84ac2ffbfe73be594ad3aaddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga161c1c50ece40023a0894fde356bb2bd"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#ga161c1c50ece40023a0894fde356bb2bd">metaL.t_str</a> (t)</td></tr>
+<tr class="memdesc:ga161c1c50ece40023a0894fde356bb2bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">start string  <a href="group__lexer.html#ga161c1c50ece40023a0894fde356bb2bd">More...</a><br /></td></tr>
+<tr class="separator:ga161c1c50ece40023a0894fde356bb2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6b0e79c94ff00d473dd935cffdcc17b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#gad6b0e79c94ff00d473dd935cffdcc17b">metaL.t_str_string</a> (t)</td></tr>
+<tr class="memdesc:gad6b0e79c94ff00d473dd935cffdcc17b"><td class="mdescLeft">&#160;</td><td class="mdescRight">end string  <a href="group__lexer.html#gad6b0e79c94ff00d473dd935cffdcc17b">More...</a><br /></td></tr>
+<tr class="separator:gad6b0e79c94ff00d473dd935cffdcc17b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab278f9346f1fa1a03e244007af5af5d3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#gab278f9346f1fa1a03e244007af5af5d3">metaL.t_str_nl</a> (t)</td></tr>
+<tr class="memdesc:gab278f9346f1fa1a03e244007af5af5d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">mutiline strings processing  <a href="group__lexer.html#gab278f9346f1fa1a03e244007af5af5d3">More...</a><br /></td></tr>
+<tr class="separator:gab278f9346f1fa1a03e244007af5af5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6989745366f83f10428b01aa0ab66ced"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#ga6989745366f83f10428b01aa0ab66ced">metaL.t_str_esc_nl</a> (t)</td></tr>
+<tr class="memdesc:ga6989745366f83f10428b01aa0ab66ced"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>\n</code>  <a href="group__lexer.html#ga6989745366f83f10428b01aa0ab66ced">More...</a><br /></td></tr>
+<tr class="separator:ga6989745366f83f10428b01aa0ab66ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga078e8fa0b4a0a11e31cea7c8024799bf"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#ga078e8fa0b4a0a11e31cea7c8024799bf">metaL.t_str_esc_cr</a> (t)</td></tr>
+<tr class="memdesc:ga078e8fa0b4a0a11e31cea7c8024799bf"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>\r</code>  <a href="group__lexer.html#ga078e8fa0b4a0a11e31cea7c8024799bf">More...</a><br /></td></tr>
+<tr class="separator:ga078e8fa0b4a0a11e31cea7c8024799bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga36cc4492e0217c2049605382fa0d5b7f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#ga36cc4492e0217c2049605382fa0d5b7f">metaL.t_str_esc_tab</a> (t)</td></tr>
+<tr class="memdesc:ga36cc4492e0217c2049605382fa0d5b7f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>\t</code>  <a href="group__lexer.html#ga36cc4492e0217c2049605382fa0d5b7f">More...</a><br /></td></tr>
+<tr class="separator:ga36cc4492e0217c2049605382fa0d5b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b8274e3a886e0af74169e80e0f4742b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#ga9b8274e3a886e0af74169e80e0f4742b">metaL.t_str_any</a> (t)</td></tr>
+<tr class="memdesc:ga9b8274e3a886e0af74169e80e0f4742b"><td class="mdescLeft">&#160;</td><td class="mdescRight">any other chars  <a href="group__lexer.html#ga9b8274e3a886e0af74169e80e0f4742b">More...</a><br /></td></tr>
+<tr class="separator:ga9b8274e3a886e0af74169e80e0f4742b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="member-group"></a>
 operator</h2></td></tr>

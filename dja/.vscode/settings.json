@@ -29,40 +29,29 @@
     // ignore large files for VSCode sync
     "files.watcherExclude": {
 // \ <section:watcher>
-
         // "**/buildroot-*/**": true,
         // "**/firmware/**": true,
         "**/bin/**": true, "**/include/**":true,
         "**/lib*/**":true, "**/share/**":true,
         "**/*.pyc": true,
-
 // / <section:watcher>
-
-
     },
 
     "files.exclude": {
 // \ <section:exclude>
-
         "bin": true, "include":true, "lib*":true,
         "share":true, "pyvenv.cfg":true,
         "**/*.pyc": true,
-
 // / <section:exclude>
-
-
     },
 
     "editor.tabSize": 4,
 
     "files.associations": {
 // \ <section:associations>
-
         "**/requirements{/**,*}.{txt,in}": "pip-requirements",
         "**/templates/*.html": "html",
-
+        // "**/templates/*": "django-txt",
 // / <section:associations>
-
-
     },
 }

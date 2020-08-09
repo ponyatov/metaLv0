@@ -37,11 +37,37 @@ apt = diroot['apt']
 
 ## `Makefile` for target project build/run
 mk = diroot['mk']
-# mk // (Section(MODULE) // '.PHONY: all\nall: $(PY) $(MODULE).py\n\t$^\n')
+mk['head']['pytools'] // 'DJA = $(CWD)/bin/django-admin' // ''
+mk['head'] // '' // 'HOST = 127.0.0.1'
+mk['head'] // 'PORT = 19999' // ''
+mk['all'] // '' // '.PHONY: runserver'
+mk['all'] // 'runserver: $(PY) manage.py'
+mk['all'] // '$^ runserver $(HOST):$(PORT)' // ''
+
+mk['all'] // '.PHONY: migrations\nmigrations: $(PY) manage.py\n\t\t$^ make$@' // ''
+
+mk['tail']['install'] // '\t$(MAKE) js'//''
+
+js = Section('js/install') ; mk['tail'] // ''//js //''
+js // '.PHONY: js'
+js // 'js: static/jquery.js static/bootstrap.css static/bootstrap.js'
+js // ''
+js // 'JQUERY_VER = 3.5.0'
+js // 'static/jquery.js:'
+js // '\t$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js'
+js // ''
+js // 'BOOTSTRAP_VER = 3.4.1'
+js // 'BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/'
+js // 'static/bootstrap.css:'
+js // '\t$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css'
+js // 'static/bootstrap.js:'
+js // '\t$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js'
+js // ''
 mk.sync()
 
 ## file associations in .vscode
 MODULE['vscode/assoc'] // (' ' * 8 + '"**/templates/*.html": "html",')
+MODULE['vscode/assoc'] // (' ' * 8 + '// "**/templates/*": "django-txt",')
 MODULE['vscode/settings'].sync()
 
 ## requirements.txt

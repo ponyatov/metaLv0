@@ -77,7 +77,7 @@ class TestLexer:
 
     def test_spaces(self):
         lexer.input(' \t\r\n')
-        assert lexer.token() == None
+        assert lexer.token() != None # nl
 
     def test_symbol(self):
         lexer.input('symbol')

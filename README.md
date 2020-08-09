@@ -325,3 +325,5 @@ XeroxParc lab, Addison-Wesley, 1983
 
 [dbms] **Database Systems. The Complete Book** 2nd ed.
 Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom
+
+[hickey] https://www.youtube.com/watch?v=eWbPLSJZ5Zw

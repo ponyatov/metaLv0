@@ -423,10 +423,10 @@ class Section(Meta):
     def file(self, comment=None):
         if comment:
             self.comment = comment
-        ret = '%s \\ %s\n\n' % (self.comment, self.head(test=True))
+        ret = '%s \\ %s\n' % (self.comment, self.head(test=True))
         for i in self.nest:
             ret += i.file() + '\n'
-        ret += '\n%s / %s\n\n' % (self.comment, self.head(test=True))
+        ret += '%s / %s' % (self.comment, self.head(test=True))
         return ret
 
 
@@ -493,6 +493,7 @@ class File(IO):
         return IO.sync(self)
 
     ## push object/line
+    ## @param[in] that `B` operand: string of section will be pushed into file
     ## @param[in] sync `=False` default w/o flush to disk (via `sync()``)
     def __floordiv__(self, that, sync=False):
         return IO.__floordiv__(self, that, sync)
@@ -605,7 +606,7 @@ class README(File):
 class Makefile(File):
     def __init__(self, V='Makefile'):
         File.__init__(self, V, comment='#')
-        h = Section('head')
+        h = Section('head') // ''
         h // 'CWD     = $(CURDIR)'
         h // 'MODULE  = $(notdir $(CWD))'
         h // 'OS     ?= $(shell uname -s)'
@@ -614,18 +615,18 @@ class Makefile(File):
         h // 'REL = $(shell git rev-parse --short=4 HEAD)'
         h // ''
         self >> h
-        t = Section('tail')
-        install = Section('install')
+        t = Section('tail') // ''
+        install = Section('install') // ''
         t // install
         install // '.PHONY: install'
         install // 'install:\n\t$(MAKE) $(OS)_install'
         t >> install
-        update = Section('update')
+        update = Section('update') // ''
         t // update
         update // '.PHONY: update'
         update // 'update:\n\t$(MAKE) $(OS)_update'
         t >> update
-        t // 'WGET  = wget -c --no-check-certificate'
+        t // '' // 'WGET = wget -c --no-check-certificate'
         t // '\n.PHONY: Linux_install Linux_update'
         t // '\nLinux_install Linux_update:'
         t // '\tsudo apt update'
@@ -635,10 +636,10 @@ class Makefile(File):
     def sync(self):
         if self.fh:
             self.fh.seek(0)
-            self.fh.write(self['head'].file(self.comment))
+            self.fh.write(self['head'].file(self.comment) + '\n')
             for i in self.nest:
                 self.fh.write(i.file() + '\n')
-            self.fh.write(self['tail'].file(self.comment))
+            self.fh.write(self['tail'].file(self.comment) + '\n')
             self.fh.flush()
         return IO.sync(self)
 
@@ -781,20 +782,22 @@ class pyModule(anyModule):
         self.diroot['reqs'] = reqs
         self.diroot // reqs
         reqs // 'pip\npylint\nautopep8'
+        reqs // 'xxhash\nply'
         reqs.sync()
         # mk
-        h = Section('python tools')
-        self.mk['head'] // h
-        h // 'PIP = $(CWD)/bin/pip3'
-        h // 'PY  = $(CWD)/bin/python3'
-        h // 'PYT = $(CWD)/bin/pytest'
-        h // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
+        pytools = Section('python tools') // ''
+        self.mk['head'] // pytools
+        self.mk['head']['pytools'] = pytools
+        pytools // 'PIP = $(CWD)/bin/pip3'
+        pytools // 'PY  = $(CWD)/bin/python3'
+        pytools // 'PYT = $(CWD)/bin/pytest'
+        pytools // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
         install = self.mk['tail']['install']
         install // '\t$(MAKE) $(PIP)'
         install // '\t$(PIP) install    -r requirements.txt'
         update = self.mk['tail']['update']
         update // '\t$(PIP) install -U    pip'
-        update // '\t$(PIP) install -U -r requirements.txt'
+        update // '\t$(PIP) install -U -r requirements.txt' // ''
         pyinst = Section('py/install')
         self.mk['tail'] // pyinst
         pyinst // '$(PIP) $(PY):'
@@ -802,8 +805,9 @@ class pyModule(anyModule):
         pyinst // '\t$(PIP) install -U pip pylint autopep8'
         pyinst // '$(PYT):'
         pyinst // '\t$(PIP) install -U pytest'
-        all = Section(self)
+        all = Section(self) // ''
         self.mk // all
+        self.mk['all'] = all
         all // '.PHONY: all\nall: $(PY) $(MODULE).py'
         all // '\t$^'
         all // ''
@@ -818,8 +822,18 @@ class pyModule(anyModule):
         meta = Section('metaL')
         py['tail'] // meta
         meta // 'from metaL import *' // ''
-        meta // ('MODULE = pyModule(\'%s\')'%self.val)
+        meta // ('MODULE = pyModule(\'%s\')' % self.val)
         meta // ''
+        meta // 'TITLE = Title(\'\')\nMODULE << TITLE'
+        meta // ''
+        meta // '## `~/metaL/$MODULE` target directory for code generation'
+        meta // 'diroot = MODULE[\'dir\']'
+        meta // ''
+        meta // '## README\nreadme = README(MODULE)\ndiroot // readme\nreadme.sync()'
+        meta // ''
+        meta // '## module source code\npy = diroot[\'py\']'
+        meta // "py['head'] // ('## @brief %s' % MODULE['title'].val) // ''"
+        meta // 'py.sync()'
         py.sync()
         # config
         config = pyFile('config')
@@ -858,12 +872,12 @@ import ply.lex as lex
 
 ## @ingroup lexer
 ## token types
-tokens = ['symbol',
+tokens = ['symbol', 'string',
           'number', 'integer', 'hex', 'bin',
           'lp', 'rp', 'lq', 'rq', 'lc', 'rc',
           'add', 'sub', 'mul', 'div', 'pow',
-          'comma',
-          'exit']
+          'comma', 'eq',
+          'nl', 'exit']
 
 ## @ingroup lexer
 ## drop spaces
@@ -873,11 +887,64 @@ t_ignore = ' \t\r'
 ## line commens starts with `#`
 t_ignore_comment = r'\#.*'
 
+## @name string lexer state
+## @{
+
+## @ingroup lexer
+## lexer states: string parsing mode
+states = (('str', 'exclusive'),)
+
+## @ingroup lexer
+t_str_ignore = ''
+
+## @ingroup lexer
+## start string
+def t_str(t):
+    r"'"
+    t.lexer.string = ''
+    t.lexer.push_state('str')
+## @ingroup lexer
+## end string
+def t_str_string(t):
+    r"'"
+    t.lexer.pop_state()
+    t.value = String(t.lexer.string)
+    return t
+## @ingroup lexer
+## mutiline strings processing
+def t_str_nl(t):
+    r"\n"
+    t.lexer.string += t.value
+## @ingroup lexer
+## `\n`
+def t_str_esc_nl(t):
+    r"\\n"
+    t.lexer.string += '\n'
+## @ingroup lexer
+## `\r`
+def t_str_esc_cr(t):
+    r"\\r"
+    t.lexer.string += '\r'
+## @ingroup lexer
+## `\t`
+def t_str_esc_tab(t):
+    r"\\t"
+    t.lexer.string += '\t'
+## @ingroup lexer
+## any other chars
+def t_str_any(t):
+    r"."
+    t.lexer.string += t.value
+
+## @}
+
+
 ## @ingroup lexer
 ## increment line counter on every new line
 def t_nl(t):
     r'\n'
     t.lexer.lineno += 1
+    return t
 
 ## @ingroup lexer
 ## process `exit()` as special CLI command
@@ -1043,6 +1110,10 @@ def p_REPL_none(p):
     ' REPL : '
     p[0] = AST('')
 
+def p_REPL_nl(p):
+    ' REPL : REPL nl '
+    p[0] = p[1]
+
 ## @ingroup parser
 ##    ' REPL : REPL ex '
 ## collect every parsed [ex]pression
@@ -1171,6 +1242,11 @@ def p_ex_bin(p):
 
 ## @}
 
+## @ingroup parser
+##    ' ex : string '
+def p_ex_string(p):
+    ' ex : string '
+    p[0] = p[1]
 ## @ingroup parser
 ##    ' ex : symbol '
 def p_ex_symbol(p):
