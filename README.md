@@ -10,7 +10,7 @@ doxygen manual: https://ponyatov.github.io/metaL
 
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
 
-github: https://github.com/ponyatov/replit
+github: https://github.com/ponyatov/metaL
 
 ## Language Ideas Promo
 
