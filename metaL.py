@@ -599,7 +599,7 @@ class README(File):
             module['author'].val, module['email'].val,
             module['year'].val, module['license'].val))
         self // ''
-        self // ('github: %s/%s/README.md' % (module['GITHUB'].val, module.val))
+        self // ('github: %s%s/README.md' % (module['GITHUB'].val, module.val))
 
 
 ## @ingroup prj
@@ -651,7 +651,7 @@ class anyModule(Module):
         self << vm['EMAIL']
         self['year'] = vm['YEAR']
         self << vm['LICENSE']
-        self['GITHUB'] = self.val
+        self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
         self.diroot = Dir(V)
         self << self.diroot
         # apt

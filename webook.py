@@ -3,7 +3,6 @@
 
 ## @defgroup webook webook
 ## @brief Web Book platform demo
-
 ## @{
 
 from dja import *
@@ -12,8 +11,6 @@ MODULE = djModule('webook')
 
 MODULE['URL'] = Url(
     'https://repl.it/talk/ask/Who-knows-any-micro-contest-platform-for-newbies-in-programming/49019')
-
-MODULE['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
 
 TITLE = Title('Web Book platform demo')
 MODULE << TITLE

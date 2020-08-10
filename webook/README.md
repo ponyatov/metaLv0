@@ -12,4 +12,4 @@ Demo web platform for newbies in programming runs over [Repl.it](https://repl.it
 
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
 
-github: https://repl.it/@metaLmasters/metaL#/webook/README.md
+github: https://repl.it/@metaLmasters/metaL#webook/README.md

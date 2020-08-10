@@ -7,4 +7,4 @@ Automatic (generative) programming approach to building intranet business system
 
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
 
-github: https://github.com/ponyatov/dja
+github: https://repl.it/@metaLmasters/metaL#dja/README.md
