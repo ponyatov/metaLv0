@@ -8,7 +8,11 @@ from metaL import *
 ## @brief Django Apps Generator
 ## @{
 
-MODULE = pyModule('dja')
+class djModule(pyModule):
+    def __init__(self, V):
+        pyModule.__init__(self,V)
+
+MODULE = djModule('dja')
 
 TITLE = Title('Generic Django App /metaL-templated/')
 MODULE << TITLE

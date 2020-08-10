@@ -91,6 +91,7 @@ MERGE += requirements.txt pyproject.toml .replit doc
 MERGE += $(MODULE) metacircular.py
 MERGE += dja dja.py
 MERGE += demos demos.py
+MERGE += webook webook.py
 
 master:
 	git checkout $@

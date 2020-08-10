@@ -24,7 +24,7 @@ generation of your application.
 
 ***
 
-### system startup
+### System startup
 
 * installation
 ```sh
@@ -168,3 +168,19 @@ string were split by new line chars (besides multiline strings):
          ...
          vm = <vm:metaL> #14ee5988 @7fc7328d7828 _/
    ```
+
+### Variables/Slots
+
+* Any @ref Symbol evaluates as the value, stored in a named attribute of the
+  *computation context*.
+* The default *computation context* resides in the global `<vm:metaL>` object. 
+* Also, *any object can be treated as computation context* by passing it as a
+  parameter for `.eval()`/`.apply()` methods.
+
+The *computation context* here means any object, which holds **bindings**
+between *names* and *values*. In mainstream programming languages, such bindings
+are called "variable". 
+
+In `metaL` the term **variable** is planned to be used in another context
+(closer to Prolog language), so we'll call these bindings as **slots** the same
+as this `Object.slot` dict field is named.
