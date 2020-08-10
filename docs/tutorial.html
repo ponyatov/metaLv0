@@ -75,7 +75,7 @@ $(function() {
 <p><code><a class="el" href="namespacemetaL.html">metaL</a></code> <b>targets</b> not on writing application programs, but <b>on writing programs that generate other programs</b> (into C code which can be compiled and run on any computer system).</p>
 <p>Don't try to write something which must be fast like number crunching or game engine &ndash; <code><a class="el" href="namespacemetaL.html">metaL</a></code> just does not work like that, and was not designed to be fast. It was created for manipulations with program structures, and you can write extra fast programs in <code><a class="el" href="namespacemetaL.html">metaL</a></code> if you use it a wright way: for source code generation of your application.</p>
 <hr/>
-<h3>system startup</h3>
+<h3>System startup</h3>
 <ul>
 <li>installation <div class="fragment"><div class="line">~$ git clone -o gh https://github.com/ponyatov/metaL</div><div class="line">~$ cd metaL</div><div class="line">~/metaL$ make install</div></div><!-- fragment --></li>
 <li>interactive with <a class="el" href="group__repl.html#gaa68c3f209a9f835f178bd690f7636edc">REPL()</a> autorun <div class="fragment"><div class="line">~/metaL$ make metaL/repl</div></div><!-- fragment --></li>
@@ -99,8 +99,16 @@ $(function() {
 <p>Read-Eval-Print-Loop runs in three stages after every line in the source code string were split by new line chars (besides multiline strings): </p><div class="fragment"><div class="line">&gt;&gt;&gt; <a class="code" href="namespacemetaL.html">metaL</a>(<span class="stringliteral">&#39; -01 \n +2.30 &#39;</span>)</div><div class="line"></div><div class="line">  &lt;ast:&gt;</div><div class="line">    &lt;op:-&gt; <span class="comment">#f70b8dac @7f01078ac080</span></div><div class="line">      0: &lt;integer:1&gt; <span class="comment">#47696a48 @7f01078ac1d0</span></div><div class="line">    &lt;op:+&gt; <span class="comment">#63257116 @7f01078ac320</span></div><div class="line">      0: &lt;number:2.3&gt; <span class="comment">#c4287bc0 @7f01078ac400</span></div></div><!-- fragment --><ol type="1">
 <li>pure parsing: every line will be parsed into an AST (Abstract Syntax Tree) combined from the <code><a class="el" href="namespacemetaL.html">metaL</a></code> objects <div class="fragment"><div class="line">&lt;op:-&gt; #f70b8dac @7f01078ac080</div><div class="line">   0: &lt;integer:1&gt; #47696a48 @7f01078ac1d0</div></div><!-- fragment --></li>
 <li>evaluation: <code><a class="el" href="namespacemetaL.html">metaL</a></code> objects composite structure runs via <code>eval</code>/<code>apply</code> methods <div class="fragment"><div class="line">&lt;integer:-1&gt; #d85c1811 @7f905edd3e10</div></div><!-- fragment --></li>
-<li>When you run <code><a class="el" href="namespacemetaL.html">metaL</a></code> scripts via an interactive shell, every line will be printed as parsed-only AST and evaluated object, followed by the current VM state. <div class="fragment"><div class="line">&lt;vm:metaL&gt; #14ee5988 @7fc7328d7828</div><div class="line">   ABOUT = &lt;string:homoiconic metaprogramming system\n* powered by `metaL`&gt; #0dfa5b4e @7fc7328d7cf8</div><div class="line">   ...</div><div class="line">   vm = &lt;vm:metaL&gt; #14ee5988 @7fc7328d7828 _/</div></div><!-- fragment --> </li>
+<li>When you run <code><a class="el" href="namespacemetaL.html">metaL</a></code> scripts via an interactive shell, every line will be printed as parsed-only AST and evaluated object, followed by the current VM state. <div class="fragment"><div class="line">&lt;vm:metaL&gt; #14ee5988 @7fc7328d7828</div><div class="line">   ABOUT = &lt;string:homoiconic metaprogramming system\n* powered by `metaL`&gt; #0dfa5b4e @7fc7328d7cf8</div><div class="line">   ...</div><div class="line">   vm = &lt;vm:metaL&gt; #14ee5988 @7fc7328d7828 _/</div></div><!-- fragment --></li>
 </ol>
+<h3>Variables/Slots</h3>
+<ul>
+<li>Any Symbol evaluates as the value, stored in a named attribute of the <em>computation context</em>.</li>
+<li>The default <em>computation context</em> resides in the global <code>&lt;vm:<a class="el" href="namespacemetaL.html">metaL</a>&gt;</code> object.</li>
+<li>Also, <em>any object can be treated as computation context</em> by passing it as a parameter for <code>.eval()</code>/<code>.apply()</code> methods.</li>
+</ul>
+<p>The <em>computation context</em> here means any object, which holds <b>bindings</b> between <em>names</em> and <em>values</em>. In mainstream programming languages, such bindings are called "variable".</p>
+<p>In <code><a class="el" href="namespacemetaL.html">metaL</a></code> the term <b>variable</b> is planned to be used in another context (closer to Prolog language), so we'll call these bindings as <b>slots</b> the same as this <code>Object.slot</code> dict field is named. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

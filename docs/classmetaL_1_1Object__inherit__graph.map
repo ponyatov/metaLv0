@@ -5,7 +5,7 @@
 <area shape="rect" id="node15" href="$classmetaL_1_1Error.html" title="metaL.Error" alt="" coords="167,424,258,451"/>
 <area shape="rect" id="node16" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="175,487,251,513"/>
 <area shape="rect" id="node32" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="167,791,258,817"/>
-<area shape="rect" id="node37" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="156,943,269,969"/>
+<area shape="rect" id="node38" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="156,943,269,969"/>
 <area shape="rect" id="node3" href="$classmetaL_1_1Fn.html" title="function " alt="" coords="335,5,413,32"/>
 <area shape="rect" id="node4" href="$classmetaL_1_1Op.html" title="operator " alt="" coords="335,56,413,83"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="333,107,415,133"/>
@@ -32,13 +32,14 @@
 <area shape="rect" id="node30" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="499,791,578,817"/>
 <area shape="rect" id="node31" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="493,841,584,868"/>
 <area shape="rect" id="node33" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="322,791,426,817"/>
-<area shape="rect" id="node36" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="321,841,427,868"/>
+<area shape="rect" id="node37" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="321,841,427,868"/>
 <area shape="rect" id="node34" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="476,892,601,919"/>
 <area shape="rect" id="node35" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="649,892,768,919"/>
-<area shape="rect" id="node38" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="320,917,428,944"/>
-<area shape="rect" id="node42" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="326,968,422,995"/>
-<area shape="rect" id="node43" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="321,1019,427,1045"/>
-<area shape="rect" id="node39" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="487,943,590,969"/>
-<area shape="rect" id="node40" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="668,943,749,969"/>
-<area shape="rect" id="node41" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="665,993,752,1020"/>
+<area shape="rect" id="node36" href="$classdja_1_1djModule.html" title="dja.djModule" alt="" coords="816,892,911,919"/>
+<area shape="rect" id="node39" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="320,917,428,944"/>
+<area shape="rect" id="node43" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="326,968,422,995"/>
+<area shape="rect" id="node44" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="321,1019,427,1045"/>
+<area shape="rect" id="node40" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="487,943,590,969"/>
+<area shape="rect" id="node41" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="668,943,749,969"/>
+<area shape="rect" id="node42" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="665,993,752,1020"/>
 </map>
