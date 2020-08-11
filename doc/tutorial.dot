@@ -1,0 +1,51 @@
+digraph {
+    rankdir=LR;
+    host -> script [label="optional:\nPLY parser"]
+    host -> metaL [label="direct structure construction\nmetaL-in-Python"];
+    script -> metaL [label="AST\nevaluation"];
+    metaL -> target [color=blue,label="model\ncompiler"];
+    target -> production [label="backend compiler\nGCC/TCC, javac,.."]
+
+    metaL -> transformation
+    transformation -> metaL [label="self-modification"];
+
+    metaL -> host [dir=both,label="graph transformations in Python"];
+
+    host [label="host:\nPython"];
+    script [label="metaL script\n(REPL/CLI, git files)"];
+    metaL [label="metaL models\ninterpretable object graph\nknowledge base\ntransformations in metaL"];
+    production [label="production\ndeployment\ndistribution\npackaging"]
+
+    target [label="target:\nC++,Java,.."];
+
+    php [label="PHP legacy"];
+    php -> metaL [label="metaL core can be implemented\nin any host language"];
+    legacy -> metaL [dir=both,label="any legacy code can be parsed and imported into model space\nfor analisys, legacy raking, refactoring and redesign\nmetaL-generated code refreshes legacy by hands (using meld tool)\n(consistency provided by model relations and tests)"]
+    legacy [label="existing legacy system"]
+
+    metaL -> php [label="model element/part\ncan be translated to source code\nin any other programming language\n(including metaL porting itself)"];
+
+    { host; php; legacy; rank=same; }
+
+    metaL -> host [color=blue,label="metaL model can describe metaL implementation\nself-bootstrapping"];
+
+    metaL -> storage [label="sync    "]
+    storage -> metaL [xlabel="  recover\nupdate"]
+    storage [label="persistent\nstorage\n(Redis, RDBMS,..)"]
+
+    metaL -> other [dir=both,label="distributed\nmessage passing"]
+
+    { storage; metaL; transformation; rank=same; }
+
+    other [label="other metaL\nsystem instance"]
+    storage -> other [label="async update"]
+    other -> storage [label="distributed via DB"]
+    { target; other; sim; rank=same; }
+
+    metaL -> sim [label="model interpreter"]
+    sim [label="simulation\nmodel debug"]
+    sim -> metaL [label="tracing"]
+
+    team [label="your team\nempoyer\ncomunity"]
+    target -> team [label="share generated source code"]
+}

@@ -45,10 +45,11 @@ pep:
 	echo $(SRC) | xargs -n1 -P0 $(PEP) -i
 
 .PHONY: doxy
-doxy:
+doxy: doc/tutorial.svg
 #	doxygen -g doxy.gen
 	doxygen doxy.gen 1>/dev/null
-
+doc/%.svg: doc/%.dot
+	dot -Tsvg -o $@ $<
 
 
 .PHONY: install update
@@ -92,6 +93,7 @@ MERGE += $(MODULE) metacircular.py
 MERGE += dja dja.py
 MERGE += demos demos.py
 MERGE += webook webook.py
+MERGE += rdbms rdbms.py
 
 master:
 	git checkout $@
