@@ -69,6 +69,13 @@ metaL(comment)
 integer = ' -01 # integer '
 metaL(integer)
 ```
+```
+<op:-> #f70b8dac @7f131058fe10
+        0: <integer:1> #47696a48 @7f131059d160
+
+<integer:-1> #d85c1811 @7f131058f128
+```
+
 * can be interactively executed after @ref REPL() start
 
 Recommended use is running under any IDE can send selected code from a text
@@ -85,24 +92,29 @@ literals. They are numbers, strings, and symbols.
 ```py
 number = ' +02.30 # floating point '
 metaL(number)
+# <number:2.3>
 ```
 ```py
 integer = ' -01 # integer '
 metaL(integer)
+# <integer:-1>
 ```
 ```py
 ihex = ' 0xDeadBeef # hexadecimal '
 metaL(ihex)
+# <hex:0xdeadbeef>
 ```
 ```py
 ibin = ' 0b1101 # binary '
 metaL(ibin)
+# <bin:0b1101>
 ```
 
 * strings
 ```py
 simple = " 'single line\n\twith escaped chars' "
 metaL(simple)
+# <string:single line\n\twith escaped chars>
 ```
 Multiline strings can be parsed, but it is not an exception from the
 single-lined syntax, as REPL can't correctly input such strings. The only way to
@@ -112,12 +124,14 @@ multiline = """ 'multiple lines
 \twith escaped chars'
 """
 metaL(multiline)
+# <string:multiple lines\n\twith escaped chars>
 ```
 
 * symbols: any none-space char groups
 ```py
 symbol = 'MODULE'
 metaL(symbol)
+# <module:metaL>
 ```
 The `Symbol` type differs from other literals: most of them evaluate to itself,
 but **symbols will do a lookup in current computation context** as a variable
@@ -173,13 +187,13 @@ string were split by new line chars (besides multiline strings):
 
 * Any @ref Symbol evaluates as the value, stored in a named attribute of the
   *computation context*.
-* The default *computation context* resides in the global `<vm:metaL>` object. 
+* The default *computation context* resides in the global `<vm:metaL>` object.
 * Also, *any object can be treated as computation context* by passing it as a
   parameter for `.eval()`/`.apply()` methods.
 
 The *computation context* here means any object, which holds **bindings**
 between *names* and *values*. In mainstream programming languages, such bindings
-are called "variable". 
+are called "variable".
 
 In `metaL` the term **variable** is planned to be used in another context
 (closer to Prolog language), so we'll call these bindings as **slots** the same
@@ -210,7 +224,7 @@ understood from the idea and nature of the `metaL` as it strictly targets on the
 some language such as Python: we are going to write some code, which solves your
 single application tasks. In contrast, programming in `metaL` means: we should
 write some code, which will *generate other program source code* in any other
-mainstream language (Python, C++, Java,..). 
+mainstream language (Python, C++, Java,..).
 
 In `metaL` we are not implementing the application, but we mostly should write
 **generic code templates** for making a set of different applications resides in
@@ -306,7 +320,7 @@ if you want to implement your own `metaL` version in it (Haskell maybe? 8-).
 Finally, we have to think about **four (!) languages** in every tiny
 meta-project, **and model graph** in memory. It is even good if this languages
 are different -- you can distinguish them at least syntactically. The worst-case
-when you are trying to reimplement the `metaL` in itself (bootstrap), 
+when you are trying to reimplement the `metaL` in itself (bootstrap),
 
 @image html doc/tutorial.svg
 
@@ -317,4 +331,61 @@ complexity by ignoring its targets. Play with scripting, or think in
 `metaL`-in-Python, as a description of your program model, and running this
 model interactively. This *model simulation* is a variant of `metaL` use, which
 can be used for your model testing, requirements verification, or even in
-production (in case if you host and target languages can match).
+production (in case if you host and target languages can be the same).
+
+## `Object` graph
+
+*This section is most important* to understand the `metaL` internals, please don't skip it.
+
+```py
+# base object graph node
+class Object:
+    # construct object
+    def __init__(self, V):
+        # symbol name / scalar value (string, number,..)
+        self.val = V
+        # slots = attributes = dict = env
+        self.slot = {}
+        # nested AST = vector = stack = queue
+        self.nest = []
+        # global storage id
+        self.gid = id(self)
+```
+
+The `metaL` language is built atop of
+[object graph](https://en.wikipedia.org/wiki/Object_graph)
+the same way as Lisp language is built over lists. Groups of objects inherited
+from the base `Object` class form a network through their relationships with
+each other via references -- in math terms it is oriented (directed) attributed
+graph, *extended with an ability to store elements in order*. The difference
+from the Lisp language model is all data elements are typed, and any subgraph
+element can work as data containers simultaneously. There are no atoms, even
+`Primitive` can have any attributes and any nested elements stored in order.
+
+* `.val` scalar value in Python type, symbol name, string/number
+* `.slot{}` named attributes, or slots -- some sort of variables, which holds
+  binding between a name and some subgraph at the level of a given object (works
+  like environment in Lisp)
+* `.nest[]` ordered container, something like vector/list, which is strictly
+  required for work with any source code was parsed into the AST
+* `.gid` unique global id *needed for storing* data in key/value storage or
+  database, *and to differ objects* looks like the same object (like two equal
+  numbers reside in different places of some program)
+
+If you have ever heard about compiler construction, you straightway see the
+linkage between this unified data type, AST representation, and [attribute
+grammars](https://en.wikipedia.org/wiki/Attribute_grammar). Naturally, it is not
+a surprise because the `metaL` was created for and only for working with
+arbitrary source code as a data structure. It has some ability to be used as a
+general-purpose programming language itself, but mostly for software models
+simulation in design time, not at production use.
+
+Instances of the `Object` class is never used. This class must be inherited to
+represent different data=program, but it can look like the universal data type,
+which **can represent any knowledge**. If you want to implement some expert
+system or logic programming engine over the `metaL`, this data model will stay
+unchanged, but able to provide you any required behavior. Also, this model is
+tightly close to the [Frames
+concept](https://web.media.mit.edu/~minsky/papers/Frames/frames.html) in AI.
+
+@image html doc/taxonomy.svg

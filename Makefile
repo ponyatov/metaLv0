@@ -45,7 +45,7 @@ pep:
 	echo $(SRC) | xargs -n1 -P0 $(PEP) -i
 
 .PHONY: doxy
-doxy: doc/tutorial.svg
+doxy: doc/tutorial.svg doc/taxonomy.svg
 #	doxygen -g doxy.gen
 	doxygen doxy.gen 1>/dev/null
 doc/%.svg: doc/%.dot

@@ -1,0 +1,17 @@
+digraph {
+    rankdir=LR
+    Object -> Primitive -> Number -> Integer -> Hex
+    Integer -> Bin
+    Primitive -> Symbol
+    Primitive -> String
+    Object -> Container -> Vector
+    Container -> Stack
+    Container -> Dict
+    Object -> Active -> VM
+    Active -> Op
+    Active -> Fn
+    Object -> Meta -> Module
+    Meta -> Class
+    Meta -> Method
+    Fn -> Method
+}

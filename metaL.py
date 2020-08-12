@@ -32,9 +32,9 @@ class Object:
     def __init__(self, V):
         if isinstance(V, Object):
             V = V.val
-        ## name / scalar value
+        ## symbol name / scalar value (string, number,..)
         self.val = V
-        ## attributes = dict = env
+        ## slots = attributes = dict = env
         self.slot = {}
         ## nested AST = vector = stack = queue
         self.nest = []
