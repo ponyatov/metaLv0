@@ -189,6 +189,14 @@ For people already have some previous programming skills, multiple variable
 variants in the `metaL` language can be confusing:
 * **slot**: binding between the name and its value was defined as some object
   attribute
+  ```py
+  vm['x'] = Integer(123) ; vm
+  ```
+  ```
+  <vm:metaL> #531e221d @7f611664f748
+      vm = <vm:metaL> #531e221d @7f611664f748 _/
+      x = <integer:123> #b5dc8722 @7f6115ec40b8
+  ```
 * **variable**: represents source code variables in target programming languages
 * **unifying variable**: /planned/ Prolog-like variable works with backtracking
   inference/pattern matching
@@ -302,11 +310,11 @@ when you are trying to reimplement the `metaL` in itself (bootstrap),
 
 @image html doc/tutorial.svg
 
-I'm unconditionally sure that your brain already boils only reading this text.
-If you look at the `metaL` as yet another fun little language, just skip it to
-next section and return after much practice later. Avoid the `metaL` complexity
-by ignoring its targets. Play with scripting, or think in `metaL`-in-Python, as
-a description of your program model, and running this model interactively. This
-*model simulation* is a variant of `metaL` use, which can be used for your model
-testing, requirements verification, or even in production (in case if you host
-and target languages can match).
+I'm unconditionally sure that your brain already boils only reading these few
+paragraphs. If you look at the `metaL` as yet another fun little language, just
+skip it to next section and return after much practice later. Avoid the `metaL`
+complexity by ignoring its targets. Play with scripting, or think in
+`metaL`-in-Python, as a description of your program model, and running this
+model interactively. This *model simulation* is a variant of `metaL` use, which
+can be used for your model testing, requirements verification, or even in
+production (in case if you host and target languages can match).

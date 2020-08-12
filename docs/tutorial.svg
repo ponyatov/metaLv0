@@ -43,8 +43,8 @@
 <!-- host&#45;&gt;metaL -->
 <g id="edge2" class="edge">
 <title>host&#45;&gt;metaL</title>
-<path fill="none" stroke="#000000" d="M128.7342,-403.4365C228.3846,-419.7049 505.6026,-454.8415 719.9839,-385.6861 742.8279,-378.317 765.7223,-366.006 785.7167,-353.2234"/>
-<polygon fill="#000000" stroke="#000000" points="787.6543,-356.1383 794.0996,-347.7294 783.8172,-350.2836 787.6543,-356.1383"/>
+<path fill="none" stroke="#ff0000" d="M128.7342,-403.4365C228.3846,-419.7049 505.6026,-454.8415 719.9839,-385.6861 742.8279,-378.317 765.7223,-366.006 785.7167,-353.2234"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="787.6543,-356.1383 794.0996,-347.7294 783.8172,-350.2836 787.6543,-356.1383"/>
 <text text-anchor="middle" x="462.9839" y="-445.4861" font-family="Times,serif" font-size="14.00" fill="#000000">direct structure construction</text>
 <text text-anchor="middle" x="462.9839" y="-430.4861" font-family="Times,serif" font-size="14.00" fill="#000000">metaL&#45;in&#45;Python</text>
 </g>
@@ -59,9 +59,9 @@
 <!-- metaL&#45;&gt;host -->
 <g id="edge8" class="edge">
 <title>metaL&#45;&gt;host</title>
-<path fill="none" stroke="#000000" d="M736.1586,-325.7419C706.5643,-330.6776 674.6169,-335.6878 644.9839,-339.6861 458.9281,-364.7895 236.3972,-384.6042 139.7644,-392.7108"/>
-<polygon fill="#000000" stroke="#000000" points="736.8159,-329.1806 746.098,-324.0725 735.6563,-322.2773 736.8159,-329.1806"/>
-<polygon fill="#000000" stroke="#000000" points="139.3847,-389.2302 129.7106,-393.55 139.9671,-396.2059 139.3847,-389.2302"/>
+<path fill="none" stroke="#006400" d="M736.1586,-325.7419C706.5643,-330.6776 674.6169,-335.6878 644.9839,-339.6861 458.9281,-364.7895 236.3972,-384.6042 139.7644,-392.7108"/>
+<polygon fill="#006400" stroke="#006400" points="736.8159,-329.1806 746.098,-324.0725 735.6563,-322.2773 736.8159,-329.1806"/>
+<polygon fill="#006400" stroke="#006400" points="139.3847,-389.2302 129.7106,-393.55 139.9671,-396.2059 139.3847,-389.2302"/>
 <text text-anchor="middle" x="462.9839" y="-383.4861" font-family="Times,serif" font-size="14.00" fill="#000000">graph transformations in Python</text>
 </g>
 <!-- metaL&#45;&gt;host -->
@@ -90,14 +90,21 @@
 <!-- transformation -->
 <g id="node6" class="node">
 <title>transformation</title>
-<ellipse fill="none" stroke="#000000" cx="848.2925" cy="-407.6861" rx="63.0888" ry="18"/>
-<text text-anchor="middle" x="848.2925" y="-403.9861" font-family="Times,serif" font-size="14.00" fill="#000000">transformation</text>
+<ellipse fill="none" stroke="#006400" cx="848.2925" cy="-437.6861" rx="90.5193" ry="48.1667"/>
+<text text-anchor="middle" x="848.2925" y="-456.4861" font-family="Times,serif" font-size="14.00" fill="#000000">transformation</text>
+<text text-anchor="middle" x="848.2925" y="-441.4861" font-family="Times,serif" font-size="14.00" fill="#000000">knowlege graph is</text>
+<text text-anchor="middle" x="848.2925" y="-426.4861" font-family="Times,serif" font-size="14.00" fill="#000000">able to modify itself</text>
+<text text-anchor="middle" x="848.2925" y="-411.4861" font-family="Times,serif" font-size="14.00" fill="#000000"> via interpretation</text>
 </g>
 <!-- metaL&#45;&gt;transformation -->
 <g id="edge6" class="edge">
 <title>metaL&#45;&gt;transformation</title>
-<path fill="none" stroke="#000000" d="M851.5253,-354.1215C851.7021,-362.0079 851.6732,-370.0888 851.2925,-377.7138 851.2624,-378.3177 851.2288,-378.9282 851.1922,-379.5435"/>
-<polygon fill="#000000" stroke="#000000" points="847.6932,-379.3946 850.3928,-389.6397 854.6713,-379.9472 847.6932,-379.3946"/>
+<path fill="none" stroke="#006400" d="M916.2996,-343.8423C934.7824,-361.3177 935.8648,-378.7931 919.5468,-396.2686"/>
+<polygon fill="#006400" stroke="#006400" points="917.0271,-393.8333 912.1287,-403.2278 921.8164,-398.9385 917.0271,-393.8333"/>
+<text text-anchor="middle" x="971.1372" y="-409.9991" font-family="Times,serif" font-size="14.00" fill="#000000">functions</text>
+<text text-anchor="middle" x="971.1372" y="-394.9991" font-family="Times,serif" font-size="14.00" fill="#000000">methods</text>
+<text text-anchor="middle" x="971.1372" y="-379.9991" font-family="Times,serif" font-size="14.00" fill="#000000">transformation</text>
+<text text-anchor="middle" x="971.1372" y="-364.9991" font-family="Times,serif" font-size="14.00" fill="#000000">descriptions</text>
 </g>
 <!-- php -->
 <g id="node7" class="node">
@@ -195,9 +202,10 @@
 <!-- transformation&#45;&gt;metaL -->
 <g id="edge7" class="edge">
 <title>transformation&#45;&gt;metaL</title>
-<path fill="none" stroke="#000000" d="M848.2925,-389.2829C848.2925,-381.984 848.2925,-373.1517 848.2925,-363.9985"/>
-<polygon fill="#000000" stroke="#000000" points="851.7926,-363.9977 848.2925,-353.9977 844.7926,-363.9977 851.7926,-363.9977"/>
-<text text-anchor="middle" x="837.7925" y="-368.0277" font-family="Times,serif" font-size="14.00" fill="#000000">self&#45;modification</text>
+<path fill="none" stroke="#006400" d="M784.4563,-403.2278C763.7041,-385.907 760.0456,-368.5863 773.4809,-351.2655"/>
+<polygon fill="#006400" stroke="#006400" points="776.1082,-353.5789 780.2854,-343.8423 770.9481,-348.8489 776.1082,-353.5789"/>
+<text text-anchor="middle" x="812.9893" y="-372.7347" font-family="Times,serif" font-size="14.00" fill="#000000">self&#45;modification</text>
+<text text-anchor="middle" x="812.9893" y="-357.7347" font-family="Times,serif" font-size="14.00" fill="#000000">and inference</text>
 </g>
 <!-- php&#45;&gt;metaL -->
 <g id="edge9" class="edge">

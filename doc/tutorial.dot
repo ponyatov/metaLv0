@@ -1,15 +1,17 @@
 digraph {
     rankdir=LR;
     host -> script [label="optional:\nPLY parser"]
-    host -> metaL [label="direct structure construction\nmetaL-in-Python"];
+    host -> metaL [color=red,label="direct structure construction\nmetaL-in-Python"];
     script -> metaL [label="AST\nevaluation"];
     metaL -> target [color=blue,label="model\ncompiler"];
     target -> production [label="backend compiler\nGCC/TCC, javac,.."]
 
-    metaL -> transformation
-    transformation -> metaL [label="self-modification"];
+    metaL -> transformation [color=darkgreen,xlabel="functions\nmethods\ntransformation\ndescriptions"]
+    transformation -> metaL [color=darkgreen,xlabel="self-modification\nand inference"];
 
-    metaL -> host [dir=both,label="graph transformations in Python"];
+    transformation [color=darkgreen,label="transformation\nknowlege graph is\nable to modify itself\n via interpretation"]
+
+    metaL -> host [dir=both,color=darkgreen,label="graph transformations in Python"];
 
     host [label="host:\nPython"];
     script [label="metaL script\n(REPL/CLI, git files)"];

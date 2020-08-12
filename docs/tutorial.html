@@ -110,7 +110,7 @@ $(function() {
 <p>The <em>computation context</em> here means any object, which holds <b>bindings</b> between <em>names</em> and <em>values</em>. In mainstream programming languages, such bindings are called "variable".</p>
 <p>In <code><a class="el" href="namespacemetaL.html">metaL</a></code> the term <b>variable</b> is planned to be used in another context (closer to Prolog language), so we'll call these bindings as <b>slots</b> the same as this <code>Object.slot</code> dict field is named.</p>
 <p>For people already have some previous programming skills, multiple variable variants in the <code><a class="el" href="namespacemetaL.html">metaL</a></code> language can be confusing:</p><ul>
-<li><b>slot</b>: binding between the name and its value was defined as some object attribute</li>
+<li><b>slot</b>: binding between the name and its value was defined as some object attribute <div class="fragment"><div class="line">vm[<span class="stringliteral">&#39;x&#39;</span>] = Integer(123) ; vm</div></div><!-- fragment --> <div class="fragment"><div class="line">&lt;vm:metaL&gt; #531e221d @7f611664f748</div><div class="line">    vm = &lt;vm:metaL&gt; #531e221d @7f611664f748 _/</div><div class="line">    x = &lt;integer:123&gt; #b5dc8722 @7f6115ec40b8</div></div><!-- fragment --></li>
 <li><b>variable</b>: represents source code variables in target programming languages</li>
 <li><b>unifying variable</b>: /planned/ Prolog-like variable works with backtracking inference/pattern matching</li>
 </ul>
@@ -135,7 +135,7 @@ $(function() {
 <div class="image">
 <object type="image/svg+xml" data="tutorial.svg">tutorial.svg</object>
 </div>
-<p>I'm unconditionally sure that your brain already boils only reading this text. If you look at the <code><a class="el" href="namespacemetaL.html">metaL</a></code> as yet another fun little language, just skip it to next section and return after much practice later. Avoid the <code><a class="el" href="namespacemetaL.html">metaL</a></code> complexity by ignoring its targets. Play with scripting, or think in <code><a class="el" href="namespacemetaL.html">metaL</a></code>-in-Python, as a description of your program model, and running this model interactively. This <em>model simulation</em> is a variant of <code><a class="el" href="namespacemetaL.html">metaL</a></code> use, which can be used for your model testing, requirements verification, or even in production (in case if you host and target languages can match). </p>
+<p>I'm unconditionally sure that your brain already boils only reading these few paragraphs. If you look at the <code><a class="el" href="namespacemetaL.html">metaL</a></code> as yet another fun little language, just skip it to next section and return after much practice later. Avoid the <code><a class="el" href="namespacemetaL.html">metaL</a></code> complexity by ignoring its targets. Play with scripting, or think in <code><a class="el" href="namespacemetaL.html">metaL</a></code>-in-Python, as a description of your program model, and running this model interactively. This <em>model simulation</em> is a variant of <code><a class="el" href="namespacemetaL.html">metaL</a></code> use, which can be used for your model testing, requirements verification, or even in production (in case if you host and target languages can match). </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
