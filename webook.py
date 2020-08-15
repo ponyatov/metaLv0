@@ -36,6 +36,13 @@ readme = README(MODULE)
 diroot // readme
 readme.sync()
 
-print(MODULE)
+# print(MODULE)
+
+print(metaL('''
+`che = module:`modan
+# che.doc
+'''))
+
+REPL()
 
 ## @}

@@ -68,6 +68,7 @@ $(function() {
 , <a class="el" href="group__dja.html#ga34aef3713ca334573ea8862b71f417fe">dja</a>
 , <a class="el" href="group__info.html#ga7d61fc0aed15ba9c1fd968186a0e5342">metaL</a>
 , <a class="el" href="group__rdbms.html#ga4d797fa359ce97cf088aeaa30e14763c">rdbms</a>
+, <a class="el" href="group__st.html#ga127f0b7f23d2e3189c20dde947467d3f">SmallTalk</a>
 , <a class="el" href="group__webook.html#gadde5e50b08db0ff26031b7cba5e1f0fc">webook</a>
 </li>
 <li>apt
@@ -106,6 +107,7 @@ $(function() {
 , <a class="el" href="group__dja.html#ga14d231e319ec62e001823b61c1ac11c6">dja</a>
 , <a class="el" href="group__circ.html#ga87cfbb9d5218d0de79b2c2771a1e2696">metacircular</a>
 , <a class="el" href="group__rdbms.html#ga5481467f59dd5bfdb6abd2d198ced45e">rdbms</a>
+, <a class="el" href="group__st.html#gac80f20395630a3cbbe01e86945bfe742">SmallTalk</a>
 , <a class="el" href="group__webook.html#ga91c598bc4cb7b167af4218ac4f849221">webook</a>
 </li>
 </ul>
@@ -201,6 +203,7 @@ $(function() {
 , <a class="el" href="group__circ.html#ga0139012e5f82241fd37cef871e5966d0">metacircular</a>
 , <a class="el" href="group__info.html#gaef5fe1e14020599c2c6fad4ed7fa67bf">metaL</a>
 , <a class="el" href="group__rdbms.html#gad12a10d714904f5ccfbb934d61ca5330">rdbms</a>
+, <a class="el" href="group__st.html#gab371b80d7f96db0903156bf5e8f093e5">SmallTalk</a>
 , <a class="el" href="group__webook.html#ga474c0c1f32a61e7cc0bae96e9db9c6cb">webook</a>
 </li>
 </ul>
@@ -223,11 +226,20 @@ $(function() {
 <li>p_ex_bin()
 : <a class="el" href="group__parser.html#ga207f1f4bfa34ec6bbffd44fa82f3e49d">metaL</a>
 </li>
-<li>p_ex_curles()
-: <a class="el" href="group__parser.html#ga4dbbd28f7cef629f09a9c12a2863c187">metaL</a>
+<li>p_ex_colon()
+: <a class="el" href="group__parser.html#ga3f154acf63f5aa83fc064bb9cd3e7c7a">metaL</a>
 </li>
 <li>p_ex_div()
 : <a class="el" href="group__parser.html#gab228bb9a033bf15144816200798f83f3">metaL</a>
+</li>
+<li>p_ex_dot()
+: <a class="el" href="group__parser.html#ga2284490f1312d308748fcbd3621ea2ac">metaL</a>
+</li>
+<li>p_ex_eq()
+: <a class="el" href="group__parser.html#gad933d39cc4e4c3c4d2362b3b4de52991">metaL</a>
+</li>
+<li>p_ex_fn()
+: <a class="el" href="group__parser.html#ga5f2bc9b09cf2ddffd05e82d18989fb30">metaL</a>
 </li>
 <li>p_ex_hex()
 : <a class="el" href="group__parser.html#gaded1fd97169c57c2f0f44086d35f8d46">metaL</a>
@@ -262,8 +274,20 @@ $(function() {
 <li>p_ex_symbol()
 : <a class="el" href="group__parser.html#ga061d34404a8488fe523396b913ff7ac8">metaL</a>
 </li>
+<li>p_ex_tick()
+: <a class="el" href="group__parser.html#ga2a4138bc44db34c6fba82fa1e0f6b0b4">metaL</a>
+</li>
 <li>p_ex_vector()
 : <a class="el" href="group__parser.html#gabb598160392b6445a248070952bc70c7">metaL</a>
+</li>
+<li>p_fn()
+: <a class="el" href="group__parser.html#ga9eb812bc2e35161c79d8560287e93960">metaL</a>
+</li>
+<li>p_fn_bar()
+: <a class="el" href="group__parser.html#gacc0dac6b29a004fef2327e3d387b7584">metaL</a>
+</li>
+<li>p_fn_empty()
+: <a class="el" href="group__parser.html#gaa6953ea34621f3c7e0839f6325f123fc">metaL</a>
 </li>
 <li>p_REPL_exit()
 : <a class="el" href="group__parser.html#ga189551c54ad619b87686c566ff6b507f">metaL</a>
@@ -304,6 +328,7 @@ $(function() {
 : <a class="el" href="group__demos.html#gaa6bcb7efcf987e75c578eb6009f6b49d">demos</a>
 , <a class="el" href="group__dja.html#gac6476e8058be69f24c1f03617c5e00de">dja</a>
 , <a class="el" href="group__rdbms.html#gae513c3d331b20ce610a1568e382f1f34">rdbms</a>
+, <a class="el" href="group__st.html#ga333841438d7500193f00b0803591140f">SmallTalk</a>
 , <a class="el" href="group__webook.html#gabc30f5c9ce669a580df92ff5aa72b86f">webook</a>
 </li>
 <li>REPL()
@@ -332,14 +357,26 @@ $(function() {
 <li>t_ANY_error()
 : <a class="el" href="group__lexer.html#ga2e559c97a22b3e9e783ec624a22b2553">metaL</a>
 </li>
+<li>t_bar()
+: <a class="el" href="group__parser.html#ga63dbe101223c561b5586f167aa619f96">metaL</a>
+</li>
 <li>t_bin()
 : <a class="el" href="group__lexer.html#ga3577975777efc7af378f6a864cb5c6a3">metaL</a>
+</li>
+<li>t_colon()
+: <a class="el" href="group__parser.html#ga58038608dd3799284aaeca2407b01385">metaL</a>
 </li>
 <li>t_comma()
 : <a class="el" href="group__lexer.html#gae020f75a23ad0d775e0a8481079fb8e4">metaL</a>
 </li>
 <li>t_div()
 : <a class="el" href="group__parser.html#gacd8fb3d2ec50e20f460eec4fc2800310">metaL</a>
+</li>
+<li>t_dot()
+: <a class="el" href="group__parser.html#ga4506f42a4476995aa9c36aa6d3a2ce71">metaL</a>
+</li>
+<li>t_eq()
+: <a class="el" href="group__parser.html#gafc1228751c480062dc96fc9aa251e3e0">metaL</a>
 </li>
 <li>t_exit()
 : <a class="el" href="group__lexer.html#ga147aa83b2dd2201fde534c95ed96798b">metaL</a>
@@ -419,6 +456,9 @@ $(function() {
 <li>t_symbol()
 : <a class="el" href="group__lexer.html#gaf73bfc3ae105937421391fedb3762239">metaL</a>
 </li>
+<li>t_tick()
+: <a class="el" href="group__parser.html#gad6f7b84cf544e966ca8767f6633e0a50">metaL</a>
+</li>
 <li>TCC
 : <a class="el" href="group__config.html#ga1f9c1d64bb0e49a6f3caa35843d8ccb0">config</a>
 </li>
@@ -430,6 +470,7 @@ $(function() {
 , <a class="el" href="group__dja.html#ga718ab616de94c084fcb02c692fe93cf3">dja</a>
 , <a class="el" href="group__info.html#ga200c3999a61f52c347270452e9ed094a">metaL</a>
 , <a class="el" href="group__rdbms.html#ga016095c78837f105358ee1aca806994b">rdbms</a>
+, <a class="el" href="group__st.html#gab343645ed56e799997c276be1d7fccaa">SmallTalk</a>
 , <a class="el" href="group__webook.html#ga0340114ab0d6f3d517146f11bee24c43">webook</a>
 </li>
 <li>tokens

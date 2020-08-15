@@ -209,3 +209,17 @@ class TestIntMath():
             '\n\t1: <integer:5>'
         assert ast.eval(vm).test() ==\
             '\n<integer:2>'
+
+## @ref parser
+## @ingroup test
+class TestFn:
+
+    def test_empty(self):
+        ast = parser.parse('{}')
+        assert ast.test() == '\n<ast:>\n\t0: <fn:>'
+
+    def test_single(self):
+        ast = parser.parse('{123}')
+        assert ast.test() == '\n<ast:>' +\
+            '\n\t0: <fn:>' +\
+            '\n\t\t0: <integer:123>'

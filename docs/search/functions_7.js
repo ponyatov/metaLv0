@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['json',['json',['../group__persist.html#gaf9d4118016b8b8488b0dffc2df94d5c9',1,'metaL::Object']]]
+  ['init',['init',['../group__init.html#ga6a1d4b13956350ea241c7665bb1eca2c',1,'metaL']]]
 ];

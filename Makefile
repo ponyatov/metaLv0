@@ -94,6 +94,7 @@ MERGE += dja dja.py
 MERGE += demos demos.py
 MERGE += webook webook.py
 MERGE += rdbms rdbms.py
+MERGE += SmallTalk SmallTalk.py
 
 master:
 	git checkout $@

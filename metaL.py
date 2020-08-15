@@ -152,8 +152,15 @@ class Object:
         if isinstance(key, int):
             return self.nest[key]
         if isinstance(key, str):
-            return self.slot[key]
+            try:
+                return self.slot[key]
+            except KeyError:
+                return Undef(key) // self
         raise TypeError(key)
+
+    def dot(self, that, ctx):
+        assert isinstance(that, Object)
+        return self[that.val]
 
     ## `A[key] = B`
     def __setitem__(self, key, that):
@@ -225,6 +232,9 @@ class Object:
 class Error(Object, BaseException):
     pass
 
+## @ingroup error
+class Undef(Object):
+    pass
 
 ## @defgroup prim Primitive
 ## @ingroup object
@@ -236,8 +246,14 @@ class Primitive(Object):
 
 ## @ingroup prim
 class Symbol(Primitive):
+
     ## symbol evaluates via context lookup
     def eval(self, ctx): return ctx[self.val]
+
+    ## assignment
+    def eq(self, that, ctx):
+        ctx[self.val] = that
+        return that
 
 ## @ingroup prim
 class String(Primitive):
@@ -362,12 +378,14 @@ class Active(Object):
 ## @ingroup active
 ## function
 class Fn(Active):
-    pass
+    def eval(self, ctx): return self
 
 ## @ingroup active
 ## operator
 class Op(Active):
     def eval(self, ctx):
+        if self.val == '`':
+            return self.nest[0]
         # greedy computation for all subtrees
         greedy = list(map(lambda i: i.eval(ctx), self.nest))
         # unary
@@ -388,6 +406,12 @@ class Op(Active):
                 return greedy[0].div(greedy[1], ctx)
             if self.val == '^':
                 return greedy[0].pow(greedy[1], ctx)
+            if self.val == '=':
+                return greedy[0].eq(greedy[1], ctx)
+            if self.val == '.':
+                return greedy[0].dot(greedy[1], ctx)
+            if self.val == ':':
+                return greedy[0].colon(greedy[1], ctx)
         # unknown
         raise Error((self))
 
@@ -411,8 +435,21 @@ class Meta(Object):
     pass
 
 ## @ingroup meta
+class Class(Meta):
+    def __init__(self, C):
+        assert type(C) == type(Class)
+        Meta.__init__(self, C.__name__)
+        self.C = C
+
+    def colon(self, that, ctx):
+        return self.C(that)
+
+## @ingroup meta
 class Module(Meta):
     pass
+
+
+vm['module'] = Class(Module)
 
 ## @ingroup meta
 class Section(Meta):
@@ -876,7 +913,7 @@ tokens = ['symbol', 'string',
           'number', 'integer', 'hex', 'bin',
           'lp', 'rp', 'lq', 'rq', 'lc', 'rc',
           'add', 'sub', 'mul', 'div', 'pow',
-          'comma', 'eq',
+          'comma', 'tick', 'eq', 'dot', 'colon', 'bar',
           'nl', 'exit']
 
 ## @ingroup lexer
@@ -1033,6 +1070,40 @@ def t_pow(t):
     t.value = Op(t.value)
     return t
 
+## @ingroup lexer
+##    r'`'
+def t_tick(t):
+    r'`'
+    t.value = Op(t.value)
+    return t
+
+## @ingroup lexer
+##    r'='
+def t_eq(t):
+    r'='
+    t.value = Op(t.value)
+    return t
+
+## @ingroup lexer
+##    r'\.'
+def t_dot(t):
+    r'\.'
+    t.value = Op(t.value)
+    return t
+
+## @ingroup lexer
+##    r':'
+def t_colon(t):
+    r':'
+    t.value = Op(t.value)
+    return t
+
+## @ingroup lexer
+##    r'\|'
+def t_bar(t):
+    r'\|'
+    return t
+
 ## @}
 
 ## @name lexeme
@@ -1078,7 +1149,7 @@ def t_integer(t):
 ## @ingroup lexer
 ##    r`[^ \t\r\n\#\+\-\*\/\^]+`
 def t_symbol(t):
-    r'[^ \t\r\n\#\+\-\*\/\^\\(\)\[\]\{\}]+'
+    r'[^ \t\r\n\#\+\-\*\/\^\\(\)\[\]\{\}\:\=\.]+'
     t.value = Symbol(t.value)
     return t
 
@@ -1133,12 +1204,25 @@ def p_REPL_exit(p):
 
 
 ## @ingroup parser
+## operators precedence
+##
+## precedence level increases down to the end:
+## the lower group has higher precedence
 precedence = (
+    ('right', 'eq', ),
+    ('nonassoc', 'colon', 'dot',),
     ('left', 'add', 'sub'),
     ('left', 'mul', 'div'),
     ('left', 'pow', ),
     ('left', 'pfx', ),
+    ('nonassoc', 'tick',),
 )
+
+## @ingroup parser
+##    ' ex : tick ex '
+def p_ex_tick(p):
+    ' ex : tick ex '
+    p[0] = p[1] // p[2]
 
 ## @ingroup parser
 ##    ' ex : add ex %prec pfx ' `+A`
@@ -1177,39 +1261,88 @@ def p_ex_pow(p):
     ' ex : ex pow ex '
     p[0] = p[2] // p[1] // p[3]
 
+## @ingroup parser
+##    ' ex : ex eq ex '
+def p_ex_eq(p):
+    ' ex : ex eq ex '
+    p[0] = p[2] // p[1] // p[3]
+
+## @ingroup parser
+##    ' ex : ex dot ex '
+def p_ex_dot(p):
+    ' ex : ex dot ex '
+    p[0] = p[2] // p[1] // p[3]
+
+## @ingroup parser
+##    ' ex : ex colon ex '
+def p_ex_colon(p):
+    ' ex : ex colon ex '
+    p[0] = p[2] // p[1] // p[3]
+
 ## @}
 
-## @name parens
+## @name (parens)
 ## @{
 
 ## @ingroup parser
+##    ' ex : lp ex rp '
 def p_ex_parens(p):
     ' ex : lp ex rp '
     p[0] = p[2]
 
-## @ingroup parser
-def p_ex_curles(p):
-    ' ex : lc ex rc '
-    p[0] = Fn('') // p[2]
-
 ## @}
 
-## @name vector
+## @name {function definition}
 ## @{
 
 ## @ingroup parser
+##    ' ex : lc fn rc '
+def p_ex_fn(p):
+    ' ex : lc fn rc '
+    p[0] = p[2]
+
+## @ingroup parser
+##    ' fn : '
+def p_fn_empty(p):
+    ' fn : '
+    p[0] = Fn('')
+
+## @ingroup parser
+##    ' fn : fn symbol bar '
+def p_fn_bar(p):
+    ' fn : fn symbol bar '
+    p[0] = p[1]
+    p[0]['arg'] = Vector('')
+    p[0]['arg'] // p[2]
+
+## @ingroup parser
+##    ' fn : fn ex '
+def p_fn(p):
+    ' fn : fn ex '
+    p[0] = p[1] // p[2]
+
+## @}
+
+## @name [vector]
+## @{
+
+## @ingroup parser
+##    ' ex : lq vector rq '
 def p_ex_vector(p):
     ' ex : lq vector rq '
     p[0] = p[2]
 ## @ingroup parser
+##    ' vector : '
 def p_vector_empty(p):
     ' vector : '
     p[0] = Vector('')
 ## @ingroup parser
+##    ' vector : vector ex '
 def p_vector_single(p):
     ' vector : vector ex '
     p[0] = p[1] // p[2]
 ## @ingroup parser
+##    ' vector : vector comma ex '
 def p_vector_many(p):
     ' vector : vector comma ex '
     p[0] = p[1] // p[3]

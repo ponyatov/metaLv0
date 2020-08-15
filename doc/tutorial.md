@@ -1,6 +1,7 @@
 # Tutorial {#tutorial}
 
-see also <a href=modules.html>modules</a> and <a href=index.html>main page</a> (README.md)
+see also <a href=modules.html>modules</a> and 
+<a href=index.html>main page</a> (README.md)
 
 ***
 
@@ -8,7 +9,8 @@ The `metaL` (meta)programming language was designed as a mix of Lisp and Python,
 not of syntax, but to get feels of language abilities.
 
 * *Python* is simple to use and have very friendly syntax
-* *Lisp* has a power of self-modification able to change program in runtime
+* *Lisp* has a power of self-modification able to change program in runtime, and
+  work with program as a data structure
 * *Smalltalk* is pure OOP-language works over message passing which is good for
   distributed and parallel systems
 
@@ -19,14 +21,21 @@ run on any computer system).
 Don't try to write something which must be fast like number crunching or game
 engine -- `metaL` just does not work like that, and was not designed to be fast.
 It was created for manipulations with program structures, and you can write
-extra fast programs in `metaL` if you use it a right way: for source code
+extra fast programs in `metaL` if you use it the right way: for source code
 generation of your application.
 
 ***
 
 ### System startup
 
-* installation
+* online run: https://repl.it/@metaLmasters/metaL
+```
+Python 3.8.2 (default, Feb 26 2020, 02:56:10)
+> bin/python3 -i metaL.py
+
+<vm:metaL> _
+```
+* local installation on user computer
 ```sh
 ~$ git clone -o gh https://github.com/ponyatov/metaL
 ~$ cd metaL
@@ -56,7 +65,7 @@ Python
 >>>
 ```
 
-### `metaL` DDL/DML script
+### `metaL`-script (DDL/DML)
 
 * **only single line syntax** can be used for every command /Python `input()`
   limitation in @ref REPL() /
@@ -64,18 +73,18 @@ Python
 ```py
 comment = ' # line comment '
 metaL(comment)
+#
 ```
 ```py
 integer = ' -01 # integer '
 metaL(integer)
+#
+# <ast:>
+#     <op:-> #f70b8dac @7f131058fe10
+#         0: <integer:1> #47696a48 @7f131059d160
+#
+# <integer:-1> #d85c1811 @7f131058f128
 ```
-```
-<op:-> #f70b8dac @7f131058fe10
-        0: <integer:1> #47696a48 @7f131059d160
-
-<integer:-1> #d85c1811 @7f131058f128
-```
-
 * can be interactively executed after @ref REPL() start
 
 Recommended use is running under any IDE can send selected code from a text
@@ -85,8 +94,8 @@ changes commit.
 
 ### Literals
 
-Some set of language elements can be inputted directly, which are called
-literals. They are numbers, strings, and symbols.
+Some set of language elements can be inputted directly in script, which are
+called literals. They are numbers, strings, and symbols.
 
 * numbers
 ```py
@@ -168,8 +177,7 @@ string were split by new line chars (besides multiline strings):
       <op:-> #f70b8dac @7f01078ac080
          0: <integer:1> #47696a48 @7f01078ac1d0
    ```
-2. evaluation: `metaL` objects composite structure runs via `eval`/`apply`
-   methods
+2. evaluation: object graph runs via `.eval()`/`.apply()` methods
    ```
       <integer:-1> #d85c1811 @7f905edd3e10
    ```
@@ -296,7 +304,8 @@ dialect over JVM).
 
 Also, you must not forget then `metaL` has two forms.
 
-First, the pure *data-in-memory no-syntax language* available only from the host language layer.
+First, the pure *data-in-memory no-syntax language* available only from the host
+language layer.
 * Please note again: **data structures defined and manipulated in Python is the
   primary form of `metaL` programs**.
 * **There is no data/program differentiation**: any program is a data structure,
@@ -335,7 +344,8 @@ production (in case if you host and target languages can be the same).
 
 ## `Object` graph
 
-*This section is most important* to understand the `metaL` internals, please don't skip it.
+*This section is most important* to understand the `metaL` internals, please
+don't skip it.
 
 ```py
 # base object graph node
@@ -373,19 +383,128 @@ element can work as data containers simultaneously. There are no atoms, even
   numbers reside in different places of some program)
 
 If you have ever heard about compiler construction, you straightway see the
-linkage between this unified data type, AST representation, and [attribute
-grammars](https://en.wikipedia.org/wiki/Attribute_grammar). Naturally, it is not
-a surprise because the `metaL` was created for and only for working with
-arbitrary source code as a data structure. It has some ability to be used as a
-general-purpose programming language itself, but mostly for software models
-simulation in design time, not at production use.
+linkage between this unified data type, AST representation, and
+[attribute grammars](https://en.wikipedia.org/wiki/Attribute_grammar).
+Naturally, it is not a surprise because the `metaL` was created for and only for
+working with arbitrary source code as a data structure. It has some ability to
+be used as a general-purpose programming language itself, but mostly for
+software models simulation in design time, not at production use.
 
 Instances of the `Object` class is never used. This class must be inherited to
 represent different data=program, but it can look like the universal data type,
 which **can represent any knowledge**. If you want to implement some expert
 system or logic programming engine over the `metaL`, this data model will stay
 unchanged, but able to provide you any required behavior. Also, this model is
-tightly close to the [Frames
-concept](https://web.media.mit.edu/~minsky/papers/Frames/frames.html) in AI.
+tightly close to the
+[Frames concept](https://web.media.mit.edu/~minsky/papers/Frames/frames.html) in
+AI.
 
 @image html doc/taxonomy.svg
+
+### Everything is an expression
+
+Most popular programming languages devide code variants into two types of
+elements: statements and expressions. Statements perform some action (e.g.
+`if/else` blocks) and expressions which return values (e.g. `a + b`). In
+`metaL`, everything is an expression which means that every object can be
+evaluated, and be used where value is expected.
+
+### Function is a first-class concept
+
+Literally every single mainstream programming language these days introduced the
+concept of lambdas. The "first-class" concept not only means that functions can
+be passed as arguments, and returned as a result of other function: this ability
+is available even in oldest C compilers. The most important thing is **function
+can be created or modified in a runtime**.
+
+## Operators
+
+### ` tick = quote
+
+
+Quoting operator differs from others as it blocks execution of all
+subexpressions and returns them as-is:
+```
+<vm:metaL> `a
+
+<op:`> #0f70d12e @7f36ef554400
+    0: <symbol:a> #43870d7b @7f36ef5546d8
+
+<symbol:a> #43870d7b @7f36ef5546d8
+```
+```
+<vm:metaL> `(1+2)
+
+<op:`> #89a1f3ef @7f445c6467b8
+    0: <op:+> #4153b36f @7f445c64f7f0
+        0: <integer:1> #47696a48 @7f445c64f860
+        1: <integer:2> #2b7e8c83 @7f445c64f8d0
+
+<op:+> #4153b36f @7f445c64f7f0
+    0: <integer:1> #47696a48 @7f445c64f860
+    1: <integer:2> #2b7e8c83 @7f445c64f8d0
+```
+
+The most frequently use of quoting is in slot assignment operations, as `metaL`
+uses evaluable expressions for slot names identifying. So, every time you need
+to define the slot (variable) name, you should use quoting to block the try of
+resolving the name symbol.
+
+### Slot assignment
+
+#### Global assignment
+
+By default slot named by a symbol will be allocated in global computation
+context:
+```
+<vm:metaL> `a=1
+
+<op:=> #8b9ce96c @7fddb6f07748
+    0: <op:`> #0f70d12e @7fddb6efe7b8
+        0: <symbol:a> #43870d7b @7fddb6f07470
+    1: <integer:1> #47696a48 @7fddb6f078d0
+```
+
+First, ``a` evaluates as is to the `<symbol:a>`.
+Next, the `=` operator uses `a` as the name of slot in the `<vm:metaL>` global context.
+
+```
+<integer:1> #47696a48 @7f87ee083908
+
+<vm:metaL> #55b02009 @7f87ee7fdc50
+    a = <integer:1> #47696a48 @7f87ee083908
+```
+Also, you can see that *assignment is an expression and returns a value*.
+
+#### Object slot modification
+
+With the **dot notation**, you can read and write slots that resides in arbitrary objects.
+
+```
+<vm:metaL> # define new module, available via global slot
+<vm:metaL> `che = module:`modan
+
+<op:=> #8b7b8b4e @7f1ff9e98d68
+    0: <op:`> #1835c534 @7f1ff9e989e8
+        0: <symbol:che> #a5384509 @7f1ff9e98cf8
+    1: <op::> #14b78740 @7f1ff9e98eb8
+        0: <symbol:module> #89706cbd @7f1ff9e98e48
+        1: <op:`> #1268553f @7f1ff9e98ef0
+            0: <symbol:modan> #132a9c3e @7f1ff9e98f98
+
+<module:modan> #b249615e @7f1ff9e98dd8
+
+<vm:metaL> #24c4e6ad @7f1ffa608e80
+    che = <module:modan> #b249615e @7f1ff9e98dd8
+```
+Addressing to non-existent slot will be evaluated to `<undef:>` object.
+```
+<vm:metaL> che.doc
+
+<op:.> #b6572576 @7f39540d9320
+    0: <symbol:che> #a5384509 @7f39540d92b0
+    1: <symbol:doc> #5894c1f0 @7f39540d9128
+
+<undef:doc> #9c6f4403 @7f3954150908
+    0: <module:modan> #b249615e @7f39540d91d0
+```
