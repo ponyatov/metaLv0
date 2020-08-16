@@ -51,6 +51,19 @@ doxy: doc/tutorial.svg doc/taxonomy.svg
 doc/%.svg: doc/%.dot
 	dot -Tsvg -o $@ $<
 
+.PHONY: pdf
+pdf: doc/pdf/InsideSmalltalk_I.pdf doc/pdf/InsideSmalltalk_II.pdf \
+		doc/pdf/ALittleSmalltalk.pdf doc/pdf/Bluebook.pdf
+doc/pdf/InsideSmalltalk_I.pdf:
+	$(WGET) -O $@ http://sdmeta.gforge.inria.fr/FreeBooks/InsideST/InsideSmalltalk.pdf
+doc/pdf/InsideSmalltalk_II.pdf:
+	$(WGET) -O $@ http://sdmeta.gforge.inria.fr/FreeBooks/InsideST/InsideSmalltalkII.pdf
+doc/pdf/ALittleSmalltalk.pdf:
+	$(WGET) -O $@ http://sdmeta.gforge.inria.fr/FreeBooks/LittleSmalltalk/ALittleSmalltalk.pdf
+doc/pdf/Bluebook.pdf:
+	$(WGET) -O $@ http://sdmeta.gforge.inria.fr/FreeBooks/BlueBook/Bluebook.pdf
+
+
 
 .PHONY: install update
 
@@ -90,11 +103,11 @@ MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
 MERGE += requirements.txt pyproject.toml .replit doc
 MERGE += $(MODULE) metacircular.py
+MERGE += Smalltalk.py
 MERGE += dja dja.py
 MERGE += demos demos.py
 MERGE += webook webook.py
 MERGE += rdbms rdbms.py
-MERGE += SmallTalk SmallTalk.py
 
 master:
 	git checkout $@

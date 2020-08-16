@@ -272,6 +272,8 @@ class String(Primitive):
 
     def file(self): return self.val
 
+    def py(self): return self.val
+
 ## @ingroup prim
 ## floating point
 class Number(Primitive):
@@ -444,6 +446,9 @@ class Class(Meta):
     def colon(self, that, ctx):
         return self.C(that)
 
+    def py(self):
+        return 'class %s: pass' % self.val
+
 ## @ingroup meta
 class Module(Meta):
     pass
@@ -466,6 +471,7 @@ class Section(Meta):
         ret += '%s / %s' % (self.comment, self.head(test=True))
         return ret
 
+    def py(self): return self.file()
 
 ## @defgroup io IO
 ## @ingroup object
@@ -784,6 +790,25 @@ class pyFile(File):
         head // ('## @file %s' % vm.head(test=True))
         self['tail'] = Section('')
 
+    def sync(self):
+        if self.fh:
+            self.fh.seek(0)
+            # head
+            try:
+                for i in self['head']:
+                    self.fh.write(i.py() + '\n')
+            except KeyError:
+                pass
+            # tail
+            try:
+                for k in self['tail']:
+                    self.fh.write(k.py() + '\n')
+            except KeyError:
+                pass
+            # commit
+            self.fh.flush()
+        return IO.sync(self)
+
 ## @ingroup py
 class pyModule(anyModule):
     def __init__(self, V):
@@ -857,20 +882,21 @@ class pyModule(anyModule):
         self.diroot['py'] = py
         self.diroot // py
         meta = Section('metaL')
-        py['tail'] // meta
+        py['head'] // meta
         meta // 'from metaL import *' // ''
-        meta // ('MODULE = pyModule(\'%s\')' % self.val)
-        meta // ''
-        meta // 'TITLE = Title(\'\')\nMODULE << TITLE'
-        meta // ''
-        meta // '## `~/metaL/$MODULE` target directory for code generation'
-        meta // 'diroot = MODULE[\'dir\']'
-        meta // ''
-        meta // '## README\nreadme = README(MODULE)\ndiroot // readme\nreadme.sync()'
-        meta // ''
-        meta // '## module source code\npy = diroot[\'py\']'
-        meta // "py['head'] // ('## @brief %s' % MODULE['title'].val) // ''"
-        meta // 'py.sync()'
+        # meta // ('MODULE = pyModule(\'%s\')' % self.val)
+        # meta // ''
+        # meta // 'TITLE = Title(\'\')\nMODULE << TITLE'
+        # meta // ''
+        # meta // '## `~/metaL/$MODULE` target directory for code generation'
+        # meta // 'diroot = MODULE[\'dir\']'
+        # meta // ''
+        # meta // '## README\nreadme = README(MODULE)\ndiroot // readme\nreadme.sync()'
+        # meta // ''
+        # meta // '## module source code\npy = diroot[\'py\']'
+        # meta // "py['head'] // ('## @brief %s' % MODULE['title'].val) // ''"
+        # meta // 'py.sync()'
+        py['tail'] // Section('init')
         py.sync()
         # config
         config = pyFile('config')

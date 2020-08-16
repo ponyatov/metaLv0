@@ -1,4 +1,4 @@
-# SmallTalk {#stmd}
+# Smalltalk {#stmd}
 
 * **Free Online Smalltalk Books**
   http://stephane.ducasse.free.fr/FreeBooks.html

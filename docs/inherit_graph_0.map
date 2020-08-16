@@ -1,13 +1,14 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node2" href="$classmetaL_1_1Error.html" title="metaL.Error" alt="" coords="178,56,269,83"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="11,461,111,488"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="11,512,111,539"/>
 <area shape="rect" id="node4" href="$classmetaL_1_1Active.html" title="executable data elements " alt="" coords="174,107,273,133"/>
 <area shape="rect" id="node8" href="$classmetaL_1_1Container.html" title="generic data container " alt="" coords="164,233,283,260"/>
 <area shape="rect" id="node13" href="$classmetaL_1_1Doc.html" title="metaL.Doc" alt="" coords="180,385,267,412"/>
-<area shape="rect" id="node17" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="185,487,261,513"/>
-<area shape="rect" id="node33" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="178,715,269,741"/>
-<area shape="rect" id="node40" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="167,841,280,868"/>
-<area shape="rect" id="node47" href="$classmetaL_1_1Undef.html" title="metaL.Undef" alt="" coords="175,892,272,919"/>
+<area shape="rect" id="node17" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="185,512,261,539"/>
+<area shape="rect" id="node33" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="178,689,269,716"/>
+<area shape="rect" id="node40" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="167,791,280,817"/>
+<area shape="rect" id="node47" href="$classmetaL_1_1Undef.html" title="metaL.Undef" alt="" coords="175,841,272,868"/>
+<area shape="rect" id="node48" href="$classSmalltalk_1_1ST.html" title="Smalltalk elements. " alt="" coords="175,892,272,919"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1Fn.html" title="function " alt="" coords="346,5,423,32"/>
 <area shape="rect" id="node6" href="$classmetaL_1_1Op.html" title="operator " alt="" coords="345,56,424,83"/>
 <area shape="rect" id="node7" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="343,107,426,133"/>
@@ -20,7 +21,7 @@
 <area shape="rect" id="node16" href="$classmetaL_1_1Title.html" title="metaL.Title" alt="" coords="341,411,428,437"/>
 <area shape="rect" id="node18" href="$classmetaL_1_1Dir.html" title="metaL.Dir" alt="" coords="345,461,424,488"/>
 <area shape="rect" id="node19" href="$classmetaL_1_1File.html" title="metaL.File" alt="" coords="343,512,426,539"/>
-<area shape="rect" id="node26" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="343,639,426,665"/>
+<area shape="rect" id="node26" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="343,613,426,640"/>
 <area shape="rect" id="node20" href="$classmetaL_1_1cFile.html" title="metaL.cFile" alt="" coords="504,309,595,336"/>
 <area shape="rect" id="node21" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="493,360,605,387"/>
 <area shape="rect" id="node23" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="494,411,605,437"/>
@@ -33,15 +34,15 @@
 <area shape="rect" id="node30" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="502,715,597,741"/>
 <area shape="rect" id="node31" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="510,765,589,792"/>
 <area shape="rect" id="node32" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="504,816,595,843"/>
-<area shape="rect" id="node34" href="$classmetaL_1_1Class.html" title="metaL.Class" alt="" coords="337,689,433,716"/>
-<area shape="rect" id="node35" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="333,740,437,767"/>
-<area shape="rect" id="node39" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="331,791,438,817"/>
+<area shape="rect" id="node34" href="$classmetaL_1_1Class.html" title="metaL.Class" alt="" coords="337,664,433,691"/>
+<area shape="rect" id="node35" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="333,715,437,741"/>
+<area shape="rect" id="node39" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="331,765,438,792"/>
 <area shape="rect" id="node36" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="487,867,612,893"/>
 <area shape="rect" id="node37" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="660,867,779,893"/>
 <area shape="rect" id="node38" href="$classdja_1_1djModule.html" title="dja.djModule" alt="" coords="827,867,921,893"/>
-<area shape="rect" id="node41" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="331,841,439,868"/>
-<area shape="rect" id="node45" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="337,892,433,919"/>
-<area shape="rect" id="node46" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="331,943,438,969"/>
+<area shape="rect" id="node41" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="331,816,439,843"/>
+<area shape="rect" id="node45" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="337,867,433,893"/>
+<area shape="rect" id="node46" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="331,917,438,944"/>
 <area shape="rect" id="node42" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="498,917,601,944"/>
 <area shape="rect" id="node43" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="679,917,760,944"/>
 <area shape="rect" id="node44" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="676,968,763,995"/>
