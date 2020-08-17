@@ -1,0 +1,25 @@
+digraph {
+    rankdir=LR;
+    host -> metaL [label="реализация"]
+    metaL -> target [label="компиляция моделей"]
+    metaL -> PHP
+    metaL -> host [label="bootstrap"]
+    metaL -> Django [label="модели конфигурация REST"]
+    metaL -> JS [label="шаблоны графика стили\nфронт-логика сериализация"]
+    JS [label="JS/HTML"]
+    PHP [label="target: PHP5\n(обновление legacy)"]
+    metaL -> PostgreSQL [label="триггеры, контроль ограничений\nPL/pgSQL"]
+    Django [label="Python/Django"]
+    host [label="host:\nPython"]
+    target [label="target: C/C++\n(embedded/standalone/bigdata)"]
+    metaL -> metaL [label="трансформация\nмоделей"]
+    hPHP [label="host:\nPHP"]
+    hPHP -> metaL [label="реализация"]
+    metaL -> hPHP [label="портирование"]
+    { host; hPHP; rank=same; }
+    Django -> PostgreSQL [label="ORM"]
+    PostgreSQL -> Django [label="триггеры"]
+    Django -> JS [label="GET/POST",dir=both]
+    JS -> Django [label="WebSockets",dir=both]
+    Django -> JS [label="медиастриминг"]
+}

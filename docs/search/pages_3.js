@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['the_20magic_20of_20types',['The Magic of Types',['../md_doc_TypeMagic.html',1,'']]],
-  ['tcc_3a_20tiny_20c_20compiler',['TCC: Tiny C Compiler',['../tcc.html',1,'']]],
-  ['tutorial',['Tutorial',['../tutorial.html',1,'']]]
+  ['sicp_201_2e1_2e1_20expressions',['SICP 1.1.1 Expressions',['../md_doc_SICP_1_1_1_Expressions.html',1,'']]],
+  ['sicp',['SICP',['../sicp.html',1,'']]],
+  ['smalltalk',['Smalltalk',['../stmd.html',1,'']]]
 ];

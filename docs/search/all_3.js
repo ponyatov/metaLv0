@@ -2,6 +2,7 @@ var searchData=
 [
   ['c',['C',['../classmetaL_1_1Class.html#a119bc473487382482c6a317e64ccffe9',1,'metaL::Class']]],
   ['c99',['C99',['../group__cc.html',1,'']]],
+  ['center',['center',['../group__st.html#ga39d407b5b55beb1aaa64f9cd2615e998',1,'Smalltalk']]],
   ['cfile',['cFile',['../classmetaL_1_1cFile.html',1,'metaL']]],
   ['class',['Class',['../classmetaL_1_1Class.html',1,'metaL']]],
   ['colon',['colon',['../classmetaL_1_1Class.html#ae648f8517d6aede460c4a6ac06cbcd31',1,'metaL::Class']]],

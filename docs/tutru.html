@@ -64,32 +64,8 @@ $(function() {
 <div class="title">Учебник </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>см. также <a href="modules.html">модули документации</a> и <a href="index.html">главную страницу</a> (<a class="el" href="README_8md.html">README.md</a>)</p>
-<hr/>
-<p>Язык (мета)программирования <code><a class="el" href="namespacemetaL.html">metaL</a></code> был разработан как смесь Lisp и Python, но не с точки зрения синтаксиса, а духа этих языков.</p>
-<ul>
-<li><em>Python</em> прост в использовании и имеет очень удобный синтаксис</li>
-<li><em>Lisp</em> обладает волшебством самомодификации, способной изменять программу во время выполнения, и работать с программой как со структурой данных</li>
-<li><em><a class="el" href="namespaceSmalltalk.html">Smalltalk</a></em> это чистый ООП-язык, работающий на основе передачей сообщений, которая идеально подходит для распределенных и параллельных систем.</li>
-</ul>
-<p>Цель и идеология <code><a class="el" href="namespacemetaL.html">metaL</a></code> не в написание прикладных программ, а <b>создание программ, которые генерируют исходный код других программы</b> (генерация Си-кода, который может быть скомпилирован и запущен на любой компьютерной системе).</p>
-<p>Не пытайтесь написать что-то, что должно быть быстрым, типа числодробилки или игрового движка &ndash; <code><a class="el" href="namespacemetaL.html">metaL</a></code> просто так не работает, и быстрое выполнение не предполагалось. Он был создан для манипуляций с программными структурами, и вы можете писать очень быстрые программы в <code><a class="el" href="namespacemetaL.html">metaL</a></code>, если вы используете его правильно: для генерации исходного кода вашего приложения.</p>
-<hr/>
-<h3>Запуск системы</h3>
-<ul>
-<li>online-версия: <a href="https://repl.it/@metaLmasters/metaL">https://repl.it/@metaLmasters/metaL</a><br />
-после входа на сайт repl.it дождитесь завершения инициализации песочницы, кликните мышью в командной консоли, и введите команду запуска: <div class="fragment"><div class="line">Python 3.8.2 (default, Feb 26 2020, 02:56:10)</div><div class="line">&gt; bin/python3 -i metaL.py</div><div class="line"></div><div class="line">&lt;vm:metaL&gt; _</div></div><!-- fragment --></li>
-<li>локальная установка на собственный компьютер <div class="fragment"><div class="line">~$ git clone -o gh https://github.com/ponyatov/metaL</div><div class="line">~$ cd metaL</div><div class="line">~/metaL$ make install</div></div><!-- fragment --></li>
-<li>интерактивный режим с автоматическим запуском <a class="el" href="group__repl.html#gaa68c3f209a9f835f178bd690f7636edc">REPL()</a> <div class="fragment"><div class="line">~/metaL$ make metaL/repl</div></div><!-- fragment --></li>
-<li>только в Python-режиме: нажмите [Ctrl]+[C] для выхода в интерактивную консоль Python</li>
-</ul>
-<h3><code><a class="el" href="namespacemetaL.html">metaL</a></code>-скрипт (DDL/DML)</h3>
-<ul>
-<li><b>используется только однострочный синтаксис</b> для каждой команды (ограничение функции <code>input()</code> в Python)</li>
-<li>выполняется как строка в Python-режиме через функцию <a class="el" href="group__repl.html#gadca7f71af965e163dd4eb02731ea6043">metaL()</a> <div class="fragment"><div class="line">comment = <span class="stringliteral">&#39; # line comment &#39;</span></div><div class="line"><a class="code" href="namespacemetaL.html">metaL</a>(comment)</div><div class="line"><span class="comment">#</span></div></div><!-- fragment --> <div class="fragment"><div class="line">integer = <span class="stringliteral">&#39; -01 # integer &#39;</span></div><div class="line"><a class="code" href="namespacemetaL.html">metaL</a>(integer)</div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># &lt;ast:&gt;</span></div><div class="line"><span class="comment">#     &lt;op:-&gt; #f70b8dac @7f131058fe10</span></div><div class="line"><span class="comment">#         0: &lt;integer:1&gt; #47696a48 @7f131059d160</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># &lt;integer:-1&gt; #d85c1811 @7f131058f128</span></div></div><!-- fragment --></li>
-<li>выполняется интерактивно после запуска <a class="el" href="group__repl.html#gaa68c3f209a9f835f178bd690f7636edc">REPL()</a></li>
-</ul>
-<h3>Литералы</h3>
+<div class="textblock"><h3><code><a class="el" href="namespacemetaL.html">metaL</a></code>-скрипт (DDL/DML)</h3>
+<div class="fragment"><div class="line">comment = <span class="stringliteral">&#39; # line comment &#39;</span></div><div class="line"><a class="code" href="namespacemetaL.html">metaL</a>(comment)</div><div class="line"><span class="comment">#</span></div></div><!-- fragment --> <div class="fragment"><div class="line">integer = <span class="stringliteral">&#39; -01 # integer &#39;</span></div><div class="line"><a class="code" href="namespacemetaL.html">metaL</a>(integer)</div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># &lt;ast:&gt;</span></div><div class="line"><span class="comment">#     &lt;op:-&gt; #f70b8dac @7f131058fe10</span></div><div class="line"><span class="comment">#         0: &lt;integer:1&gt; #47696a48 @7f131059d160</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># &lt;integer:-1&gt; #d85c1811 @7f131058f128</span></div></div><!-- fragment --><h3>Литералы</h3>
 <p>Непосредственно можно ввести некоторый набор языковых элементов, которые называются литералами.</p>
 <ul>
 <li>число <div class="fragment"><div class="line">number = <span class="stringliteral">&#39; +02.30 # floating point &#39;</span></div><div class="line"><a class="code" href="namespacemetaL.html">metaL</a>(number)</div><div class="line"><span class="comment"># &lt;number:2.3&gt;</span></div></div><!-- fragment --> <div class="fragment"><div class="line">integer = <span class="stringliteral">&#39; -01 # integer &#39;</span></div><div class="line"><a class="code" href="namespacemetaL.html">metaL</a>(integer)</div><div class="line"><span class="comment"># &lt;integer:-1&gt;</span></div></div><!-- fragment --></li>

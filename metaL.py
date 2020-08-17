@@ -145,7 +145,8 @@ class Object:
     ## @{
 
     ## `A.keys()`
-    def keys(self): return self.slot.keys()
+    def keys(self):
+        return self.slot.keys()
 
     ## `A[key] ~> A.slot[key:str] | A.nest[key:int] `
     def __getitem__(self, key):
@@ -158,6 +159,7 @@ class Object:
                 return Undef(key) // self
         raise TypeError(key)
 
+    ## `A.B`
     def dot(self, that, ctx):
         assert isinstance(that, Object)
         return self[that.val]
@@ -695,6 +697,7 @@ class anyModule(Module):
         self['year'] = vm['YEAR']
         self << vm['LICENSE']
         self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
+        # diroot
         self.diroot = Dir(V)
         self << self.diroot
         # apt
@@ -844,7 +847,7 @@ class pyModule(anyModule):
         self.diroot['reqs'] = reqs
         self.diroot // reqs
         reqs // 'pip\npylint\nautopep8'
-        reqs // 'xxhash\nply'
+        # reqs // 'xxhash\nply'
         reqs.sync()
         # mk
         pytools = Section('python tools') // ''
@@ -878,6 +881,10 @@ class pyModule(anyModule):
         all // '\t$(MAKE) $@'
         self.mk.sync()
         # py
+        try:
+            os.symlink('../metaL.py', '%s/metaL.py' % self.diroot.val)
+        except FileExistsError:
+            pass
         py = pyFile(self)
         self.diroot['py'] = py
         self.diroot // py

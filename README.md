@@ -331,3 +331,12 @@ XeroxParc lab, Addison-Wesley, 1983
 Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom
 
 [hickey] https://www.youtube.com/watch?v=eWbPLSJZ5Zw
+
+[mdmp] Vytautas à tuikys, Robertas Damaševičius
+**Meta-Programming and Model-Driven Meta-Program Development: Principles,
+Processes and Techniques**
+Springer London, 2013, ISBN 978-1-4471-4126-6
+
+[plai] Shriram Krishnamurthi [Programming Languages: Application and Interpretation](https://www.plai.org)
+
+[papl] Joe Politz, Ben Lerner [Programming and Programming Languages](https://papl.cs.brown.edu/2020/)

@@ -5,45 +5,59 @@
 <area shape="rect" id="node8" href="$classmetaL_1_1Container.html" title="generic data container " alt="" coords="164,233,283,260"/>
 <area shape="rect" id="node13" href="$classmetaL_1_1Doc.html" title="metaL.Doc" alt="" coords="180,385,267,412"/>
 <area shape="rect" id="node17" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="185,512,261,539"/>
-<area shape="rect" id="node33" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="178,689,269,716"/>
-<area shape="rect" id="node40" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="167,791,280,817"/>
-<area shape="rect" id="node47" href="$classmetaL_1_1Undef.html" title="metaL.Undef" alt="" coords="175,841,272,868"/>
-<area shape="rect" id="node48" href="$classSmalltalk_1_1ST.html" title="Smalltalk elements. " alt="" coords="175,892,272,919"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1Fn.html" title="function " alt="" coords="346,5,423,32"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1Op.html" title="operator " alt="" coords="345,56,424,83"/>
-<area shape="rect" id="node7" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="343,107,426,133"/>
-<area shape="rect" id="node9" href="$classmetaL_1_1Dict.html" title="associative array " alt="" coords="341,157,428,184"/>
-<area shape="rect" id="node10" href="$classmetaL_1_1Stack.html" title="FIFO stack. " alt="" coords="337,208,433,235"/>
-<area shape="rect" id="node11" href="$classmetaL_1_1Vector.html" title="var size array (Python list) " alt="" coords="335,259,435,285"/>
-<area shape="rect" id="node12" href="$classmetaL_1_1AST.html" title="Abstract Syntax Tree =~= any metaL graph. " alt="" coords="505,259,593,285"/>
-<area shape="rect" id="node14" href="$classmetaL_1_1Author.html" title="metaL.Author" alt="" coords="335,309,435,336"/>
-<area shape="rect" id="node15" href="$classmetaL_1_1License.html" title="metaL.License" alt="" coords="331,360,438,387"/>
-<area shape="rect" id="node16" href="$classmetaL_1_1Title.html" title="metaL.Title" alt="" coords="341,411,428,437"/>
-<area shape="rect" id="node18" href="$classmetaL_1_1Dir.html" title="metaL.Dir" alt="" coords="345,461,424,488"/>
-<area shape="rect" id="node19" href="$classmetaL_1_1File.html" title="metaL.File" alt="" coords="343,512,426,539"/>
-<area shape="rect" id="node26" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="343,613,426,640"/>
-<area shape="rect" id="node20" href="$classmetaL_1_1cFile.html" title="metaL.cFile" alt="" coords="504,309,595,336"/>
-<area shape="rect" id="node21" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="493,360,605,387"/>
-<area shape="rect" id="node23" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="494,411,605,437"/>
-<area shape="rect" id="node24" href="$classmetaL_1_1pyFile.html" title="metaL.pyFile" alt="" coords="501,461,598,488"/>
-<area shape="rect" id="node25" href="$classmetaL_1_1README.html" title="metaL.README" alt="" coords="489,512,609,539"/>
-<area shape="rect" id="node22" href="$classmetaL_1_1pygIgnore.html" title="metaL.pygIgnore" alt="" coords="660,360,779,387"/>
-<area shape="rect" id="node27" href="$classmetaL_1_1Email.html" title="metaL.Email" alt="" coords="502,563,597,589"/>
-<area shape="rect" id="node28" href="$classmetaL_1_1Ip.html" title="TCP/IP address. " alt="" coords="513,613,586,640"/>
-<area shape="rect" id="node29" href="$classmetaL_1_1Port.html" title="TCP/IP port. " alt="" coords="506,664,593,691"/>
-<area shape="rect" id="node30" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="502,715,597,741"/>
-<area shape="rect" id="node31" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="510,765,589,792"/>
-<area shape="rect" id="node32" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="504,816,595,843"/>
-<area shape="rect" id="node34" href="$classmetaL_1_1Class.html" title="metaL.Class" alt="" coords="337,664,433,691"/>
-<area shape="rect" id="node35" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="333,715,437,741"/>
-<area shape="rect" id="node39" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="331,765,438,792"/>
-<area shape="rect" id="node36" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="487,867,612,893"/>
-<area shape="rect" id="node37" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="660,867,779,893"/>
-<area shape="rect" id="node38" href="$classdja_1_1djModule.html" title="dja.djModule" alt="" coords="827,867,921,893"/>
-<area shape="rect" id="node41" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="331,816,439,843"/>
-<area shape="rect" id="node45" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="337,867,433,893"/>
-<area shape="rect" id="node46" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="331,917,438,944"/>
-<area shape="rect" id="node42" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="498,917,601,944"/>
-<area shape="rect" id="node43" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="679,917,760,944"/>
-<area shape="rect" id="node44" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="676,968,763,995"/>
+<area shape="rect" id="node33" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="178,765,269,792"/>
+<area shape="rect" id="node40" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="167,904,280,931"/>
+<area shape="rect" id="node48" href="$classmetaL_1_1Undef.html" title="metaL.Undef" alt="" coords="175,955,272,981"/>
+<area shape="rect" id="node49" href="$classSmalltalk_1_1ST.html" title="Smalltalk elements. " alt="" coords="175,1217,272,1244"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Fn.html" title="function " alt="" coords="367,5,445,32"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Op.html" title="operator " alt="" coords="367,56,445,83"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1VM.html" title="Virtual Machine (environment + stack + message queue) " alt="" coords="365,107,447,133"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1Dict.html" title="associative array " alt="" coords="363,157,449,184"/>
+<area shape="rect" id="node10" href="$classmetaL_1_1Stack.html" title="FIFO stack. " alt="" coords="358,208,454,235"/>
+<area shape="rect" id="node11" href="$classmetaL_1_1Vector.html" title="var size array (Python list) " alt="" coords="356,259,456,285"/>
+<area shape="rect" id="node12" href="$classmetaL_1_1AST.html" title="Abstract Syntax Tree =~= any metaL graph. " alt="" coords="553,259,641,285"/>
+<area shape="rect" id="node14" href="$classmetaL_1_1Author.html" title="metaL.Author" alt="" coords="356,309,456,336"/>
+<area shape="rect" id="node15" href="$classmetaL_1_1License.html" title="metaL.License" alt="" coords="353,360,459,387"/>
+<area shape="rect" id="node16" href="$classmetaL_1_1Title.html" title="metaL.Title" alt="" coords="363,411,449,437"/>
+<area shape="rect" id="node18" href="$classmetaL_1_1Dir.html" title="metaL.Dir" alt="" coords="367,461,445,488"/>
+<area shape="rect" id="node19" href="$classmetaL_1_1File.html" title="metaL.File" alt="" coords="365,512,447,539"/>
+<area shape="rect" id="node26" href="$classmetaL_1_1Net.html" title="metaL.Net" alt="" coords="365,664,447,691"/>
+<area shape="rect" id="node20" href="$classmetaL_1_1cFile.html" title="metaL.cFile" alt="" coords="551,309,642,336"/>
+<area shape="rect" id="node21" href="$classmetaL_1_1gitIgnore.html" title="metaL.gitIgnore" alt="" coords="541,360,653,387"/>
+<area shape="rect" id="node23" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="541,411,652,437"/>
+<area shape="rect" id="node24" href="$classmetaL_1_1pyFile.html" title="metaL.pyFile" alt="" coords="548,461,645,488"/>
+<area shape="rect" id="node25" href="$classmetaL_1_1README.html" title="metaL.README" alt="" coords="537,512,657,539"/>
+<area shape="rect" id="node22" href="$classmetaL_1_1pygIgnore.html" title="metaL.pygIgnore" alt="" coords="712,360,831,387"/>
+<area shape="rect" id="node27" href="$classmetaL_1_1Email.html" title="metaL.Email" alt="" coords="549,563,644,589"/>
+<area shape="rect" id="node28" href="$classmetaL_1_1Ip.html" title="TCP/IP address. " alt="" coords="560,613,633,640"/>
+<area shape="rect" id="node29" href="$classmetaL_1_1Port.html" title="TCP/IP port. " alt="" coords="553,664,640,691"/>
+<area shape="rect" id="node30" href="$classmetaL_1_1Pswd.html" title="password " alt="" coords="549,715,644,741"/>
+<area shape="rect" id="node31" href="$classmetaL_1_1Url.html" title="metaL.Url" alt="" coords="557,765,636,792"/>
+<area shape="rect" id="node32" href="$classmetaL_1_1User.html" title="metaL.User" alt="" coords="551,816,642,843"/>
+<area shape="rect" id="node34" href="$classmetaL_1_1Class.html" title="metaL.Class" alt="" coords="358,740,454,767"/>
+<area shape="rect" id="node35" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="354,791,458,817"/>
+<area shape="rect" id="node39" href="$classmetaL_1_1Section.html" title="metaL.Section" alt="" coords="353,841,459,868"/>
+<area shape="rect" id="node36" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="534,867,659,893"/>
+<area shape="rect" id="node37" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="712,867,831,893"/>
+<area shape="rect" id="node38" href="$classdja_1_1djModule.html" title="dja.djModule" alt="" coords="879,867,973,893"/>
+<area shape="rect" id="node41" href="$classmetaL_1_1Number.html" title="floating point " alt="" coords="352,904,460,931"/>
+<area shape="rect" id="node45" href="$classmetaL_1_1String.html" title="metaL.String" alt="" coords="358,955,454,981"/>
+<area shape="rect" id="node47" href="$classmetaL_1_1Symbol.html" title="metaL.Symbol" alt="" coords="353,1005,459,1032"/>
+<area shape="rect" id="node42" href="$classmetaL_1_1Integer.html" title="metaL.Integer" alt="" coords="545,917,648,944"/>
+<area shape="rect" id="node43" href="$classmetaL_1_1Bin.html" title="bit string " alt="" coords="731,917,812,944"/>
+<area shape="rect" id="node44" href="$classmetaL_1_1Hex.html" title="hexadecimal machine number " alt="" coords="728,968,815,995"/>
+<area shape="rect" id="node46" href="$classSmalltalk_1_1stString.html" title="String p.542. " alt="" coords="534,968,659,995"/>
+<area shape="rect" id="node50" href="$classSmalltalk_1_1stBytecode.html" title="Bytecode p.542. " alt="" coords="333,1116,479,1143"/>
+<area shape="rect" id="node57" href="$classSmalltalk_1_1stCompiler.html" title="Compiler p.542. " alt="" coords="335,1167,477,1193"/>
+<area shape="rect" id="node58" href="$classSmalltalk_1_1stHAL.html" title="Hardware HAL p.542. " alt="" coords="347,1217,465,1244"/>
+<area shape="rect" id="node59" href="$classSmalltalk_1_1stImage.html" title="Virtual Image p.542. " alt="" coords="343,1268,469,1295"/>
+<area shape="rect" id="node60" href="$classSmalltalk_1_1stInterpreter.html" title="Interpreter p.542. " alt="" coords="331,1319,481,1345"/>
+<area shape="rect" id="node61" href="$classSmalltalk_1_1stMemory.html" title="Object Memory p.542. " alt="" coords="337,1369,475,1396"/>
+<area shape="rect" id="node62" href="$classSmalltalk_1_1stVM.html" title="Virtual Machine p.542. " alt="" coords="351,1420,461,1447"/>
+<area shape="rect" id="node51" href="$classSmalltalk_1_1ADD.html" title="+ p.543 " alt="" coords="542,1019,651,1045"/>
+<area shape="rect" id="node52" href="$classSmalltalk_1_1DIV.html" title="/ first p.543 " alt="" coords="545,1069,648,1096"/>
+<area shape="rect" id="node53" href="$classSmalltalk_1_1PUSH__1.html" title="PUSH first instance variable p.543 " alt="" coords="531,1120,663,1147"/>
+<area shape="rect" id="node54" href="$classSmalltalk_1_1PUSH__2.html" title="PUSH second instance variable p.543 " alt="" coords="531,1171,663,1197"/>
+<area shape="rect" id="node55" href="$classSmalltalk_1_1PUSH__i2.html" title="PUSH SmallInteger(2) p.543. " alt="" coords="529,1221,664,1248"/>
+<area shape="rect" id="node56" href="$classSmalltalk_1_1RET.html" title="return result p.543 " alt="" coords="543,1272,650,1299"/>
 </map>

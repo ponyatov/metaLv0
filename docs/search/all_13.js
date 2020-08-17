@@ -75,7 +75,7 @@ var searchData=
   ['testprimitive',['TestPrimitive',['../classtest__metaL_1_1TestPrimitive.html',1,'test_metaL']]],
   ['title',['Title',['../classmetaL_1_1Title.html',1,'metaL.Title'],['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()'],['../group__dja.html#ga718ab616de94c084fcb02c692fe93cf3',1,'dja.TITLE()'],['../group__demos.html#ga76d04d1fd87b66e20f7d2ce5343711fe',1,'demos.TITLE()'],['../group__rdbms.html#ga016095c78837f105358ee1aca806994b',1,'rdbms.TITLE()'],['../group__webook.html#ga0340114ab0d6f3d517146f11bee24c43',1,'webook.TITLE()']]],
   ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]],
-  ['tutorial',['Tutorial',['../tutorial.html',1,'']]],
+  ['tutorial',['Tutorial',['../group__tutorial.html',1,'(Global Namespace)'],['../tutorial.html',1,'(Global Namespace)']]],
   ['tutorial_2emd',['tutorial.md',['../tutorial_8md.html',1,'']]],
   ['tutru_2emd',['tutru.md',['../tutru_8md.html',1,'']]],
   ['typemagic_2emd',['TypeMagic.md',['../TypeMagic_8md.html',1,'']]]

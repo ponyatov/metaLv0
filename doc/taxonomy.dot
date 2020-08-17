@@ -13,5 +13,19 @@ digraph {
     Object -> Meta -> Module
     Meta -> Class
     Meta -> Method
+    Meta -> Section
     Fn -> Method
+    Object -> IO -> File
+    IO -> Dir
+    IO -> Net
+    Net -> Ip
+    Net -> Port
+    Net -> Email
+    Net -> Url
+    Net -> User
+    Net -> Pswd
+    Object -> Doc
+    Doc -> Title
+    Doc -> Author
+    Doc -> License
 }

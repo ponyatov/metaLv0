@@ -2,7 +2,7 @@ var searchData=
 [
   ['about',['ABOUT',['../group__info.html#ga7d61fc0aed15ba9c1fd968186a0e5342',1,'metaL.ABOUT()'],['../group__dja.html#ga34aef3713ca334573ea8862b71f417fe',1,'dja.ABOUT()'],['../group__demos.html#gac0f80c733b2e9d8bb25e1c109560ef79',1,'demos.ABOUT()'],['../group__rdbms.html#ga4d797fa359ce97cf088aeaa30e14763c',1,'rdbms.ABOUT()'],['../group__webook.html#gadde5e50b08db0ff26031b7cba5e1f0fc',1,'webook.ABOUT()']]],
   ['active',['Active',['../classmetaL_1_1Active.html',1,'metaL.Active'],['../group__active.html',1,'(Global Namespace)']]],
-  ['add',['add',['../classmetaL_1_1Number.html#a3b442e40f444cdab530a5bc2a120043a',1,'metaL::Number']]],
+  ['add',['ADD',['../classSmalltalk_1_1ADD.html',1,'Smalltalk.ADD'],['../classmetaL_1_1Number.html#a3b442e40f444cdab530a5bc2a120043a',1,'metaL.Number.add()']]],
   ['allocator_2emd',['allocator.md',['../allocator_8md.html',1,'']]],
   ['anymodule',['anyModule',['../classmetaL_1_1anyModule.html',1,'metaL']]],
   ['apply',['apply',['../classmetaL_1_1Object.html#af09fe92014b47127c67bdc8091228688',1,'metaL::Object']]],
