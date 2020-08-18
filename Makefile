@@ -110,12 +110,14 @@ MERGE += webook webook.py
 MERGE += rdbms rdbms.py
 
 master:
+	rm -rf docs
 	git checkout $@
 	git pull -v
 	git checkout shadow -- $(MERGE)
 	$(MAKE) doxy
 
 shadow:
+	rm -rf docs
 	git checkout docs
 	git checkout $@
 	git pull -v

@@ -65,7 +65,420 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a href="https://papl.cs.brown.edu/2020/">https://papl.cs.brown.edu/2020/</a></p>
-<p>Книга отличается от PLAI использованием хост-языка <code>Pyret</code>, который по своей модели языка достаточно близок к Python. Начинать предпочтительнее с этой книги, так как она проще чем <a href="md_doc_ru_SICP.html">SICP</a>. </p>
+<p>(c) Shriram Krishnamurthi, Benjamin S. Lerner, Joe Gibbs Politz, Kathi Fisler</p>
+<p>Книга отличается от PLAI использованием хост-языка <code>Pyret</code>, который по своей модели языка достаточно близок к Python. Начинать предпочтительнее с этой книги, так как она проще чем <a href="md_doc_ru_SICP.html">SICP</a>.</p>
+<p>Этот текст не перевод, а скорее конспект &ndash; будет переведена только очень небольшая часть текста, которая интересна с точки зрения адаптации к <code><a class="el" href="namespacemetaL.html">metaL</a></code>. Читать с листа не очень интересно, так как быстро забывается, конспектирование с переводом дает лучшее погружение в материал. Возможно вы тоже найдете что-то интересное для себя, и откроете оригинал чтобы прочитать что там реально написано. Позднее, и только при условии что <code><a class="el" href="namespacemetaL.html">metaL</a></code> каким-то чудом взлетит дальше моих экспериментов, этот текст возможно будет использован для написания собственного варианта учебника по языку, но шансы на это стремяться к минус нулю.</p>
+<h1>1 Введение</h1>
+<h2>1.1 Наша философия</h2>
+<p>Многие предпочли бы видеть здесь две книги, а не одну. Первая книга это введение в программирование, обучающее вас основным концепциям организации данных и программ, которые с ними работают, и заканчивающееся рассмотрением полезных универсальных алгоритмов. Другая книга представляет собой введение в языки программирования: изучение, начиная верхнего уровня, средств с помощью которых мы структурируем эти данные и программы.</p>
+<p>Очевидно, что это не две отдельные темы. Мы изучаем программирование на одном или нескольких языках, и программы, которые мы пишем, становятся естественными предметами изучения для понимания языков в целом. Тем не менее, эти темы считаются достаточно разными, поэтому к ним подходят отдельно. Мы рассматриваем их таким же образом.</p>
+<p>Единственным великим исключением из такого разделения является лучшая из когда-либо написанных книг по информатике «Структура и интерпретация компьютерных программ». Мы пришли к выводу, что это разделение не имеет смысла и не помогает. Темы глубоко переплетены, и если специально допустить их чередование, то, вероятно, получится гораздо лучшая книга. Это мой эксперимент с таким форматом. (c) Shriram Krishnamurthi, Benjamin S. Lerner, Joe Gibbs Politz, Kathi Fisler</p>
+<h2>1.2 Предсказуемость как тема</h2>
+<p>Есть много способов организовать изучение языков и приёмов программирования. Моя центральная тема &ndash; концепция предсказуемости.</p>
+<p>Программы обычно статичны: они записаны на неком эквиваленте листа бумаги, неподвижны и неизменны. Но когда мы запускаем программу, она создает сложное, динамичное поведение, приносящее пользу, удовольствие и (иногда) разочарование. Каждый, кто пишет программы, в конечном итоге заботится &ndash; осознают он это или нет &ndash; о необходимости предсказуемого поведения, легко видимого из записи программы. Иногда мы даже пишем специальные программы, которые помогают нам с этой задачей (как мы увидим позже).</p>
+<p>Предсказуемость имеет плохую репутацию. Под видом научной темы «рассуждений о поведении программ» это стало рассматриваться одновременно как благородное и невероятно скучное дело. Это, безусловно, уважаемо, но мы надеемся представить эти методы так, чтобы они казались совершенно естественными, действительно совершенно очевидными (потому что мы считаем, что это так). Надеюсь, вы вынесете из этого учебного курса спокойную уверенность в том, что предсказуемость занимает центральное место и в вашей собственной работе, и как метрика для проектирования языков программирования.</p>
+<h2>1.3 Структура книги</h2>
+<p>В отличие от некоторых других учебников, этот не следует повествованию сверху вниз. Скорее, это поток обсуждения с возвратами. Мы часто будем создавать программы пошагово, как это сделала бы пара программистов. Мы будем специально делать ошибки не потому, что не знаем как правильно, а потому, что для вас это лучший способ учиться. Включение ошибок делает невозможным пассивное чтение: вместо этого вы должны взаимодействовать с материалом, потому что вы никогда не можете быть уверены в правдивости того, что читаете.</p>
+<p>В конце вы всегда получите правильный ответ. Однако этот нелинейный путь в краткосрочной перспективе вызывает большее разочарование (у вас часто возникает соблазн сказать: «Просто скажите мне уже ответ!»), и он делает книгу плохим справочником (вы не можете открыть книгу на случайной странице и быть уверены, что там написано правильно). Однако это чувство разочарования &ndash; это ощущение реального обучения. Мы не знаем способа обойти это.</p>
+<p>В разные моменты вы столкнетесь с этим: </p><div class="fragment"><div class="line">Упражнение:</div><div class="line">Это упражнение. Попробуйте сделать это.</div></div><!-- fragment --><p>Это традиционное упражнение из учебника. Это то, что вам нужно делать самостоятельно. Если вы используете эту книгу как часть учебного курса, скорее всего это будет задано как домашнее задание. Напротив, вы также найдете вопросы, похожие на упражнения, которые выглядят следующим образом: </p><div class="fragment"><div class="line">Делай сейчас!</div><div class="line">Здесь нужна ваша активность! Вы видите это?</div></div><!-- fragment --><p>Когда вы доберетесь до одного из них, <b>остановитесь</b>. Прочтите, подумайте и сформулируйте ответ, прежде чем продолжить. Вы должны сделать это, потому что на самом деле это упражнение, но ответ уже есть в книге &ndash; чаще всего в тексте, который следует сразу же (то есть в той же части, которую вы сейчас читаете) &ndash; или это то, что вы можете увидеть после запуска программы. Если вы просто продолжите читать, вы увидите ответ, даже не задумываясь (или не увидев его вообще, если инструкции предназначены для запуска программы), поэтому вы не сможете ни (а) проверить свои знания, ни (б) улучшить свою интуицию. Другими словами, это дополнительные, явные попытки поощрения активного обучения. Однако в конечном итоге мы можем только предложить эти упражнения; вам решать, будете ли вы их практиковать.</p>
+<h2>1.4 Язык использованный в книге</h2>
+<p>В этой книге используется новый язык программирования <code>Pyret</code>. Pyret &ndash; это результат нашего глубокого опыта программирования и проектирования функциональных, объектно-ориентированных и скриптовых языков, а также их систем типов, анализа программ, и сред разработки.</p>
+<p>Синтаксис языка основан на Python. В отличие от Python, <code>Pyret</code> будет требовать правильные отступы, а не интерпретировать их: то есть отступ просто станет еще одним критерием проверки синтаксиса. Но это еще не реализовано.</p>
+<p>Pyret заполняет нишу, отсутствующую в образовании по информатике, &ndash; простого языка, который избавляет от странных заморочек Python (которых много), добавляя важные функции, которых в Python не хватает для обучения программированию (например, алгебраические типы данных, дополнительные аннотации к переменным, дизайн языка который позволяют создавать более удобные среды разработки, и сильная поддержка тестирования). Начинающие программисты могут не напрягаться в получении знаний, о которых они беспокоятся, в то время как программисты, которые в прошлом были знакомы с языковым зверинцем, от змей до дромадеров, должны найти <code>Pyret</code> знакомым и удобным.</p>
+<h1>2 Благодарности</h1>
+<h1>3 Начала</h1>
+<h2>3.1 Мотивирующий пример: флаги</h2>
+<h2>3.2 Числа</h2>
+<h2>3.3 Выражения</h2>
+<h2>3.4 Терминология</h2>
+<h2>3.5 Строки</h2>
+<h2>3.6 Изображения</h2>
+<h3>3.6.1 Комбинация изображений</h3>
+<h3>3.6.2 Делаем флаг</h3>
+<h2>3.7 Шаг назад: типы, ошибки и документация</h2>
+<h3>3.7.1 Типы и контракты</h3>
+<h3>3.7.2 Ошибки формата и записи</h3>
+<h3>3.7.3 Поиск других функций: документация</h3>
+<h1>4 Naming Values</h1>
+<h2>4.1 The Definitions Window</h2>
+<h2>4.2 Naming Values</h2>
+<h3>4.2.1 Names Versus Strings</h3>
+<h3>4.2.2 Expressions versus Statements</h3>
+<h2>4.3 Using Names to Streamline Building Images</h2>
+<h1>5 From Repeated Expressions to Functions</h1>
+<h2>5.1 Example: Similar Flags</h2>
+<h2>5.2 Defining Functions</h2>
+<h3>5.2.1 How Functions Evaluate</h3>
+<h3>5.2.2 Type Annotations</h3>
+<h3>5.2.3 Documentation</h3>
+<h2>5.3 Functions Practice: Moon Weight</h2>
+<h2>5.4 Documenting Functions with Examples</h2>
+<h2>5.5 Functions Practice: Cost of pens</h2>
+<h1>6 Conditionals and Booleans</h1>
+<h2>6.1 Motivating Example: Shipping Costs</h2>
+<h2>6.2 Conditionals: Computations with Decisions</h2>
+<h2>6.3 Booleans</h2>
+<h3>6.3.1 Other Boolean Operations</h3>
+<h3>6.3.2 Combining Booleans</h3>
+<h2>6.4 Asking Multiple Questions</h2>
+<h2>6.5 Evaluating by Reducing Expressions</h2>
+<h2>6.6 Wrapping up: Composing Functions</h2>
+<h1>7 Introduction to Tabular Data</h1>
+<h2>7.1 Creating Tabular Data</h2>
+<h2>7.2 Processing Rows</h2>
+<h3>7.2.1 Keeping</h3>
+<h3>7.2.2 Ordering</h3>
+<h3>7.2.3 Combining Keeping and Ordering</h3>
+<h3>7.2.4 Extending</h3>
+<h3>7.2.5 Transforming, Cleansing, and Normalizing</h3>
+<h3>7.2.6 Selecting</h3>
+<h3>7.2.7 Summary of Row-Wise Table Operations</h3>
+<h1>8 From Tables to Lists</h1>
+<h2>8.1 Basic Statistical Questions</h2>
+<h2>8.2 Extracting a Column from a Table</h2>
+<h2>8.3 Understanding Lists</h2>
+<h3>8.3.1 Lists as Anonymous Data</h3>
+<h3>8.3.2 Creating Literal Lists</h3>
+<h2>8.4 Operating on Lists</h2>
+<h3>8.4.1 Built-In Operations on Lists</h3>
+<h3>8.4.2 Combining Lists and Tables</h3>
+<h1>9 Processing Lists</h1>
+<h2>9.1 Making Lists and Taking Them Apart</h2>
+<h2>9.2 Some Example Exercises</h2>
+<h2>9.3 Structural Problems with Scalar Answers</h2>
+<h3>9.3.1 my-len: Examples</h3>
+<h3>9.3.2 my-sum: Examples</h3>
+<h3>9.3.3 From Examples to Code</h3>
+<h2>9.4 Structural Problems with List Answers</h2>
+<h3>9.4.1 my-str-len: Examples and Code</h3>
+<h3>9.4.2 my-pos-nums: Examples and Code</h3>
+<h3>9.4.3 my-alternating: First Attempt</h3>
+<h3>9.4.4 my-running-sum: First Attempt</h3>
+<h2>9.5 Structural Problems with Sub-Domains</h2>
+<h3>9.5.1 my-max: Examples</h3>
+<h3>9.5.2 my-max: From Examples to Code</h3>
+<h3>9.5.3 my-alternating: Examples and Code</h3>
+<h2>9.6 More Structural Problems with Scalar Answers</h2>
+<h3>9.6.1 my-avg: Examples</h3>
+<h2>9.7 Structural Problems with Accumulators</h2>
+<h3>9.7.1 my-running-sum: Examples and Code</h3>
+<h3>9.7.2 my-alternating: Examples and Code</h3>
+<h2>9.8 Dealing with Multiple Answers</h2>
+<h3>9.8.1 uniq: Problem Setup</h3>
+<h3>9.8.2 uniq: Examples</h3>
+<h3>9.8.3 uniq: Code</h3>
+<h3>9.8.4 uniq: Reducing Computation</h3>
+<h3>9.8.5 uniq: Example and Code Variations</h3>
+<h3>9.8.6 uniq: Why Produce a List?</h3>
+<h2>9.9 Monomorphic Lists and Polymorphic Types</h2>
+<h1>10 Introduction to Structured Data</h1>
+<h2>10.1 Understanding the Kinds of Compound Data</h2>
+<h3>10.1.1 A First Peek at Structured Data</h3>
+<h3>10.1.2 A First Peek at Conditional Data</h3>
+<h2>10.2 Defining and Creating Structured and Conditional Data</h2>
+<h3>10.2.1 Defining and Creating Structured Data</h3>
+<h3>10.2.2 Annotations for Structured Data</h3>
+<h3>10.2.3 Defining and Creating Conditional Data</h3>
+<h2>10.3 Programming with Structured and Conditional Data</h2>
+<h3>10.3.1 Extracting Fields from Structured Data</h3>
+<h3>10.3.2 Telling Apart Variants of Conditional Data</h3>
+<h3>10.3.3 Processing Fields of Variants</h3>
+<h1>11 Collections of Structured Data</h1>
+<h2>11.1 Lists as Collective Data</h2>
+<h2>11.2 Sets as Collective Data</h2>
+<h3>11.2.1 Picking Elements from Sets</h3>
+<h3>11.2.2 Computing with Sets</h3>
+<h2>11.3 Combining Structured and Collective Data</h2>
+<h1>12 Recursive Data</h1>
+<h1>13 Interactive Games as Reactive Systems</h1>
+<h2>13.1 About Reactive Animations</h2>
+<h2>13.2 Preliminaries</h2>
+<h2>13.3 Version: Airplane Moving Across the Screen</h2>
+<h3>13.3.1 Updating the World State</h3>
+<h3>13.3.2 Displaying the World State</h3>
+<h3>13.3.3 Observing Time (and Combining the Pieces)</h3>
+<h2>13.4 Version: Wrapping Around</h2>
+<h2>13.5 Version: Descending</h2>
+<h3>13.5.1 Moving the Airplane</h3>
+<h3>13.5.2 Drawing the Scene</h3>
+<h3>13.5.3 Finishing Touches</h3>
+<h2>13.6 Version: Responding to Keystrokes</h2>
+<h2>13.7 Version: Landing</h2>
+<h2>13.8 Version: A Fixed Balloon</h2>
+<h2>13.9 Version: Keep Your Eye on the Tank</h2>
+<h2>13.10 Version: The Balloon Moves, Too</h2>
+<h2>13.11 Version: One, Two, ..., Ninety-Nine Luftballons!</h2>
+<h1>14 Examples, Testing, and Program Checking</h1>
+<h2>14.1 From Examples to Tests</h2>
+<h2>14.2 More Refined Comparisons</h2>
+<h2>14.3 When Tests Fail</h2>
+<h2>14.4 Oracles for Testing</h2>
+<h2>14.5 Testing Erroneous Programs</h2>
+<h1>15 Functions as Data</h1>
+<h2>15.1 A Little Calculus</h2>
+<h2>15.2 A Helpful Shorthand for Anonymous Functions</h2>
+<h2>15.3 Streams From Functions</h2>
+<h2>15.4 Combining Forces: Streams of Derivatives</h2>
+<h1>16 Predicting Growth</h1>
+<h2>16.1 A Little (True) Story</h2>
+<h2>16.2 The Analytical Idea</h2>
+<h2>16.3 A Cost Model for Pyret Running Time</h2>
+<h2>16.4 The Size of the Input</h2>
+<h2>16.5 The Tabular Method for Singly-Structurally-Recursive Functions</h2>
+<h2>16.6 Creating Recurrences</h2>
+<h2>16.7 A Notation for Functions</h2>
+<h2>16.8 Comparing Functions</h2>
+<h2>16.9 Combining Big-Oh Without Woe</h2>
+<h2>16.10 Solving Recurrences</h2>
+<h1>17 Sets Appeal</h1>
+<h2>17.1 Representing Sets by Lists</h2>
+<h3>17.1.1 Representation Choices</h3>
+<h3>17.1.2 Time Complexity</h3>
+<h3>17.1.3 Choosing Between Representations</h3>
+<h3>17.1.4 Other Operations</h3>
+<h2>17.2 Making Sets Grow on Trees</h2>
+<h3>17.2.1 Converting Values to Ordered Values</h3>
+<h3>17.2.2 Using Binary Trees</h3>
+<h3>17.2.3 A Fine Balance: Tree Surgery</h3>
+<h4>17.2.3.1 Left-Left Case</h4>
+<h4>17.2.3.2 Left-Right Case</h4>
+<h4>17.2.3.3 Any Other Cases?</h4>
+<h1>18 Halloween Analysis</h1>
+<h2>18.1 A First Example</h2>
+<h2>18.2 The New Form of Analysis</h2>
+<h2>18.3 An Example: Queues from Lists</h2>
+<h3>18.3.1 List Representations</h3>
+<h3>18.3.2 A First Analysis</h3>
+<h3>18.3.3 More Liberal Sequences of Operations</h3>
+<h3>18.3.4 A Second Analysis</h3>
+<h3>18.3.5 Amortization Versus Individual Operations</h3>
+<h2>18.4 Reading More</h2>
+<h1>19 Sharing and Equality</h1>
+<h2>19.1 Re-Examining Equality</h2>
+<h2>19.2 The Cost of Evaluating References</h2>
+<h2>19.3 On the Internet, Nobody Knows You’re a DAG</h2>
+<h2>19.4 From Acyclicity to Cycles</h2>
+<h1>20 Graphs</h1>
+<h2>20.1 Understanding Graphs</h2>
+<h2>20.2 Representations</h2>
+<h3>20.2.1 Links by Name</h3>
+<h3>20.2.2 Links by Indices</h3>
+<h3>20.2.3 A List of Edges</h3>
+<h3>20.2.4 Abstracting Representations</h3>
+<h2>20.3 Measuring Complexity for Graphs</h2>
+<h2>20.4 Reachability</h2>
+<h3>20.4.1 Simple Recursion</h3>
+<h3>20.4.2 Cleaning up the Loop</h3>
+<h3>20.4.3 Traversal with Memory</h3>
+<h3>20.4.4 A Better Interface</h3>
+<h2>20.5 Depth- and Breadth-First Traversals</h2>
+<h2>20.6 Graphs With Weighted Edges</h2>
+<h2>20.7 Shortest (or Lightest) Paths</h2>
+<h2>20.8 Moravian Spanning Trees</h2>
+<h3>20.8.1 The Problem</h3>
+<h3>20.8.2 A Greedy Solution</h3>
+<h3>20.8.3 Another Greedy Solution</h3>
+<h3>20.8.4 A Third Solution</h3>
+<h3>20.8.5 Checking Component Connectedness</h3>
+<h1>21 State, Change, and More Equality</h1>
+<h2>21.1 A Canonical Mutable Structure</h2>
+<h2>21.2 Equality and Mutation</h2>
+<h3>21.2.1 Observing Mutation</h3>
+<h3>21.2.2 What it Means to be Identical</h3>
+<h3>21.2.3 An Additional Challenge</h3>
+<h2>21.3 Recursion and Cycles from Mutation</h2>
+<h3>21.3.1 Partial Definitions</h3>
+<h3>21.3.2 Recursive Functions</h3>
+<h3>21.3.3 Premature Evaluation</h3>
+<h3>21.3.4 Cyclic Lists Versus Streams</h3>
+<h2>21.4 From Identifiers to Variables</h2>
+<h2>21.5 Interaction of Mutation with Closures: Counters</h2>
+<h3>21.5.1 Implementation Using Boxes</h3>
+<h3>21.5.2 Implementation Using Variables</h3>
+<h2>21.6 A Family of Equality Predicates</h2>
+<h3>21.6.1 A Hierarchy of Equality</h3>
+<h3>21.6.2 Space and Time Complexity</h3>
+<h3>21.6.3 Comparing Functions</h3>
+<h1>22 Algorithms That Exploit State</h1>
+<h2>22.1 Disjoint Sets Redux</h2>
+<h3>22.1.1 Optimizations</h3>
+<h3>22.1.2 Analysis</h3>
+<h2>22.2 Set Membership by Hashing Redux</h2>
+<h3>22.2.1 Improving Access Time</h3>
+<h3>22.2.2 Better Hashing</h3>
+<h3>22.2.3 Bloom Filters</h3>
+<h2>22.3 Avoiding Recomputation by Remembering Answers</h2>
+<h3>22.3.1 An Interesting Numeric Sequence</h3>
+<h4>22.3.1.1 Using State to Remember Past Answers</h4>
+<h4>22.3.1.2 From a Tree of Computation to a DAG</h4>
+<h4>22.3.1.3 The Complexity of Numbers</h4>
+<h4>22.3.1.4 Abstracting Memoization</h4>
+<h3>22.3.2 Edit-Distance for Spelling Correction</h3>
+<h3>22.3.3 Nature as a Fat-Fingered Typist</h3>
+<h3>22.3.4 Dynamic Programming</h3>
+<h4>22.3.4.1 Catalan Numbers with Dynamic Programming</h4>
+<h4>22.3.4.2 Levenshtein Distance and Dynamic Programming</h4>
+<h3>22.3.5 Contrasting Memoization and Dynamic Programming</h3>
+<h1>23 Processing Programs: Parsing</h1>
+<h2>23.1 Understanding Languages by Writing Programs About Them</h2>
+<h2>23.2 Everything (We Will Say) About Parsing</h2>
+<h3>23.2.1 A Lightweight, Built-In First Half of a Parser</h3>
+<h3>23.2.2 Completing the Parser</h3>
+<h3>23.2.3 Coda</h3>
+<h1>24 Processing Programs: A First Look at Interpretation</h1>
+<h2>24.1 Representing Arithmetic</h2>
+<h2>24.2 Writing an Interpreter</h2>
+<h2>24.3 A First Taste of “Semantics”</h2>
+<h2>24.4 Desugaring: Growing the Language Without Enlarging It</h2>
+<h3>24.4.1 Extension: Binary Subtraction</h3>
+<h3>24.4.2 Extension: Unary Negation</h3>
+<h2>24.5 A Three-Stage Pipeline</h2>
+<h1>25 Interpreting Conditionals</h1>
+<h2>25.1 The Design Space of Conditionals</h2>
+<h2>25.2 The Game Plan for Conditionals</h2>
+<h3>25.2.1 The Interpreter’s Type</h3>
+<h3>25.2.2 Updating Arithmetic</h3>
+<h3>25.2.3 Defensive Programming</h3>
+<h3>25.2.4 Interpreting Conditionals</h3>
+<h2>25.3 Growing the Conditional Language</h2>
+<h1>26 Interpreting Functions</h1>
+<h2>26.1 Adding Functions to the Language</h2>
+<h3>26.1.1 Defining Data Representations</h3>
+<h3>26.1.2 Growing the Interpreter</h3>
+<h3>26.1.3 Substitution</h3>
+<h3>26.1.4 The Interpreter, Resumed</h3>
+<h3>26.1.5 Oh Wait, There’s More!</h3>
+<h2>26.2 From Substitution to Environments</h2>
+<h3>26.2.1 Introducing the Environment</h3>
+<h3>26.2.2 Interpreting with Environments</h3>
+<h3>26.2.3 Deferring Correctly</h3>
+<h3>26.2.4 Scope</h3>
+<h3>26.2.5 How Bad Is It?</h3>
+<h3>26.2.6 The Top-Level Scope</h3>
+<h3>26.2.7 Exposing the Environment</h3>
+<h2>26.3 Functions Anywhere</h2>
+<h3>26.3.1 Functions as Expressions and Values</h3>
+<h3>26.3.2 A Small Improvement</h3>
+<h3>26.3.3 Nesting Functions</h3>
+<h3>26.3.4 Nested Functions and Substitution</h3>
+<h3>26.3.5 Updating Values</h3>
+<h3>26.3.6 Sugaring Over Anonymity</h3>
+<h2>26.4 Recursion and Non-Termination</h2>
+<h2>26.5 Functions and Predictability</h2>
+<h1>27 Reasoning about Programs: A First Look at Types</h1>
+<h2>27.1 Types as a Static Discipline</h2>
+<h2>27.2 The Principle of Substitutability</h2>
+<h2>27.3 A Type(d) Language and Type Errors</h2>
+<h3>27.3.1 Assume-Guarantee Reasoning</h3>
+<h2>27.4 A Type Checker for Expressions and Functions</h2>
+<h3>27.4.1 A Pure Checker</h3>
+<h3>27.4.2 A Calculator and Checker</h3>
+<h3>27.4.3 Type-Checking Versus Interpretation</h3>
+<h2>27.5 Type-Checking, Testing, and Coverage</h2>
+<h2>27.6 Recursion in Code</h2>
+<h3>27.6.1 A First Attempt at Typing Recursion</h3>
+<h3>27.6.2 Program Termination</h3>
+<h3>27.6.3 Typing Recursion</h3>
+<h2>27.7 Recursion in Data</h2>
+<h3>27.7.1 Recursive Datatype Definitions</h3>
+<h3>27.7.2 Introduced Types</h3>
+<h3>27.7.3 Selectors</h3>
+<h3>27.7.4 Pattern-Matching and Desugaring</h3>
+<h1>28 Safety and Soundness</h1>
+<h2>28.1 Safety</h2>
+<h2>28.2 “Untyped” Languages</h2>
+<h2>28.3 The Central Theorem: Type Soundness</h2>
+<h2>28.4 Types, Time, and Space</h2>
+<h2>28.5 Types Versus Safety</h2>
+<h1>29 Parametric Polymorphism</h1>
+<h2>29.1 Parameterized Types</h2>
+<h2>29.2 Making Parameters Explicit</h2>
+<h2>29.3 Rank-1 Polymorphism</h2>
+<h2>29.4 Interpreting Rank-1 Polymorphism as Desugaring</h2>
+<h2>29.5 Alternate Implementations</h2>
+<h2>29.6 Relational Parametricity</h2>
+<h1>30 Type Inference</h1>
+<h2>30.1 Type Inference as Type Annotation Insertion</h2>
+<h2>30.2 Understanding Inference</h2>
+<h3>30.2.1 Constraint Generation</h3>
+<h3>30.2.2 Constraint Solving Using Unification</h3>
+<h2>30.3 Type Checking and Type Errors</h2>
+<h2>30.4 Over- and Under-Constrained Solutions</h2>
+<h2>30.5 Let-Polymorphism</h2>
+<h1>31 Mutation: Structures and Variables</h1>
+<h2>31.1 Separating Meaning from Notation</h2>
+<h2>31.2 Mutation and Closures</h2>
+<h2>31.3 Mutable Structures</h2>
+<h3>31.3.1 Extending the Language Representation</h3>
+<h3>31.3.2 The Interpretation of Boxes</h3>
+<h3>31.3.3 Can the Environment Help?</h3>
+<h3>31.3.4 Welcome to the Store</h3>
+<h3>31.3.5 Interpreting Boxes</h3>
+<h3>31.3.6 Implementing Mutation: Subtleties and Variations</h3>
+<h2>31.4 Variables</h2>
+<h3>31.4.1 The Syntax of Variable Assignment</h3>
+<h3>31.4.2 Interpreting Variables</h3>
+<h3>31.4.3 Reference Parameter Passing</h3>
+<h2>31.5 The Design of Stateful Language Operations</h2>
+<h2>31.6 Typing State</h2>
+<h3>31.6.1 Mutation and Polymorphism</h3>
+<h3>31.6.2 Typing the Initial Value</h3>
+<h1>32 Objects: Interpretation and Types</h1>
+<h2>32.1 Interpreting Objects</h2>
+<h2>32.2 Objects by Desugaring</h2>
+<h3>32.2.1 Objects as Named Collections</h3>
+<h3>32.2.2 Constructors</h3>
+<h3>32.2.3 State</h3>
+<h3>32.2.4 Private Members</h3>
+<h3>32.2.5 Static Members</h3>
+<h3>32.2.6 Objects with Self-Reference</h3>
+<h4>32.2.6.1 Self-Reference Using Mutation</h4>
+<h4>32.2.6.2 Self-Reference Without Mutation</h4>
+<h3>32.2.7 Dynamic Dispatch</h3>
+<h2>32.3 Member Access Design Space</h2>
+<h2>32.4 What (Goes In) Else?</h2>
+<h3>32.4.1 Classes</h3>
+<h3>32.4.2 Prototypes</h3>
+<h3>32.4.3 Multiple Inheritance</h3>
+<h3>32.4.4 Super-Duper!</h3>
+<h3>32.4.5 Mixins and Traits</h3>
+<h2>32.5 Object Classification and Object Equality</h2>
+<h2>32.6 Types for Objects</h2>
+<h3>32.6.1 Subtyping</h3>
+<h4>32.6.1.1 Subtyping Functions</h4>
+<h4>32.6.1.2 Subtyping and Information Hiding</h4>
+<h4>32.6.1.3 Implementing Subtyping</h4>
+<h3>32.6.2 Types for Self-Reference</h3>
+<h3>32.6.3 Nominal Types</h3>
+<h1>33 Control Operations</h1>
+<h2>33.1 Control on the Web</h2>
+<h3>33.1.1 Program Decomposition into Now and Later</h3>
+<h3>33.1.2 A Partial Solution</h3>
+<h3>33.1.3 Achieving Statelessness</h3>
+<h3>33.1.4 Interaction with State</h3>
+<h2>33.2 Conversion to Continuation-Passing Style</h2>
+<h3>33.2.1 Implementation by Desugaring</h3>
+<h3>33.2.2 Understanding the Output</h3>
+<h3>33.2.3 An Interaction Primitive by Transformation</h3>
+<h2>33.3 Implementation in the Core</h2>
+<h3>33.3.1 Converting the Interpreter</h3>
+<h3>33.3.2 An Interaction Primitive in the Core</h3>
+<h2>33.4 Generators</h2>
+<h2>33.5 Continuations and Stacks</h2>
+<h2>33.6 Tail Calls</h2>
+<h1>34 Pyret for Racketeers and Schemers</h1>
+<h2>34.1 Numbers, Strings, and Booleans</h2>
+<h2>34.2 Infix Expressions</h2>
+<h2>34.3 Function Definition and Application</h2>
+<h2>34.4 Tests</h2>
+<h2>34.5 Variable Names</h2>
+<h2>34.6 Data Definitions</h2>
+<h2>34.7 Conditionals</h2>
+<h2>34.8 Lists</h2>
+<h2>34.9 First-Class Functions</h2>
+<h2>34.10 Annotations</h2>
+<h2>34.11 What Else?</h2>
+<h1>35 Glossary</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
