@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['objdump',['objdump',['../group__demos.html#gafd9c464434014164c6345b237d7d23b7',1,'demos']]],
-  ['opcode',['opcode',['../classSmalltalk_1_1RET.html#a19c772439c742a6bb6c95748ec9a0283',1,'Smalltalk::RET']]]
+  ['parser',['parser',['../group__parser.html#gaff73940099573f5b838a1c71331ad4f9',1,'metaL']]],
+  ['precedence',['precedence',['../group__parser.html#gadfff79106ef6047a82ed5d9e6849c2f7',1,'metaL']]],
+  ['py',['py',['../group__rdbms.html#gaeae96604727cecdb260334fb6fbbd04e',1,'rdbms']]]
 ];

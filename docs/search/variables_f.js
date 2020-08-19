@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['parser',['parser',['../group__parser.html#gaff73940099573f5b838a1c71331ad4f9',1,'metaL']]],
-  ['precedence',['precedence',['../group__parser.html#gadfff79106ef6047a82ed5d9e6849c2f7',1,'metaL']]],
-  ['py',['py',['../group__dja.html#ga4031cd88f87e316dcb68d777e9b9a4c0',1,'dja.py()'],['../group__rdbms.html#gaeae96604727cecdb260334fb6fbbd04e',1,'rdbms.py()']]]
+  ['readme',['readme',['../group__demos.html#gaa6bcb7efcf987e75c578eb6009f6b49d',1,'demos.readme()'],['../group__rdbms.html#gae513c3d331b20ce610a1568e382f1f34',1,'rdbms.readme()'],['../group__webook.html#gabc30f5c9ce669a580df92ff5aa72b86f',1,'webook.readme()']]],
+  ['reqs',['reqs',['../classmetaL_1_1pyModule.html#a18c314629fff8cfe2bed16f430255235',1,'metaL::pyModule']]]
 ];

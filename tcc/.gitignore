@@ -1,0 +1,13 @@
+# \ <section:head>
+*~
+*.swp
+
+*.log
+# / <section:head>
+# \ <section:body>
+tcc
+tcc.exe
+*.o
+# / <section:body>
+# \ <section:tail>
+# / <section:tail>

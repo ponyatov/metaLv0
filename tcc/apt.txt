@@ -1,0 +1,9 @@
+# \ <section:head>
+# / <section:head>
+# \ <section:body>
+# / <section:body>
+git make
+binutils tcc
+libc6-dev
+# \ <section:tail>
+# / <section:tail>

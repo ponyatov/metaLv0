@@ -103,6 +103,7 @@ MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
 MERGE += requirements.txt pyproject.toml .replit doc
 MERGE += $(MODULE) metacircular.py
+MERGE += tcc tcc.py
 MERGE += Smalltalk.py
 MERGE += dja dja.py
 MERGE += demos demos.py

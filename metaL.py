@@ -82,7 +82,7 @@ class Object:
         js += '"slot":{%s},' % ','.join(slots)
         nested = []
         for i in self.nest:
-            nest.append('"%.8x"' % i.gid)
+            nested.append('"%.8x"' % i.gid)
         js += '"nest":[%s]' % ','.join(nested)
         return js + "}"
 
@@ -384,6 +384,7 @@ class Active(Object):
 class Fn(Active):
     def eval(self, ctx): return self
 
+
 ## @ingroup active
 ## operator
 class Op(Active):
@@ -453,7 +454,7 @@ class Class(Meta):
 
 ## @ingroup meta
 class Module(Meta):
-    pass
+    def file(self): return self.head()
 
 
 vm['module'] = Class(Module)
@@ -464,13 +465,14 @@ class Section(Meta):
         self.comment = comment
         Meta.__init__(self, V)
 
-    def file(self, comment=None):
-        if comment:
-            self.comment = comment
-        ret = '%s \\ %s\n' % (self.comment, self.head(test=True))
+    def file(self):
+        ret = ''
+        if self.comment:
+            ret += '\n%s \\ %s' % (self.comment, self.head(test=True))
         for i in self.nest:
-            ret += i.file() + '\n'
-        ret += '%s / %s' % (self.comment, self.head(test=True))
+            ret += '\n%s' % i.file()
+        if self.comment:
+            ret += '\n%s / %s' % (self.comment, self.head(test=True))
         return ret
 
     def py(self): return self.file()
@@ -512,28 +514,18 @@ class File(IO):
         self.fh = None
         self.comment = comment
         IO.__init__(self, V)
-        self['head'] = Section('')
-        self['tail'] = Section('')
+        self.top = self['top'] = Section('top', comment)
+        self.mid = self['mid'] = Section('mid', comment)
+        self.bot = self['bot'] = Section('bot', comment)
 
     def sync(self):
         if self.fh:
             self.fh.seek(0)
-            # head
-            try:
-                for i in self['head']:
-                    self.fh.write(i.file() + '\n')
-            except KeyError:
-                pass
-            # body
+            self.fh.write(self.top.file())
+            self.fh.write(self.mid.file())
             for j in self.nest:
                 self.fh.write(j.file() + '\n')
-            # tail
-            try:
-                for k in self['tail']:
-                    self.fh.write(k.file() + '\n')
-            except KeyError:
-                pass
-            # commit
+            self.fh.write(self.bot.file())
             self.fh.flush()
         return IO.sync(self)
 
@@ -617,14 +609,6 @@ vm['LOGO'] = LOGO = File(LOGO)
 ## @defgroup gen CodeGen
 ## @brief Code generators
 
-## @ingroup gen
-class gitIgnore(File):
-    def __init__(self, V='.gitignore'):
-        File.__init__(self, V)
-        self // '*~\n*.swp'
-        self // ''
-        self // '*.log\n*.exe\n*.o'
-
 ## @defgroup prj Project
 ## @ingroup gen
 ## @brief generic software project components
@@ -632,7 +616,7 @@ class gitIgnore(File):
 ## @ingroup prj
 class README(File):
     def __init__(self, module):
-        File.__init__(self, 'README.md')
+        File.__init__(self, 'README.md', comment=None)
         self.module = module
         self // ('#  `%s`' % module.val)
         self // ('## %s' % module['title'].val)
@@ -651,46 +635,56 @@ class README(File):
 class Makefile(File):
     def __init__(self, V='Makefile'):
         File.__init__(self, V, comment='#')
-        h = Section('head') // ''
-        h // 'CWD     = $(CURDIR)'
-        h // 'MODULE  = $(notdir $(CWD))'
-        h // 'OS     ?= $(shell uname -s)'
-        h // ''
-        h // 'NOW = $(shell date +%d%m%y)'
-        h // 'REL = $(shell git rev-parse --short=4 HEAD)'
-        h // ''
-        self >> h
-        t = Section('tail') // ''
-        install = Section('install') // ''
-        t // install
-        install // '.PHONY: install'
-        install // 'install:\n\t$(MAKE) $(OS)_install'
-        t >> install
-        update = Section('update') // ''
-        t // update
-        update // '.PHONY: update'
-        update // 'update:\n\t$(MAKE) $(OS)_update'
-        t >> update
-        t // '' // 'WGET = wget -c --no-check-certificate'
-        t // '\n.PHONY: Linux_install Linux_update'
-        t // '\nLinux_install Linux_update:'
-        t // '\tsudo apt update'
-        t // '\tsudo apt install -u `cat apt.txt`\n'
-        self >> t
+        vars = Section('vars')
+        self.top // vars
+        vars // 'CWD     = $(CURDIR)'
+        vars // 'MODULE  = $(notdir $(CWD))'
+        vars // 'OS     ?= $(shell uname -s)'
+        self.top // (Section('git') // 'NOW = $(shell date +%d%m%y)' //
+                     'REL = $(shell git rev-parse --short=4 HEAD)')
+        self.install = self['install'] = Section('install')
+        self.update = self['update'] = Section('update')
+        self.bot // 'WGET = wget -c --no-check-certificate'
+        self.bot // self.install
+        self.bot // self.update
+        self.install // '.PHONY: install'
+        self.install // 'install:\n\t$(MAKE) $(OS)_install'
+        self.update // '.PHONY: update'
+        self.update // 'update:\n\t$(MAKE) $(OS)_update'
+        self.bot // '.PHONY: Linux_install Linux_update'
+        self.bot // 'Linux_install Linux_update:'
+        self.bot // '\tsudo apt update'
+        self.bot // '\tsudo apt install -u `cat apt.txt`\n'
 
-    def sync(self):
-        if self.fh:
-            self.fh.seek(0)
-            self.fh.write(self['head'].file(self.comment) + '\n')
-            for i in self.nest:
-                self.fh.write(i.file() + '\n')
-            self.fh.write(self['tail'].file(self.comment) + '\n')
-            self.fh.flush()
-        return IO.sync(self)
+## @ingroup prj
+## system setting
+class Setting(Meta):
+    def __init__(self, key, val):
+        Meta.__init__(self, key)
+        self.key = key
+        self // val
+
+## @ingroup prj
+## VSCode multicommand
+class multiCommand(Setting):
+    def __init__(self, key, val):
+        Setting.__init__(self, key, val)
+
+    def file(self):
+        ret = '\t{'
+        ret += '"command":"multiCommand.%s",' % self.key
+        ret += '"sequence":['
+        ret += '\n\t\t"workbench.action.files.saveAll",'
+        ret += '\n\t\t{"command": "workbench.action.terminal.sendSequence",'
+        ret += '\n\t\t "args": {"text": "\\u000D%s\\u000D"}}' % self.nest[0].val
+        ret += '\n\t],},'
+        return ret
 
 ## @ingroup prj
 class anyModule(Module):
-    def __init__(self, V):
+    def __init__(self, V=None):
+        if not V:
+            V = __import__('sys').argv[0].split('.')[0]
         Module.__init__(self, V)
         self << vm['AUTHOR']
         self << vm['EMAIL']
@@ -700,196 +694,153 @@ class anyModule(Module):
         # diroot
         self.diroot = Dir(V)
         self << self.diroot
-        # apt
-        self.apt = File('apt.txt')
-        self.diroot['apt'] = self.apt
-        self.diroot // self.apt
-        self.apt // 'git make'
-        self.apt.sync()
         # mk
         self.mk = Makefile()
         self.diroot['mk'] = self.mk
         self.diroot // self.mk
         self.mk.sync()
+        # apt
+        self.apt = File('apt.txt', comment=None)
+        self.diroot['apt'] = self.apt
+        self.diroot // self.apt
+        self.apt // 'git make'
+        self.apt.sync()
         # gitignore
         self.gitignore = File('.gitignore')
         self.diroot['gitignore'] = self.gitignore
         self.diroot // self.gitignore
-        self.gitignore // '*~\n*.swp\n\n*.log\n*.exe\n*.o'
+        self.gitignore.top // '*~' // '*.swp' // ''
+        self.gitignore.top // '*.log'
+        # \n*.log\n*.exe\n*.o\n'
+        # self.gitignore // './%s\n./%s.exe\n' % (self.val, self.val)
         self.gitignore.sync()
         # vscode
         self.vscode = Dir('.vscode')
         self.diroot // self.vscode
         self.vscode.sync()
-        self['vscode/settings'] = File('settings.json')
-        self.settings = self['vscode/settings']
+        self.settings = File('settings.json', comment='//')
         self.vscode // self.settings
-        self.settings['head'] // '{'
-        self.settings['tail'] // '}'
-        self.settings // '''\n    "multiCommand.commands": [
-        {
-            // configure recommendation: bind F12 key on this command for handy projects rebuild/run
-            "command": "multiCommand.f12",
-            "sequence": [
-                "workbench.action.files.saveAll",
-                // "workbench.action.terminal.focus",
-                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\\u000Dexit()\\u000D"}}
-            ],
-        },'''
-        self.settings // '''
-        {
-            // configure recommendation: bind F11 key on this command for doxygen run
-            "command": "multiCommand.f11",
-            "sequence": [
-                "workbench.action.files.saveAll",
-                // "workbench.action.terminal.focus",
-                {"command": "workbench.action.terminal.sendSequence","args": {"text": "\\u000Dclear ; make repl\\u000D"}}
-            ],
-        },\n    ],'''
-        self.settings // '\n    // ignore large files for VSCode sync'
-        self.settings // '    "files.watcherExclude": {'
-        self.watcher = Section('watcher', comment='//')
-        self.watcher // (' ' * 8 + '// "**/buildroot-*/**": true,')
-        self.watcher // (' ' * 8 + '// "**/firmware/**": true,')
-        self.settings // self.watcher
-        self.settings // '    },'
-        self.settings // ''
-        self.exclude = Section('exclude', comment='//')
-        self.settings // '    "files.exclude": {'
-        self.settings // self.exclude
-        self.settings // '    },'
-        self.settings // ''
-        self.settings // '    "editor.tabSize": 4,'
-        self.settings // ''
-        self.settings // '    "files.associations": {'
-        self['vscode/assoc'] = Section('associations', comment='//')
-        self.assoc = self['vscode/assoc']
-        self.settings // self.assoc
-        self.settings // '    },'
+        self.settings.top // '{'
+        self.settings.bot // '\t"editor.tabSize": 4,'
+        self.settings.bot // '}'
+        self.settings.multiCommand = Section('multiCommand', comment='//')
+        self.settings.multiCommand // '"multiCommand.commands": ['
+        self.settings.f11 = multiCommand('f11', 'make test')
+        self.settings.f12 = multiCommand('f12', 'make all')
+        self.settings.multiCommand // self.settings.f11 // self.settings.f12
+        self.settings.multiCommand // '],'
+        self.settings.mid // self.settings.multiCommand
+        self.settings.watcher = Section('watcher', comment='//')
+        self.settings.mid // '"files.watcherExclude": {'
+        self.settings.mid // self.settings.watcher
+        self.settings.mid // '},'
+        self.settings.exclude = Section('exclude', comment='//')
+        self.settings.mid // '"files.exclude": {'
+        self.settings.mid // self.settings.exclude
+        self.settings.mid // '},'
+        self.settings.assoc = Section('associations', comment='//')
+        self.settings.mid // '"files.associations": {'
+        self.settings.mid // self.settings.assoc
+        self.settings.mid // '},'
         self.settings.sync()
 
+    def mksrc(self, file):
+        assert isinstance(file, File)
+        self.mk.src // ('SRC += %s' % file.val)
 
-## @defgroup cc C99
-## @ingroup gen
-## @brief code generation targeted for @ref tcc
-
-## @ingroup py
-class cFile(File):
-    def __init__(self, V, comment='//'):
-        File.__init__(self, V, comment)
 
 ## @defgroup py Python
 ## @ingroup gen
 
 ## @ingroup py
-class pyFile(File):
+class PY(Object):
+    pass
+
+## @ingroup py
+class pyImport(PY):
+    def file(self): return 'import %s' % self.val
+
+## @ingroup py
+class pyFn(PY):
+    def file(self):
+        res = 'def %s():' % self.val
+        for i in self.nest:
+            res += '\n    ' + i.file()
+        return res
+
+## @ingroup py
+class pyFile(PY, File):
     def __init__(self, V):
         if isinstance(V, Object):
             V = V.val
         File.__init__(self, V + '.py')
-        head = Section('')
-        self['head'] = head
-        head // '#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md'
-        head // ('## @file %s' % vm.head(test=True))
-        self['tail'] = Section('')
-
-    def sync(self):
-        if self.fh:
-            self.fh.seek(0)
-            # head
-            try:
-                for i in self['head']:
-                    self.fh.write(i.py() + '\n')
-            except KeyError:
-                pass
-            # tail
-            try:
-                for k in self['tail']:
-                    self.fh.write(k.py() + '\n')
-            except KeyError:
-                pass
-            # commit
-            self.fh.flush()
-        return IO.sync(self)
+        self.top // '#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md'
 
 ## @ingroup py
 class pyModule(anyModule):
     def __init__(self, V):
         anyModule.__init__(self, V)
+        self.settings.top // '    "python.pythonPath": "./bin/python3",'
+        self.settings.top // '    "python.formatting.provider": "autopep8",'
+        self.settings.top // '    "python.formatting.autopep8Path": "./bin/autopep8",'
+        self.settings.top // '    "python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
         # vscode/settings
-        self.settings['head'] // '    "python.pythonPath": "./bin/python3",'
-        self.settings['head'] // '    "python.formatting.provider": "autopep8",'
-        self.settings['head'] // '    "python.formatting.autopep8Path": "./bin/autopep8",'
-        self.settings['head'] // '    "python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
-        self.watcher // (' ' * 8 + '"**/bin/**": true, "**/include/**":true,')
-        self.watcher // (' ' * 8 + '"**/lib*/**":true, "**/share/**":true,')
-        self.watcher // (' ' * 8 + '"**/*.pyc": true,')
-        self.exclude // (' ' * 8 + '"bin": true, "include":true, "lib*":true,')
-        self.exclude // (' ' * 8 + '"share":true, "pyvenv.cfg":true,')
-        self.exclude // (' ' * 8 + '"**/*.pyc": true,')
-        self.assoc // (' ' * 8 +
-                       '"**/requirements{/**,*}.{txt,in}": "pip-requirements",')
+        t = '\t"**/bin/**": true, "**/include/**":true,'
+        self.settings.watcher // t
+        self.settings.exclude // t
+        t = '\t"**/lib*/**":true, "**/share/**"  :true,'
+        self.settings.watcher // t
+        self.settings.exclude // t
+        t = '\t"**/*.pyc":  true, "**/pyvenv.cfg":true,'
+        self.settings.watcher // t
+        self.settings.exclude // t
+        r = '\t"**/requirements{/**,*}.{txt,in}": "pip-requirements",'
+        self.settings.assoc // r
+        # self.assoc // (' ' * 8 +
+        #                '')
         self.settings.sync()
         # apt
         self.apt // 'python3-venv'
         self.apt.sync()
         # gitignore
-        self.gitignore // ''
-        self.gitignore // '*.pyc'
-        self.gitignore // '/bin/'
-        self.gitignore // '/include/'
-        self.gitignore // '/lib/\n/lib64'
-        self.gitignore // '/share/'
-        self.gitignore // '/pyvenv.cfg'
+        pygnore = Section('python/venv')
+        self.gitignore.mid // pygnore
+        pygnore // '*.pyc'
+        pygnore // '/bin/'
+        pygnore // '/include/'
+        pygnore // '/lib/\n/lib64'
+        pygnore // '/share/'
+        pygnore // '/pyvenv.cfg'
         self.gitignore.sync()
         # reqs
-        reqs = File('requirements.txt')
-        self.diroot['reqs'] = reqs
-        self.diroot // reqs
-        reqs // 'pip\npylint\nautopep8'
+        self.reqs = File('requirements.txt', comment=None)
+        self.diroot['reqs'] = self.reqs
+        self.diroot // self.reqs
         # reqs // 'xxhash\nply'
-        reqs.sync()
-        # mk
-        pytools = Section('python tools') // ''
-        self.mk['head'] // pytools
-        self.mk['head']['pytools'] = pytools
-        pytools // 'PIP = $(CWD)/bin/pip3'
-        pytools // 'PY  = $(CWD)/bin/python3'
-        pytools // 'PYT = $(CWD)/bin/pytest'
-        pytools // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
-        install = self.mk['tail']['install']
-        install // '\t$(MAKE) $(PIP)'
-        install // '\t$(PIP) install    -r requirements.txt'
-        update = self.mk['tail']['update']
-        update // '\t$(PIP) install -U    pip'
-        update // '\t$(PIP) install -U -r requirements.txt' // ''
-        pyinst = Section('py/install')
-        self.mk['tail'] // pyinst
-        pyinst // '$(PIP) $(PY):'
-        pyinst // '\tpython3 -m venv .'
-        pyinst // '\t$(PIP) install -U pip pylint autopep8'
-        pyinst // '$(PYT):'
-        pyinst // '\t$(PIP) install -U pytest'
-        all = Section(self) // ''
-        self.mk // all
-        self.mk['all'] = all
-        all // '.PHONY: all\nall: $(PY) $(MODULE).py'
-        all // '\t$^'
-        all // ''
-        all // 'PHONY: repl\nrepl: $(PY) $(MODULE).py metaL.py'
-        all // '\t$(PY) -i $(MODULE).py'
-        all // '\t$(MAKE) $@'
-        self.mk.sync()
+        self.reqs.sync()
+        # src
+        self.mk.src = self['src'] = Section('src')
+        self.mk.mid // self.mk.src
+        # all
+        self.mk.all = self['all'] = Section('all')
+        self.mk.mid // self.mk.all
         # py
+        self.init_py()
+        # mk
+        self.init_mk()
+
+    def init_py(self):
         try:
             os.symlink('../metaL.py', '%s/metaL.py' % self.diroot.val)
         except FileExistsError:
             pass
         py = pyFile(self)
+        self.mksrc(py)
+        py.top // ('## @file %s' % self.file())
         self.diroot['py'] = py
         self.diroot // py
         meta = Section('metaL')
-        py['head'] // meta
+        py.top // meta
         meta // 'from metaL import *' // ''
         # meta // ('MODULE = pyModule(\'%s\')' % self.val)
         # meta // ''
@@ -907,6 +858,7 @@ class pyModule(anyModule):
         py.sync()
         # config
         config = pyFile('config')
+        self.mksrc(config)
         self.diroot['config'] = config
         self.diroot // config
         config['head'] // '## @brief site-local private config'
@@ -917,26 +869,43 @@ class pyModule(anyModule):
         config['tail'] // '\n## @}'
         config.sync()
 
+    def init_mk(self):
+        pytools = Section('py/tools')
+        self.mk.top // pytools
+        pytools // 'PIP = $(CWD)/bin/pip3'
+        pytools // 'PY  = $(CWD)/bin/python3'
+        pytools // 'PYT = $(CWD)/bin/pytest'
+        pytools // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
+
+        self.mk.install // '\t$(MAKE) $(PIP)'
+        self.mk.install // '\t$(PIP) install    -r requirements.txt'
+        self.mk.update // '\t$(PIP) install -U    pip'
+        self.mk.update // '\t$(PIP) install -U -r requirements.txt' // ''
+        pyinst = Section('py/install')
+        self.mk.bot // pyinst
+        pyinst // '$(PIP) $(PY):'
+        pyinst // '\tpython3 -m venv .'
+        pyinst // '\t$(PIP) install -U pip pylint autopep8'
+        pyinst // '$(PYT):'
+        pyinst // '\t$(PIP) install -U pytest'
+        # all = Section(self) // ''
+        # self.mk // all
+        # self.mk['all'] = all
+        # all // '.PHONY: all\nall: $(PY) $(MODULE).py'
+        # all // '\t$^'
+        # all // ''
+        # all // 'PHONY: repl\nrepl: $(PY) $(MODULE).py metaL.py'
+        # all // '\t$(PY) -i $(MODULE).py'
+        # all // '\t$(MAKE) $@'
+        self.mk.sync()
+
     def py(self):
         s = '## @brief %s' % self.head(test=True)
         return s
 
-## @ingroup py
-class pygIgnore(gitIgnore):
-    def __init__(self, V='.gitignore'):
-        gitIgnore.__init__(self, V)
-        self // '''
-*.pyc
-/bin/
-/include/
-/lib/
-/lib64/
-/share/
-pyvenv.cfg'''
-
-
 ## @defgroup lexer lexer
 ## @ingroup parser
+
 
 import ply.lex as lex
 
