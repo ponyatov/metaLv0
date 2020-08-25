@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['smalltalk',['Smalltalk',['../namespaceSmalltalk.html',1,'']]]
+  ['rdbms',['rdbms',['../namespacerdbms.html',1,'']]]
 ];

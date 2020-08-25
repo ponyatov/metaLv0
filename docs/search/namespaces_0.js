@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['config',['config',['../namespaceconfig.html',1,'']]]
+  ['akkala',['AkkaLA',['../namespaceAkkaLA.html',1,'']]]
 ];
