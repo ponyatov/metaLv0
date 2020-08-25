@@ -14,4 +14,4 @@ share/
 config.py
 
 poetry.lock
-bullyz
+bully*

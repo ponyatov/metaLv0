@@ -141,6 +141,51 @@ class Object:
 
     ## @}
 
+    ## @name plot
+    ## @{
+
+    ## plot object graph via GraphViz/`dot`
+    ## @returns `digraph{}` string for `dot`
+    ## @param[in] cycle block (plottted nodes accumulator list
+    ## @param[in] depth recursion depth
+    ## @param[in] parent node
+    ## @param[in] label on edge
+    ## @param[in] color of edge
+    def plot(self, cycle=None, depth=0, parent=None, label='', color='black'):
+        # recursion root
+        if not depth:
+            dig = 'digraph "%s" {\nrankdir=LR;\n' % self.head(test=True)
+            cycle = []
+        else:
+            dig = '\t' * depth
+        # node
+        me = 'zid%s' % id(self)
+        dig += '%s [label="%s"]\n' % (me, self.head(test=True))
+        # edge
+        if parent:
+            dig += '\t' * depth + \
+                '%s -> %s [label="%s",color="%s"]\n' % (
+                    parent, me, label, color)
+        # cycles block
+        if self in cycle:
+            return dig
+        else:
+            cycle += [self]
+        # slots
+        for i in sorted(self.slot.keys()):
+            dig += self.slot[i].plot(cycle, depth + 1,
+                                     parent=me, label=i, color='blue')
+        # recursion root
+        if not depth:
+            dig += '}\n'
+            with open('/tmp/dot.dot', 'w') as f:
+                f.write(dig)
+            return dig
+        else:
+            return dig
+
+    ## @}
+
     ## @name operator
     ## @{
 
@@ -186,15 +231,30 @@ class Object:
 
     ## `A // B -> A.push(B)`
     ## @param[in] that `B`
-    ## @param[in] sync add object with sync
+    ## @param[in] sync push object with sync
     ## (hash/storage update, use `False` for massive & IO pushes)
     def __floordiv__(self, that, sync=True):
+        return self.push(that, sync)
+
+    ## @}
+
+    ## @name stack ops
+    ## @{
+
+    ## clean `.nest[]`
+    def dropall(self): self.nest = []
+
+    ## push to `.nest[]`
+    ## @param[in] sync push with sync
+    def push(self, that, sync=True):
         if isinstance(that, str):
             that = String(that)
         self.nest.append(that)
         if sync:
             return self.sync()
         return self
+
+    def drop(self): self.nest.pop(); return self
 
     ## @}
 
@@ -245,6 +305,10 @@ class Undef(Object):
 class Primitive(Object):
     ## primitives evaluates to itself
     def eval(self, ctx): return self
+
+## @ingroup Nil
+class Nil(Primitive):
+    def __init__(self): Primitive.__init__(self, '')
 
 ## @ingroup prim
 class Symbol(Primitive):
@@ -384,6 +448,14 @@ class Active(Object):
 class Fn(Active):
     def eval(self, ctx): return self
 
+    def apply(self, that, ctx):
+        self['arg'] = that
+        self['ret'] = Nil()
+        print('self', self)
+        print('that', that)
+        return self['ret']
+
+    def at(self, that, ctx): return self.apply(that, ctx)
 
 ## @ingroup active
 ## operator
@@ -417,6 +489,8 @@ class Op(Active):
                 return greedy[0].dot(greedy[1], ctx)
             if self.val == ':':
                 return greedy[0].colon(greedy[1], ctx)
+            if self.val == '@':
+                return greedy[0].at(greedy[1], ctx)
         # unknown
         raise Error((self))
 
@@ -454,7 +528,7 @@ class Class(Meta):
 
 ## @ingroup meta
 class Module(Meta):
-    def file(self): return self.head()
+    def file(self): return self.head(test=True)
 
 
 vm['module'] = Class(Module)
@@ -526,6 +600,7 @@ class File(IO):
             for j in self.nest:
                 self.fh.write(j.file() + '\n')
             self.fh.write(self.bot.file())
+            self.fh.truncate()
             self.fh.flush()
         return IO.sync(self)
 
@@ -619,16 +694,18 @@ class README(File):
         File.__init__(self, 'README.md', comment=None)
         self.module = module
         self // ('#  `%s`' % module.val)
-        self // ('## %s' % module['title'].val)
+        self // ('## %s' % module['TITLE'].val)
         try:
-            self // ('%s' % module['about'].val)
+            self // ('%s' % module['ABOUT'].val)
         except KeyError:
             self // ''
         self // ('(c) %s <<%s>> %s %s' % (
-            module['author'].val, module['email'].val,
-            module['year'].val, module['license'].val))
-        self // ''
-        self // ('github: %s%s/README.md' % (module['GITHUB'].val, module.val))
+            module['AUTHOR'].val, module['EMAIL'].val,
+            module['YEAR'].val, module['LICENSE'].val))
+        self.github = Section('github', comment=None)
+        self // self.github
+        self.github // ('github: %s/%s%s' %
+                        (module['GITHUB'].val, module.val, module['GITHUB']['branch'].val))
 
 
 ## @ingroup prj
@@ -664,6 +741,10 @@ class Setting(Meta):
         self.key = key
         self // val
 
+    def __floordiv__(self, that):
+        self.nest = []
+        Meta.__floordiv__(self, that)
+
 ## @ingroup prj
 ## VSCode multicommand
 class multiCommand(Setting):
@@ -684,41 +765,43 @@ class multiCommand(Setting):
 class anyModule(Module):
     def __init__(self, V=None):
         if not V:
-            V = __import__('sys').argv[0].split('.')[0]
+            V = __import__('sys').argv[0]
+            V = V.split('/')[-1]
+            V = V.split('.')[0]
         Module.__init__(self, V)
-        self << vm['AUTHOR']
-        self << vm['EMAIL']
-        self['year'] = vm['YEAR']
-        self << vm['LICENSE']
+        self['AUTHOR'] = vm['AUTHOR']
+        self['EMAIL'] = vm['EMAIL']
+        self['YEAR'] = vm['YEAR']
+        self['LICENSE'] = vm['LICENSE']
         self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
         # diroot
-        self.diroot = Dir(V)
-        self << self.diroot
-        # mk
-        self.mk = Makefile()
-        self.diroot['mk'] = self.mk
-        self.diroot // self.mk
-        self.mk.sync()
-        # apt
-        self.apt = File('apt.txt', comment=None)
-        self.diroot['apt'] = self.apt
-        self.diroot // self.apt
-        self.apt // 'git make'
-        self.apt.sync()
+        self['dir'] = self.diroot = Dir(V)
+        # Makefile
+        self.init_mk()
+        # apt.txt
+        self.init_apt()
         # gitignore
-        self.gitignore = File('.gitignore')
-        self.diroot['gitignore'] = self.gitignore
-        self.diroot // self.gitignore
-        self.gitignore.top // '*~' // '*.swp' // ''
-        self.gitignore.top // '*.log'
-        # \n*.log\n*.exe\n*.o\n'
-        # self.gitignore // './%s\n./%s.exe\n' % (self.val, self.val)
-        self.gitignore.sync()
+        self.init_gitignore()
         # vscode
-        self.vscode = Dir('.vscode')
+        self.init_vscode()
+        # tasks
+        self.init_tasks()
+
+    def init_gitignore(self):
+        self.diroot['gitignore'] = self.gitignore = File('.gitignore')
+        self.diroot // self.gitignore
+        self.gitignore.top // '*~' // '*.swp' // '' // '*.log'
+        self.gitignore.sync()
+
+    def init_vscode(self):
+        self.diroot['vscode'] = self.vscode = Dir('.vscode')
         self.diroot // self.vscode
-        self.vscode.sync()
-        self.settings = File('settings.json', comment='//')
+        self.init_settings()
+        self.init_launch()
+
+    def init_settings(self):
+        self.vscode['settings'] = self.settings = File(
+            'settings.json', comment='//')
         self.vscode // self.settings
         self.settings.top // '{'
         self.settings.bot // '\t"editor.tabSize": 4,'
@@ -743,6 +826,43 @@ class anyModule(Module):
         self.settings.mid // self.settings.assoc
         self.settings.mid // '},'
         self.settings.sync()
+
+    def init_launch(self):
+        self.vscode['launch'] = self.launch = File('launch.json', comment='//')
+        self.vscode // self.launch
+        self.launch.top // '// https://code.visualstudio.com/docs/python/debugging'
+        self.launch.top // '{'
+        self.launch.top // '\t"configurations": ['
+        self.launch.bot // '\t]'
+        self.launch.bot // '}'
+        self.launch.mid // '\t\t{'
+        self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
+        self.launch.mid // '\t\t\t"type": "python",'
+        self.launch.mid // '\t\t\t"request": "launch",'
+        self.launch.mid // ('\t\t\t"program": "%s.py",' % self.val)
+        self.launch.mid // '\t\t\t"console": "integratedTerminal"'
+        self.launch.mid // '\t\t}'
+        self.launch.sync()
+
+    def init_tasks(self):
+        self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
+        self.vscode // self.tasks
+        self.tasks.top // '{' // '\t"version": "2.0.0",' // '\t"tasks": ['
+        self.tasks.bot // '\t]' // '}'
+        self.tasks.sync()
+
+    def init_mk(self):
+        # mk
+        self.diroot['mk'] = self.mk = Makefile()
+        self.diroot // self.mk
+        self.mk.sync()
+
+    def init_apt(self):
+        # apt
+        self.diroot['apt'] = self.apt = File('apt.txt', comment=None)
+        self.diroot // self.apt
+        self.apt // 'git make'
+        self.apt.sync()
 
     def mksrc(self, file):
         assert isinstance(file, File)
@@ -774,17 +894,48 @@ class pyFile(PY, File):
         if isinstance(V, Object):
             V = V.val
         File.__init__(self, V + '.py')
-        self.top // '#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md'
+        self.top // '#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md' // '## @file'
 
 ## @ingroup py
 class pyModule(anyModule):
-    def __init__(self, V):
+    def __init__(self, V=None):
         anyModule.__init__(self, V)
+        # reqs
+        self.init_reqs()
+        # py
+        self.init_py()
+
+    def init_reqs(self):
+        self.reqs = File('requirements.txt', comment=None)
+        self.diroot['reqs'] = self.reqs
+        self.diroot // self.reqs
+        self.reqs['metal'] = self.reqs.metal = Section('metal', comment=None)
+        self.reqs // self.reqs.metal
+        self.reqs.metal // 'xxhash' // 'ply'
+        self.reqs.sync()
+
+    def init_gitignore(self):
+        anyModule.init_gitignore(self)
+        pygnore = Section('python/venv')
+        self.gitignore.mid // pygnore
+        pygnore // '*.pyc'
+        pygnore // '/bin/'
+        pygnore // '/include/'
+        pygnore // '/lib/\n/lib64'
+        pygnore // '/share/'
+        pygnore // '/pyvenv.cfg'
+        self.gitignore.bot // (Section('metaL') // ('/%s/' % self.val))
+        self.gitignore.sync()
+
+    def init_settings(self):
+        anyModule.init_settings(self)
         self.settings.top // '    "python.pythonPath": "./bin/python3",'
         self.settings.top // '    "python.formatting.provider": "autopep8",'
         self.settings.top // '    "python.formatting.autopep8Path": "./bin/autopep8",'
         self.settings.top // '    "python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
-        # vscode/settings
+        self.settings.f11 // 'make repl'
+        self.settings.f12 // 'exit()'
+        # files
         t = '\t"**/bin/**": true, "**/include/**":true,'
         self.settings.watcher // t
         self.settings.exclude // t
@@ -796,52 +947,41 @@ class pyModule(anyModule):
         self.settings.exclude // t
         r = '\t"**/requirements{/**,*}.{txt,in}": "pip-requirements",'
         self.settings.assoc // r
-        # self.assoc // (' ' * 8 +
-        #                '')
         self.settings.sync()
-        # apt
-        self.apt // 'python3-venv'
+
+    def init_apt(self):
+        anyModule.init_apt(self)
+        self.apt // 'python3 python3-venv python3-pip'
         self.apt.sync()
-        # gitignore
-        pygnore = Section('python/venv')
-        self.gitignore.mid // pygnore
-        pygnore // '*.pyc'
-        pygnore // '/bin/'
-        pygnore // '/include/'
-        pygnore // '/lib/\n/lib64'
-        pygnore // '/share/'
-        pygnore // '/pyvenv.cfg'
-        self.gitignore.sync()
-        # reqs
-        self.reqs = File('requirements.txt', comment=None)
-        self.diroot['reqs'] = self.reqs
-        self.diroot // self.reqs
-        # reqs // 'xxhash\nply'
-        self.reqs.sync()
-        # src
-        self.mk.src = self['src'] = Section('src')
-        self.mk.mid // self.mk.src
-        # all
-        self.mk.all = self['all'] = Section('all')
-        self.mk.mid // self.mk.all
-        # py
-        self.init_py()
-        # mk
-        self.init_mk()
 
     def init_py(self):
         try:
             os.symlink('../metaL.py', '%s/metaL.py' % self.diroot.val)
         except FileExistsError:
             pass
-        py = pyFile(self)
-        self.mksrc(py)
-        py.top // ('## @file %s' % self.file())
-        self.diroot['py'] = py
-        self.diroot // py
-        meta = Section('metaL')
-        py.top // meta
-        meta // 'from metaL import *' // ''
+        self.py = pyFile(self)
+        self.mksrc(self.py)
+        self.py.top // ('## @file %s' % self.file())
+        self.diroot['py'] = self.py
+        self.diroot // self.py
+        self.py['metal'] = self.py.metal = Section('metaL')
+        self.py.top // self.py.metal
+        self.py['metaimports'] = self.py.metaimports = Section('metaL/imports')
+        self.py.metal // self.py.metaimports
+        self.py.metaimports // 'from metaL import *'
+        self.py.metal // ('MODULE = %s()' % self.__class__.__name__)
+        self.py.title = self.py['title'] = Section('title', comment=None)
+        self.py.metal // self.py.title
+        self.py.title // "TITLE = MODULE['TITLE'] = Title(MODULE)"
+        self.py.about = self.py['about'] = Section('about', comment=None)
+        self.py.metal // self.py.about
+        # self.py.github = self.py['github'] = Section('github', comment=None)
+        # self.meta // self.py.github
+        self.py.readme = self.py['readme'] = Section('readme', comment=None)
+        self.py.metal // self.py.readme
+        self.py.readme // 'README = README(MODULE)'
+        self.py.readme // 'MODULE.diroot // README'
+        self.py.readme // 'README.sync()'
         # meta // ('MODULE = pyModule(\'%s\')' % self.val)
         # meta // ''
         # meta // 'TITLE = Title(\'\')\nMODULE << TITLE'
@@ -854,8 +994,8 @@ class pyModule(anyModule):
         # meta // '## module source code\npy = diroot[\'py\']'
         # meta // "py['head'] // ('## @brief %s' % MODULE['title'].val) // ''"
         # meta // 'py.sync()'
-        py['tail'] // Section('init')
-        py.sync()
+        self.py['tail'] // Section('init')
+        self.py.sync()
         # config
         config = pyFile('config')
         self.mksrc(config)
@@ -870,13 +1010,13 @@ class pyModule(anyModule):
         config.sync()
 
     def init_mk(self):
+        anyModule.init_mk(self)
         pytools = Section('py/tools')
         self.mk.top // pytools
         pytools // 'PIP = $(CWD)/bin/pip3'
         pytools // 'PY  = $(CWD)/bin/python3'
         pytools // 'PYT = $(CWD)/bin/pytest'
         pytools // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
-
         self.mk.install // '\t$(MAKE) $(PIP)'
         self.mk.install // '\t$(PIP) install    -r requirements.txt'
         self.mk.update // '\t$(PIP) install -U    pip'
@@ -888,20 +1028,36 @@ class pyModule(anyModule):
         pyinst // '\t$(PIP) install -U pip pylint autopep8'
         pyinst // '$(PYT):'
         pyinst // '\t$(PIP) install -U pytest'
-        # all = Section(self) // ''
-        # self.mk // all
-        # self.mk['all'] = all
-        # all // '.PHONY: all\nall: $(PY) $(MODULE).py'
-        # all // '\t$^'
-        # all // ''
-        # all // 'PHONY: repl\nrepl: $(PY) $(MODULE).py metaL.py'
-        # all // '\t$(PY) -i $(MODULE).py'
-        # all // '\t$(MAKE) $@'
+        self.mk['all'] = mkall = Section(self)
+        self.mk.mid // mkall
+        mkall['repl'] = repl = Section('repl')
+        mkall // repl
+        repl // '.PHONY: repl\nrepl: $(PY) $(MODULE).py'
+        repl // '\t$(PY) -i $(MODULE).py'
+        repl // '\t$(MAKE) $@'
+        # src
+        self.mk.src = self['src'] = Section('src')
+        self.mk.mid // self.mk.src
+        self.mk.src // 'SRC += $(MODULE).py'
+        # all
+        self.mk.all = self['all'] = Section('all')
+        self.mk.mid // self.mk.all
         self.mk.sync()
 
     def py(self):
         s = '## @brief %s' % self.head(test=True)
         return s
+
+## @ingroup py
+class bountyModule(pyModule):
+    def __init__(self, V=None):
+        pyModule.__init__(self, V)
+        self.github = self['GITHUB'] = Url('https://bitbucket.org/ponyatov/')
+        self.github['branch'] = '/src/master/'
+        self.py.about // "ABOUT = MODULE['ABOUT'] = Url('https://bountify.co/' + MODULE.val)"
+        # self.py.github // "GITHUB = MODULE['GITHUB'] = Url('https://bitbucket.org/ponyatov/%s/' % MODULE.val)"
+        self.py.sync()
+
 
 ## @defgroup lexer lexer
 ## @ingroup parser
@@ -915,7 +1071,7 @@ tokens = ['symbol', 'string',
           'number', 'integer', 'hex', 'bin',
           'lp', 'rp', 'lq', 'rq', 'lc', 'rc',
           'add', 'sub', 'mul', 'div', 'pow',
-          'comma', 'tick', 'eq', 'dot', 'colon', 'bar',
+          'comma', 'tick', 'eq', 'dot', 'colon', 'bar', 'at',
           'nl', 'exit']
 
 ## @ingroup lexer
@@ -1106,6 +1262,12 @@ def t_bar(t):
     r'\|'
     return t
 
+## @ingroup lexer
+def t_at(t):
+    r'\@'
+    t.value = Op(t.value)
+    return t
+
 ## @}
 
 ## @name lexeme
@@ -1151,7 +1313,7 @@ def t_integer(t):
 ## @ingroup lexer
 ##    r`[^ \t\r\n\#\+\-\*\/\^]+`
 def t_symbol(t):
-    r'[^ \t\r\n\#\+\-\*\/\^\\(\)\[\]\{\}\:\=\.]+'
+    r'[^ \t\r\n\#\+\-\*\/\^\\(\)\[\]\{\}\:\=\.\@]+'
     t.value = Symbol(t.value)
     return t
 
@@ -1294,8 +1456,14 @@ def p_ex_parens(p):
 
 ## @}
 
-## @name {function definition}
+## @name {functions}
 ## @{
+
+## @ingroup parser
+##    ' ex : ex ex '
+def p_ex_apply(p):
+    ' ex : ex at ex '
+    p[0] = p[2] // p[1] // p[3]
 
 ## @ingroup parser
 ##    ' ex : lc fn rc '
@@ -1314,8 +1482,8 @@ def p_fn_empty(p):
 def p_fn_bar(p):
     ' fn : fn symbol bar '
     p[0] = p[1]
-    p[0]['arg'] = Vector('')
-    p[0]['arg'] // p[2]
+    p[0]['args'] = Vector('')
+    p[0]['args'] // p[2]
 
 ## @ingroup parser
 ##    ' fn : fn ex '
@@ -1441,4 +1609,5 @@ def init():
 
 if __name__ == '__main__':
     init()
+    metaL(' {} @ 123 ')
     REPL()

@@ -791,9 +791,9 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md metaL.py test_metaL.py config.py \
-                            doc doc/ru hello.py tcc.py \
+                            book.py doc doc/ru hello.py tcc.py \
                             metacircular.py dja.py demos.py rdbms.py \
-                            webook.py Smalltalk.py bully.py
+                            webook.py Smalltalk.py bully.py 
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

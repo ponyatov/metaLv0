@@ -15,6 +15,7 @@ var searchData=
   ['st',['ST',['../classSmalltalk_1_1ST.html',1,'Smalltalk.ST'],['../group__st.html',1,'(Global Namespace)']]],
   ['stack',['Stack',['../classmetaL_1_1Stack.html',1,'metaL']]],
   ['states',['states',['../group__lexer.html#gadc487383591bb2dbdc86bd0b1cb7e3ff',1,'metaL']]],
+  ['static',['static',['../classdja_1_1djModule.html#a5a2da8ff7eb630b6095970203634ed5f',1,'dja::djModule']]],
   ['stbytecode',['stBytecode',['../classSmalltalk_1_1stBytecode.html',1,'Smalltalk']]],
   ['stcompiler',['stCompiler',['../classSmalltalk_1_1stCompiler.html',1,'Smalltalk']]],
   ['sthal',['stHAL',['../classSmalltalk_1_1stHAL.html',1,'Smalltalk']]],
