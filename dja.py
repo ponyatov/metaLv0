@@ -4,15 +4,16 @@
 from metaL import *
 
 ## @defgroup dja Dja
-## @ingroup py
 ## @brief Django Apps Generator
 ## @{
 
 ## Django-related models
+## @ingroup dja
 class DJ(Object):
     pass
 
 ## route controller (url+view+template?)
+## @ingroup dja
 class djRoute(DJ):
 
     ## codegen for `views.py`
@@ -33,6 +34,18 @@ class djRoute(DJ):
             request = 'views.%s' % self.val
         return "\tpath('%s', %s, name='%s')," % (route, request, self.val)
 
+## plugin
+## @ingroup dja
+class djPlugin(DJ,Module): pass
+
+## @ingroup dja
+## `GeoDjango` GIS subsystem
+## * https://krzysztofzuraw.com/blog/2016/geodjango-leaflet-part-one.html
+## * https://krzysztofzuraw.com/blog/2016/geodjango-leaflet-part-two.html
+geodjango = djPlugin('geodjango')
+
+## Django minimal project
+## @ingroup dja
 class djModule(DJ, pyModule):
     def __init__(self, V=None):
         pyModule.__init__(self, V)
@@ -57,6 +70,41 @@ class djModule(DJ, pyModule):
         self.init_tasks()
         # templates
         self.init_templates()
+        # admin
+        self.init_admin()
+        # models
+        self.init_models()
+
+    def init_admin(self):
+        self.app['admin'] = self.app.admin = pyFile('admin')
+        self.app // self.app.admin
+        self.app.admin.top // 'from django.contrib import admin'
+        self.app.admin.mid // 'from .models import *'
+        self.app.admin.sync()
+
+    def init_models(self):
+        self['models'] = self.models = pyFile('models')
+        self.app // self.models
+        self.models.top // '# https://tproger.ru/translations/extending-django-user-model/#var2'
+        self.models.top // "from django.db import models"
+        self.models.top // "from django.contrib.auth.models import User"
+        locs = Section('locations')
+        self.models.mid // locs
+        locs // "LOCATIONS = [('Samara','Самара'),]"
+        profile = Section('profile')
+        self.models.mid // profile
+        profile // "class Profile(models.Model):" //\
+            "\tuser = models.OneToOneField(User, on_delete=models.CASCADE)" //\
+            "\tloc = models.CharField('location', max_length=0x22, blank=True, choices=LOCATIONS)" //\
+            "\tphone = models.CharField(max_length=0x11,blank=True)" //\
+            "\tclass Meta:" //\
+            "\t\tverbose_name = 'профиль пользователя'" //\
+            "\t\tverbose_name_plural = 'профили пользователей'" //\
+            "\tdef __str__(self):" //\
+            "\t\treturn '%s @ %s | %s'%(self.user,self.loc,self.phone)"
+        self.models.sync()
+        self.app.admin.bot // 'admin.site.register(Profile)'
+        self.app.admin.sync()
 
     def init_tasks(self):
         pyModule.init_tasks(self)
@@ -78,7 +126,9 @@ class djModule(DJ, pyModule):
         self['static'] = self.static = Dir('static')
         self.diroot // self.static
         self.static.sync()
-        self.static // File('.gitignore')
+        giti = File('.gitignore', comment=None)
+        self.static // giti
+        (giti // 'bootstrap.*' // 'jquery.js').sync()
 
     def init_templates(self):
         self['templates'] = self.templates = Dir('templates')
@@ -87,11 +137,29 @@ class djModule(DJ, pyModule):
         self.templates // File('.gitignore')
         self.init_templates_all()
         self.init_templates_index()
+        admin = Dir('admin')
+        self.templates // admin
+        admin.sync()
+        base_site = File('base_site.html', comment=None)
+        admin // base_site
+        base_site //\
+            '{% extends "admin/base_site.html" %}' //\
+            '{% load static %}' //\
+            '{% block extrahead %}' //\
+            '<link rel="shortcut icon" href="{% static "logo.png" %}" type="image/png">' //\
+            '<style>' //\
+            '* { background:#111 !important; color: #aaa; }' //\
+            'input,select { background-color: lightyellow !important; color:black !important; }' //\
+            'a:hover { color:lightblue; }' //\
+            '</style>' //\
+            '{% endblock %}'
+        base_site.sync()
 
     def init_templates_all(self):
         self.templates['all'] = self.templates.all = File(
             'all.html', comment=None)
         self.templates // self.templates.all
+        self.templates.all // '{% load static %}'
         self.templates.all // '<!DOCTYPE html>'
         self.templates.all // '<html lang="ru">'
         self.templates.all // '\t<head>' //\
@@ -99,12 +167,13 @@ class djModule(DJ, pyModule):
             '\t\t<meta http-equiv="X-UA-Compatible" content="IE=edge">' //\
             '\t\t<meta name="viewport" content="width=device-width, initial-scale=1">' //\
             '\t\t{% block title %}{% endblock %}' //\
-            '\t\t<link href="/static/bootstrap.css" rel="stylesheet">' //\
+            '\t\t<link href="{% static "bootstrap.css" %}" rel="stylesheet">' //\
+            '\t\t<link rel="shortcut icon" href="{% static "logo.png" %}" type="image/png">' //\
             '\t</head>'
         self.templates.all // '\t<body>' //\
             '\t\t{% block body %}{% endblock %}' //\
-            '\t\t<script src="/static/jquery.js"></script>' //\
-            '\t\t<script src="/static/bootstrap.js"></script>' //\
+            '\t\t<script src="{% static "jquery.js" %}"></script>' //\
+            '\t\t<script src="{% static "bootstrap.js" %}"></script>' //\
             '\t</body>'
         self.templates.all // '</html>'
         self.templates.all.sync()
@@ -113,7 +182,8 @@ class djModule(DJ, pyModule):
         self.templates['index'] = self.templates.index = File(
             'index.html', comment=None)
         self.templates // self.templates.index
-        self.templates.index // "{% extends 'all.html' %}" // ''
+        self.templates.index.top // "{% extends 'all.html' %}"
+        self.templates.index.top // "{% load static %}" // ''
         self.templates.index.sync()
 
     def init_app(self):
@@ -142,16 +212,16 @@ class djModule(DJ, pyModule):
         self.app.settings.top // 'from pathlib import Path'
         self.app.settings.mid // 'BASE_DIR = Path(__file__).resolve(strict=True).parent.parent'
         self.app.settings.top // pyImport('os')
-        self.app.settings.mid // 'SECRET_KEY = os.urandom(64)'
+        self.app.settings.mid // 'SECRET_KEY = "abcdefgh"#"os.urandom(64)"'
         self.app.settings.mid // 'DEBUG = True'
         self.app.settings.mid // 'ALLOWED_HOSTS = []'
         self.init_app_installed()
-        self.init_app_static()
         self.app_init_middleware()
         self.app.settings.mid // "ROOT_URLCONF = 'app.urls'"
         self.init_app_templates()
         self.init_app_databases()
         self.init_app_i18n()
+        self.init_app_static()
         self.app.settings.sync()
         self.mk.src // 'SRC += app/settings.py'
         self.mk.sync()
@@ -193,13 +263,14 @@ class djModule(DJ, pyModule):
         self.app.settings.mid // self.app.databases
         self.app.databases // "\t'default': {"
         self.app.databases // "\t\t'ENGINE': 'django.db.backends.sqlite3',"
-        self.app.databases // ("\t\t'NAME': BASE_DIR / '%s.sqlite3'," % self.val)
+        self.app.databases // ("\t\t'NAME': BASE_DIR/'%s.sqlite3'," % self.val)
         self.app.databases // "\t}"
         self.app.settings.mid // "}"
 
     def init_app_installed(self):
         self.app['installed'] = self.app.installed = Section('installed')
         self.app.settings.mid // 'INSTALLED_APPS = [' // self.app.installed // ']'
+        self.app.installed // "\t'app',"
         self.app.installed // "\t'django.contrib.admin',"
         self.app.installed // "\t'django.contrib.auth',"
         self.app.installed // "\t'django.contrib.contenttypes',"
@@ -208,7 +279,10 @@ class djModule(DJ, pyModule):
 
     def init_app_static(self):
         self.app.installed // "\t'django.contrib.staticfiles',"
-        self.app.settings.bot // "STATIC_URL = '/static/'"
+        static = Section('static')
+        self.app.settings.mid // static
+        static // "STATIC_URL = '/static/'"
+        static // "STATICFILES_DIRS = [BASE_DIR/'static']"
 
     def init_app_views(self):
         self.app['views'] = self.app.views = pyFile('views')
@@ -272,8 +346,25 @@ class djModule(DJ, pyModule):
         self.mk.src // 'SRC += manage.py'
         self.mk.all // '.PHONY: all\nall: $(PY) manage.py\n\t$^'
         # install
+        self.mk.install // '\t$(MAKE) js'
         self.mk.install // '\t$(MAKE) migrate'
         self.mk.install // '\t$(MAKE) createsuperuser'
+        js = Section('js/install')
+        self.mk.bot // js
+        js // ".PHONY: js"
+        js // "js: static/jquery.js static/bootstrap.css static/bootstrap.js"
+        js // ''
+        js // "JQUERY_VER = 3.5.0"
+        js // "static/jquery.js:"
+        js // "\t$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js"
+        js // ''
+        js // "BOOTSTRAP_VER = 3.4.1"
+        js // "BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/"
+        js // "static/bootstrap.css:"
+        js // "\t$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css"
+        js // "static/bootstrap.js:"
+        js // "\t$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js"
+        js.sync()
         # runserver
         runserver = Section('runserver')
         runserver // '.PHONY: runserver\nrunserver: $(PY) manage.py\n\t$^ $@'
@@ -284,11 +375,13 @@ class djModule(DJ, pyModule):
         # makemigrations
         makemigrations = Section('makemigrations')
         self.mk.mid // makemigrations
-        makemigrations // '.PHONY: makemigrations\nmakemigrations: $(PY) manage.py\n\t$^ $@'
+        makemigrations // '.PHONY: makemigrations\nmakemigrations: $(PY) manage.py\n\t$^ $@ app'
         # migrate
         migrate = Section('migrate')
         self.mk.mid // migrate
-        migrate // '.PHONY: migrate\nmigrate: $(PY) manage.py\n\t$^ $@'
+        migrate // '.PHONY: migrate\nmigrate: $(PY) manage.py'
+        migrate // '\t$(MAKE) makemigrations'
+        migrate // '\t$^ $@'
         # createsuperuser
         createsuperuser = Section('createsuperuser')
         self.mk.mid // createsuperuser
@@ -326,76 +419,5 @@ class djModule(DJ, pyModule):
 
 # ## `~/metaL/$MODULE` target directory for code generation
 # diroot = MODULE['dir']
-
-# ## README
-# readme = README(MODULE)
-# diroot // readme
-# readme.sync()
-
-# ## file masks will be ignored by `git` version manager
-# gitignore = diroot['gitignore']
-# gitignore.sync()
-
-# ## Debian Linux packages install
-# apt = diroot['apt']
-
-# ## `Makefile` for target project build/run
-# mk = diroot['mk']
-# mk['head']['pytools'] // 'DJA = $(CWD)/bin/django-admin' // ''
-# mk['head'] // '' // 'HOST = 127.0.0.1'
-# mk['head'] // 'PORT = 19999' // ''
-# mk['all'] // '' // '.PHONY: runserver'
-# mk['all'] // 'runserver: $(PY) manage.py'
-# mk['all'] // '$^ runserver $(HOST):$(PORT)' // ''
-
-# mk['all'] // '.PHONY: migrations\nmigrations: $(PY) manage.py\n\t\t$^ make$@' // ''
-
-# mk['tail']['install'] // '\t$(MAKE) js'//''
-
-# js = Section('js/install') ; mk['tail'] // ''//js //''
-# js // '.PHONY: js'
-# js // 'js: static/jquery.js static/bootstrap.css static/bootstrap.js'
-# js // ''
-# js // 'JQUERY_VER = 3.5.0'
-# js // 'static/jquery.js:'
-# js // '\t$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js'
-# js // ''
-# js // 'BOOTSTRAP_VER = 3.4.1'
-# js // 'BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/'
-# js // 'static/bootstrap.css:'
-# js // '\t$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css'
-# js // 'static/bootstrap.js:'
-# js // '\t$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js'
-# js // ''
-# mk.sync()
-
-# ## file associations in .vscode
-# MODULE['vscode/assoc'] // (' ' * 8 + '"**/templates/*.html": "html",')
-# MODULE['vscode/assoc'] // (' ' * 8 + '// "**/templates/*": "django-txt",')
-# MODULE['vscode/settings'].sync()
-
-# ## requirements.txt
-# reqs = diroot['reqs']
-# reqs // 'django'2
-# reqs.sync()
-
-# ## main Python file
-# py = diroot['py']
-# py['head'] // MODULE.py()
-# py.sync()
-
-# ## static files directory
-# static = Dir('static')
-# diroot // static
-# static.sync()
-# static // File('.gitignore')
-
-# ## .html templates directory
-# templates = Dir('templates')
-# diroot // templates
-# templates.sync()
-# templates // File('.gitignore')
-
-# # print(MODULE)
 
 ## @}

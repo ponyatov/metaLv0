@@ -3,22 +3,8 @@
 
 from metaL import *
 
-## @defgroup cc ANSI C'99
-## @ingroup gen
-## @brief ANSI C'99 code generation targeted for @ref tcc
-
 ## @ingroup cc
-class CC(Object):
-    pass
-
-## @ingroup cc
-## C'99 syntax file (`.c`/`.h`)
-class ccFile(CC, File):
-    def __init__(self, V, comment='//'):
-        File.__init__(self, V, comment)
-
-## @ingroup cc
-## `@include`
+## `include`
 class cInclude(CC):
     def file(self): return '#include <%s.h>' % self.val
 

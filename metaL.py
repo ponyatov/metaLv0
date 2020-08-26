@@ -211,12 +211,16 @@ class Object:
 
     ## `A[key] = B`
     def __setitem__(self, key, that):
-        assert isinstance(key, str)
         if isinstance(that, str):
             that = String(that)
         if isinstance(that, int):
             that = Integer(that)
-        self.slot[key] = that
+        if isinstance(key, str):
+            self.slot[key] = that
+        elif isinstance(key, int):
+            self.nest[key] = that
+        else:
+            raise TypeError(key)
         return self.sync()
 
     ## `A << B ~> A[B.type] = B`
@@ -246,6 +250,7 @@ class Object:
 
     ## push to `.nest[]`
     ## @param[in] sync push with sync
+    ## @param[in] that `B` operand to be pushed
     def push(self, that, sync=True):
         if isinstance(that, str):
             that = String(that)
@@ -591,6 +596,10 @@ class File(IO):
         self.top = self['top'] = Section('top', comment)
         self.mid = self['mid'] = Section('mid', comment)
         self.bot = self['bot'] = Section('bot', comment)
+        if self.comment:
+            self.top // ('%s powered by metaL: https://repl.it/@metaLmasters/metaL#README.md' %
+                         self.comment + ' ')
+            self.top // ('%s @file' % self.comment * 2)
 
     def sync(self):
         if self.fh:
@@ -721,7 +730,6 @@ class Makefile(File):
                      'REL = $(shell git rev-parse --short=4 HEAD)')
         self.install = self['install'] = Section('install')
         self.update = self['update'] = Section('update')
-        self.bot // 'WGET = wget -c --no-check-certificate'
         self.bot // self.install
         self.bot // self.update
         self.install // '.PHONY: install'
@@ -768,7 +776,7 @@ class anyModule(Module):
             V = __import__('sys').argv[0]
             V = V.split('/')[-1]
             V = V.split('.')[0]
-        Module.__init__(self, V)
+        super().__init__(V)
         self['AUTHOR'] = vm['AUTHOR']
         self['EMAIL'] = vm['EMAIL']
         self['YEAR'] = vm['YEAR']
@@ -791,6 +799,8 @@ class anyModule(Module):
         self.diroot['gitignore'] = self.gitignore = File('.gitignore')
         self.diroot // self.gitignore
         self.gitignore.top // '*~' // '*.swp' // '' // '*.log'
+        self.gitignore.bot // ('/%s.exe\n/%s' % (self.val, self.val))
+        self.gitignore.bot  // '*.o' // '*.objdump'
         self.gitignore.sync()
 
     def init_vscode(self):
@@ -835,13 +845,13 @@ class anyModule(Module):
         self.launch.top // '\t"configurations": ['
         self.launch.bot // '\t]'
         self.launch.bot // '}'
-        self.launch.mid // '\t\t{'
-        self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
-        self.launch.mid // '\t\t\t"type": "python",'
-        self.launch.mid // '\t\t\t"request": "launch",'
-        self.launch.mid // ('\t\t\t"program": "%s.py",' % self.val)
-        self.launch.mid // '\t\t\t"console": "integratedTerminal"'
-        self.launch.mid // '\t\t}'
+        # self.launch.mid // '\t\t{'
+        # self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
+        # self.launch.mid // '\t\t\t"type": "python",'
+        # self.launch.mid // '\t\t\t"request": "launch",'
+        # self.launch.mid // ('\t\t\t"program": "%s.py",' % self.val)
+        # self.launch.mid // '\t\t\t"console": "integratedTerminal"'
+        # self.launch.mid // '\t\t}'
         self.launch.sync()
 
     def init_tasks(self):
@@ -856,6 +866,22 @@ class anyModule(Module):
         self.diroot['mk'] = self.mk = Makefile()
         self.diroot // self.mk
         self.mk.sync()
+        # tools
+        self.mk.tools = self['tools'] = Section('tools')
+        self.mk.mid // self.mk.tools
+        self.mk.tools // 'WGET    = wget -c --no-check-certificate'
+        # src
+        self.mk.src = self['src'] = Section('src')
+        self.mk.mid // self.mk.src
+        # obj
+        self.mk.obj = self['obj'] = Section('obj')
+        self.mk.mid // self.mk.obj
+        # all
+        self.mk.all = self['all'] = Section('all')
+        self.mk.mid // self.mk.all
+        # rules
+        self.mk.rules = self['rules'] = Section('rules')
+        self.mk.mid // self.mk.rules
 
     def init_apt(self):
         # apt
@@ -867,6 +893,20 @@ class anyModule(Module):
     def mksrc(self, file):
         assert isinstance(file, File)
         self.mk.src // ('SRC += %s' % file.val)
+
+## @defgroup cc ANSI C'99
+## @ingroup gen
+## @brief ANSI C'99 code generation targeted for @ref tcc
+
+## @ingroup cc
+class CC(Object):
+    pass
+
+## @ingroup cc
+## C'99 syntax file (`.c`/`.h`)
+class ccFile(CC, File):
+    def __init__(self, V, comment='//'):
+        super().__init__(V + '.c', comment)
 
 
 ## @defgroup py Python
@@ -891,15 +931,12 @@ class pyFn(PY):
 ## @ingroup py
 class pyFile(PY, File):
     def __init__(self, V):
-        if isinstance(V, Object):
-            V = V.val
-        File.__init__(self, V + '.py')
-        self.top // '#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md' // '## @file'
+        super().__init__(V + '.py', comment='//')
 
 ## @ingroup py
 class pyModule(anyModule):
     def __init__(self, V=None):
-        anyModule.__init__(self, V)
+        super().__init__(V)
         # reqs
         self.init_reqs()
         # py
@@ -948,6 +985,17 @@ class pyModule(anyModule):
         r = '\t"**/requirements{/**,*}.{txt,in}": "pip-requirements",'
         self.settings.assoc // r
         self.settings.sync()
+
+    def init_launch(self):
+        super().init_launch(self)
+        self.launch.mid // '\t\t{'
+        self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
+        self.launch.mid // '\t\t\t"type": "python",'
+        self.launch.mid // '\t\t\t"request": "launch",'
+        self.launch.mid // ('\t\t\t"program": "%s.py",' % self.val)
+        self.launch.mid // '\t\t\t"console": "integratedTerminal"'
+        self.launch.mid // '\t\t}'
+        self.launch.sync()
 
     def init_apt(self):
         anyModule.init_apt(self)
@@ -1010,7 +1058,7 @@ class pyModule(anyModule):
         config.sync()
 
     def init_mk(self):
-        anyModule.init_mk(self)
+        super().init_mk()
         pytools = Section('py/tools')
         self.mk.top // pytools
         pytools // 'PIP = $(CWD)/bin/pip3'
@@ -1035,13 +1083,7 @@ class pyModule(anyModule):
         repl // '.PHONY: repl\nrepl: $(PY) $(MODULE).py'
         repl // '\t$(PY) -i $(MODULE).py'
         repl // '\t$(MAKE) $@'
-        # src
-        self.mk.src = self['src'] = Section('src')
-        self.mk.mid // self.mk.src
         self.mk.src // 'SRC += $(MODULE).py'
-        # all
-        self.mk.all = self['all'] = Section('all')
-        self.mk.mid // self.mk.all
         self.mk.sync()
 
     def py(self):

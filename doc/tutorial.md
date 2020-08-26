@@ -193,7 +193,7 @@ string were split by new line chars (besides multiline strings):
 
 ### Variables/Slots
 
-* Any @ref Symbol evaluates as the value, stored in a named attribute of the
+* Any `Symbol` evaluates as the value, stored in a named attribute of the
   *computation context*.
 * The default *computation context* resides in the global `<vm:metaL>` object.
 * Also, *any object can be treated as computation context* by passing it as a

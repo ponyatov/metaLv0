@@ -236,7 +236,7 @@ bully/apt.txt
 
 ### `anyModule`
 
-В качестве примера можно разобрать часть кода @ref anyModule
+В качестве примера можно разобрать часть кода `anyModule`
 
 ```py
 class anyModule(Module):

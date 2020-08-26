@@ -1,0 +1,42 @@
+
+// \ <section:top>
+// powered by metaL: https://repl.it/@metaLmasters/metaL#README.md 
+// @file// @file
+{
+// / <section:top>
+// \ <section:mid>
+
+// \ <section:multiCommand>
+"multiCommand.commands": [
+	{"command":"multiCommand.f11","sequence":[
+		"workbench.action.files.saveAll",
+		{"command": "workbench.action.terminal.sendSequence",
+		 "args": {"text": "\u000Dmake test\u000D"}}
+	],},
+	{"command":"multiCommand.f12","sequence":[
+		"workbench.action.files.saveAll",
+		{"command": "workbench.action.terminal.sendSequence",
+		 "args": {"text": "\u000Dmake all\u000D"}}
+	],},
+],
+// / <section:multiCommand>
+"files.watcherExclude": {
+
+// \ <section:watcher>
+// / <section:watcher>
+},
+"files.exclude": {
+
+// \ <section:exclude>
+// / <section:exclude>
+},
+"files.associations": {
+
+// \ <section:associations>
+// / <section:associations>
+},
+// / <section:mid>
+// \ <section:bot>
+	"editor.tabSize": 4,
+}
+// / <section:bot>

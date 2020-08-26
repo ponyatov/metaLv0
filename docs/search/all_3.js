@@ -2,8 +2,8 @@ var searchData=
 [
   ['c',['C',['../classmetaL_1_1Class.html#a119bc473487382482c6a317e64ccffe9',1,'metaL.Class.C()'],['../classtcc_1_1ccModule.html#aab54b8e27226f4ec02668b83c4524738',1,'tcc.ccModule.c()']]],
   ['cakkala',['cAkkaLA',['../group__cakka.html',1,'']]],
-  ['cc',['CC',['../classtcc_1_1CC.html',1,'tcc']]],
-  ['ccfile',['ccFile',['../classtcc_1_1ccFile.html',1,'tcc']]],
+  ['cc',['CC',['../classmetaL_1_1CC.html',1,'metaL']]],
+  ['ccfile',['ccFile',['../classmetaL_1_1ccFile.html',1,'metaL']]],
   ['ccmodule',['ccModule',['../classtcc_1_1ccModule.html',1,'tcc']]],
   ['cctype',['ccType',['../classtcc_1_1ccType.html',1,'tcc']]],
   ['center',['center',['../group__st.html#ga39d407b5b55beb1aaa64f9cd2615e998',1,'Smalltalk']]],
