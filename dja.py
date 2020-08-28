@@ -36,7 +36,9 @@ class djRoute(DJ):
 
 ## plugin
 ## @ingroup dja
-class djPlugin(DJ,Module): pass
+class djPlugin(DJ, Module):
+    pass
+
 
 ## @ingroup dja
 ## `GeoDjango` GIS subsystem
@@ -62,6 +64,8 @@ class djModule(DJ, pyModule):
         self.init_app()
         # manage.py
         self.init_manage()
+        # setup.py
+        self.init_install()
         # static
         self.init_static()
         # templates
@@ -74,6 +78,43 @@ class djModule(DJ, pyModule):
         self.init_admin()
         # models
         self.init_models()
+        # cotext processors
+        self.init_contexts()
+
+    def init_install(self):
+        self.diroot['install'] = self.app.install = pyFile('install')
+        self.diroot // self.app.install
+        self.app.install.top //\
+            'import os' //\
+            'os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")' //\
+            'import django' //\
+            'django.setup()' //\
+            'from django.contrib.auth.models import User'
+        self.app.install.mid //\
+            'su = User.objects.create_superuser(' //\
+            "\tusername='dponyatov'," //\
+            "\temail='dponyatov@gmail.com'," //\
+            "\tpassword='passwd'" //\
+            ')' //\
+            'su.save()'
+        self.app.install.sync()
+        self.mk.install // '\t$(PY) install.py'
+        self.mk.sync()
+
+    def init_contexts(self):
+        self.app['context'] = self.app.context = pyFile('context')
+        self.app // self.app.context
+        self.app.context.top // 'from django.contrib.auth.models import User'
+        self.app.context.mid // 'def user(request):'
+        self.app.context.mid // "\tuser = User.objects.get(id=request.user.id)"
+        # self.app.context.mid // "\tuser = request.user"
+        # self.app.context.mid // "\tuser.f = 'Фамилия'"
+        # self.app.context.mid // "\tuser.i = 'Имя'"
+        # self.app.context.mid // "\tuser.o = 'Отчество'"
+        # self.app.context.mid // "\tuser.email = 'no@mail.ru'"
+        # self.app.context.mid // "\tuser.tel = '+79171234567'"
+        self.app.context.mid // "\treturn {'user':user}"
+        self.app.context.sync()
 
     def init_admin(self):
         self.app['admin'] = self.app.admin = pyFile('admin')
@@ -94,9 +135,9 @@ class djModule(DJ, pyModule):
         profile = Section('profile')
         self.models.mid // profile
         profile // "class Profile(models.Model):" //\
-            "\tuser = models.OneToOneField(User, on_delete=models.CASCADE)" //\
-            "\tloc = models.CharField('location', max_length=0x22, blank=True, choices=LOCATIONS)" //\
-            "\tphone = models.CharField(max_length=0x11,blank=True)" //\
+            "\tuser = models.OneToOneField(User, verbose_name='пользователь', on_delete=models.CASCADE)" //\
+            "\tloc = models.CharField('регион', max_length=0x22, blank=True, choices=LOCATIONS)" //\
+            "\tphone = models.CharField('телефон',max_length=0x11,blank=True)" //\
             "\tclass Meta:" //\
             "\t\tverbose_name = 'профиль пользователя'" //\
             "\t\tverbose_name_plural = 'профили пользователей'" //\
@@ -151,6 +192,7 @@ class djModule(DJ, pyModule):
             '* { background:#111 !important; color: #aaa; }' //\
             'input,select { background-color: lightyellow !important; color:black !important; }' //\
             'a:hover { color:lightblue; }' //\
+            '.required { color:yellow !important; }' //\
             '</style>' //\
             '{% endblock %}'
         base_site.sync()
@@ -253,6 +295,7 @@ class djModule(DJ, pyModule):
         self.app.templates // "\t\t\t\t'django.template.context_processors.request',"
         self.app.templates // "\t\t\t\t'django.contrib.auth.context_processors.auth',"
         self.app.templates // "\t\t\t\t'django.contrib.messages.context_processors.messages',"
+        self.app.templates // "\t\t\t\t'app.context.user',"
         self.app.templates // '\t\t\t],'
         self.app.templates // '\t\t},'
         self.app.templates // '\t},'
@@ -348,7 +391,6 @@ class djModule(DJ, pyModule):
         # install
         self.mk.install // '\t$(MAKE) js'
         self.mk.install // '\t$(MAKE) migrate'
-        self.mk.install // '\t$(MAKE) createsuperuser'
         js = Section('js/install')
         self.mk.bot // js
         js // ".PHONY: js"

@@ -1,4 +1,6 @@
 <map id="llvm.llType" name="llvm.llType">
-<area shape="rect" id="node2" href="$classllvm_1_1LL.html" title="llvm.LL" alt="" coords="23,80,87,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,5,105,32"/>
+<area shape="rect" id="node4" href="$classllvm_1_1llI32.html" title="llvm.llI32" alt="" coords="5,229,80,256"/>
+<area shape="rect" id="node5" href="$classllvm_1_1llVoid.html" title="llvm.llVoid" alt="" coords="104,229,187,256"/>
+<area shape="rect" id="node2" href="$classllvm_1_1LL.html" title="llvm.LL" alt="" coords="61,80,125,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="43,5,143,32"/>
 </map>

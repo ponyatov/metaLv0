@@ -11,6 +11,7 @@
 *.ll
 *.s
 *.bc
+*.wasm
 # / <section:mid>
 # \ <section:bot>
 /llvm.exe

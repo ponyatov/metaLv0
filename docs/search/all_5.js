@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['email',['Email',['../classmetaL_1_1Email.html',1,'metaL.Email'],['../group__info.html#ga6db88e5bd18b5e2f37f1d34a80761116',1,'metaL.EMAIL()']]],
+  ['email',['Email',['../classmetaL_1_1Email.html',1,'metaL.Email'],['../classmetaL_1_1dirModule.html#ab83e5c326a4c1928327898bb90965b53',1,'metaL.dirModule.EMAIL()'],['../group__info.html#ga6db88e5bd18b5e2f37f1d34a80761116',1,'metaL.EMAIL()']]],
   ['empty',['empty',['../group__ll.html#gacf33bd4b0fa87aa76a0403379e7910a4',1,'llvm']]],
   ['eq',['eq',['../classmetaL_1_1Symbol.html#adafa625ae896e6e96b5a59f2695b2709',1,'metaL::Symbol']]],
   ['error',['Error',['../classmetaL_1_1Error.html',1,'metaL.Error'],['../group__error.html',1,'(Global Namespace)']]],

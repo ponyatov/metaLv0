@@ -35,27 +35,32 @@ SRC += ll.ll ll.s ll.objdump
 OBJ += empty.o
 OBJ += hello.o
 OBJ += ll.o
+WASM += ll.wasm
 # / <section:obj>
 
 # \ <section:all>
 .PHONY: all
 all: $(MODULE)
-$(MODULE): $(OBJ) $(SRC)
+	./$^
+$(MODULE): $(OBJ) $(SRC) $(WASM)
 	$(CC) -o $@ $(OBJ)
 # / <section:all>
 
 # \ <section:rules>
 %.ll: %.c
-	$(CLANG) -O0 -S -emit-llvm -o $@ $<
+	$(CLANG) -S -emit-llvm -o $@ $<
 %.s: %.ll
-	$(LLC) -O0 -o $@ $<
+	$(LLC) -o $@ $<
 %.o: %.s
 	$(CLANG) -c -o $@ $<
+%.wasm: %.ll
+	$(LLC) -march=wasm32 -filetype=obj -o $@ $<
+	wasm-objdump -dx $@ > $@.objdump
 %.objdump: %.o
-	$(OBJDUMP) -x $< > $@
+	$(OBJDUMP) -dx $< > $@
 # / <section:rules>
 $(MODULE).objdump: $(MODULE)
-	$(OBJDUMP) -x $< > $@
+	$(OBJDUMP) -dx $< > $@
 # / <section:mid>
 # \ <section:bot>
 

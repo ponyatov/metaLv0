@@ -78,14 +78,16 @@ $(function() {
 <li>__init__()
 : <a class="el" href="classdja_1_1djModule.html#af680bf92cf546532fd936b4328b5d3ff">dja.djModule</a>
 , <a class="el" href="classllvm_1_1llFile.html#a2f72c89f961cc0929b3cf06190fd2a96">llvm.llFile</a>
-, <a class="el" href="classllvm_1_1llFn.html#a875730b94d176ffcb846336804468d53">llvm.llFn</a>
+, <a class="el" href="classllvm_1_1llFn.html#a7b7200f851eb580b3d453f5a4966fd1c">llvm.llFn</a>
 , <a class="el" href="classllvm_1_1llModule.html#a475aca2ea73e92306819d4287f332a46">llvm.llModule</a>
 , <a class="el" href="classmetaL_1_1anyModule.html#a0a7b929255c7d2f6b8b97331e3f0aed4">metaL.anyModule</a>
 , <a class="el" href="classmetaL_1_1Bin.html#a72ab58f4835ffe79434a81fdab0edb8f">metaL.Bin</a>
 , <a class="el" href="classmetaL_1_1bountyModule.html#a6145af68db746050b6ab48c7341dddf2">metaL.bountyModule</a>
 , <a class="el" href="classmetaL_1_1ccFile.html#aceac13b267bf2e7ce2ce48cbe55d4839">metaL.ccFile</a>
+, <a class="el" href="classmetaL_1_1ccFn.html#aec89fd7735574a1a27b8a4a332a850c0">metaL.ccFn</a>
 , <a class="el" href="classmetaL_1_1Class.html#add8b3bcf1bc8d45bc2be57d96c1fb914">metaL.Class</a>
 , <a class="el" href="classmetaL_1_1Dir.html#a3897859bfbbf2923b3939060dd108115">metaL.Dir</a>
+, <a class="el" href="classmetaL_1_1dirModule.html#a0208247350186d08112d9c4e6c37554b">metaL.dirModule</a>
 , <a class="el" href="classmetaL_1_1File.html#ad41d61a9d6a1ef02aa4097fe8048722d">metaL.File</a>
 , <a class="el" href="classmetaL_1_1Hex.html#afae54a13902dbf9c47c963cdbb0e1907">metaL.Hex</a>
 , <a class="el" href="classmetaL_1_1Integer.html#a643c4dc1a24e4dfbbcc2cad6298fd1fb">metaL.Integer</a>
@@ -100,6 +102,7 @@ $(function() {
 , <a class="el" href="classmetaL_1_1README.html#ac2019de23ff6229b9ae152f845548302">metaL.README</a>
 , <a class="el" href="classmetaL_1_1Section.html#a14e7b954325902760abe63d24258d380">metaL.Section</a>
 , <a class="el" href="classmetaL_1_1Setting.html#a42e69ac33aaa7001888b9d69c0773d86">metaL.Setting</a>
+, <a class="el" href="classmetaL_1_1Vector.html#ab60f3b466a54c5eef096561923ee4b5f">metaL.Vector</a>
 , <a class="el" href="classtcc_1_1ccModule.html#a9b151f1c1f539683246329dae4655a42">tcc.ccModule</a>
 </li>
 <li>__lshift__()
@@ -148,6 +151,27 @@ $(function() {
 
 
 <h3><a id="index_c"></a>- c -</h3><ul>
+<li>cc_arg()
+: <a class="el" href="classllvm_1_1llFn.html#ade670ecc007a72590a6919def5df454e">llvm.llFn</a>
+, <a class="el" href="classmetaL_1_1ccFn.html#a1f8f7cb690d0a1be6589abf3dca30c3e">metaL.ccFn</a>
+, <a class="el" href="classmetaL_1_1ccVoid.html#ad98c20670974e176e62b4634b0145586">metaL.ccVoid</a>
+, <a class="el" href="classmetaL_1_1String.html#a574ec710b4fc09a15b950099b329957c">metaL.String</a>
+, <a class="el" href="classmetaL_1_1Vector.html#ab65c0cf9fe8383b8419c3426b00afee1">metaL.Vector</a>
+</li>
+<li>cc_call()
+: <a class="el" href="classllvm_1_1llFn.html#ae6ce69d2efe54d564bba8d5a3506ef19">llvm.llFn</a>
+, <a class="el" href="classmetaL_1_1ccFn.html#a2bac43aabf6646d0e1a99bb21dcb7b6b">metaL.ccFn</a>
+</li>
+<li>cc_extern()
+: <a class="el" href="classllvm_1_1llFn.html#ad10e5bf4007160447a1f68f9f0d17681">llvm.llFn</a>
+</li>
+<li>cc_type()
+: <a class="el" href="classllvm_1_1llI32.html#ac981aa582a623389c8a0c15829c433dc">llvm.llI32</a>
+, <a class="el" href="classmetaL_1_1ccType.html#a83c68bb62758e35995bf17b25d1f3c98">metaL.ccType</a>
+</li>
+<li>cc_val()
+: <a class="el" href="classmetaL_1_1ccType.html#a08e9b04082e7eebee725ca028140cdee">metaL.ccType</a>
+</li>
 <li>colon()
 : <a class="el" href="classmetaL_1_1Class.html#ae648f8517d6aede460c4a6ac06cbcd31">metaL.Class</a>
 </li>
@@ -190,15 +214,23 @@ $(function() {
 
 <h3><a id="index_f"></a>- f -</h3><ul>
 <li>file()
-: <a class="el" href="classllvm_1_1llFn.html#a6a6a1f8183d5bc6aac4e0cb120857a3b">llvm.llFn</a>
+: <a class="el" href="classlicense_1_1License.html#a22d3d8c67afc8d64d66e52ceded7e59f">license.License</a>
+, <a class="el" href="classllvm_1_1llFn.html#a6a6a1f8183d5bc6aac4e0cb120857a3b">llvm.llFn</a>
 , <a class="el" href="classllvm_1_1llType.html#a60f0eea0b256c210351941bebce359f3">llvm.llType</a>
+, <a class="el" href="classmetaL_1_1ccFn.html#a474ce89d1d4c0ecee28ea1855f194854">metaL.ccFn</a>
+, <a class="el" href="classmetaL_1_1ccInclude.html#a602624516c65dbb456225e07ebb01a37">metaL.ccInclude</a>
+, <a class="el" href="classmetaL_1_1ccType.html#a4ee636c4ffd26587aa50fcc52817b08d">metaL.ccType</a>
+, <a class="el" href="classmetaL_1_1Doc.html#a0e2b69117504c5498384251cd4397b8c">metaL.Doc</a>
+, <a class="el" href="classmetaL_1_1Email.html#a1cfc7040e19e995c76c187d8fe9122ad">metaL.Email</a>
 , <a class="el" href="classmetaL_1_1Module.html#a86386c8ed89e5cb4fb12a00c444debba">metaL.Module</a>
 , <a class="el" href="classmetaL_1_1multiCommand.html#a3da394046ca63a1858f75f4b4fb86342">metaL.multiCommand</a>
+, <a class="el" href="classmetaL_1_1Number.html#af83a41da09665b7a350e9d55f3b0e742">metaL.Number</a>
 , <a class="el" href="group__gen.html#ga52f976c41ac25146eafdf00aefeb9fa5">metaL.Object</a>
 , <a class="el" href="classmetaL_1_1pyFn.html#aba18d2ab7e9de416c1db1f0953b24c1c">metaL.pyFn</a>
 , <a class="el" href="classmetaL_1_1pyImport.html#a8c5aaef0029c57499982c111bb17b8c3">metaL.pyImport</a>
 , <a class="el" href="classmetaL_1_1Section.html#a7f0b5373857b4547db8762cb21a11f91">metaL.Section</a>
 , <a class="el" href="classmetaL_1_1String.html#af7504dc90939168b856b8e11a82d611d">metaL.String</a>
+, <a class="el" href="classmetaL_1_1Url.html#a23dd0d14ab55f9532a38e9fc7910b9ed">metaL.Url</a>
 , <a class="el" href="classtcc_1_1cInclude.html#ad0c812a9108cc230a20a804a1b7e1558">tcc.cInclude</a>
 </li>
 </ul>
@@ -247,14 +279,21 @@ $(function() {
 </li>
 <li>init_apt()
 : <a class="el" href="classllvm_1_1llModule.html#a1d0b2f7d998006fe04dcf7c0728d5d23">llvm.llModule</a>
-, <a class="el" href="classmetaL_1_1anyModule.html#aa8898ce901a2d8b7b2ebbe22fa599dd1">metaL.anyModule</a>
+, <a class="el" href="classmetaL_1_1dirModule.html#ac6a9c13e596d289db949f8409f43fdc7">metaL.dirModule</a>
 , <a class="el" href="classmetaL_1_1pyModule.html#aef525556a0921a0ce0336830de3e7d99">metaL.pyModule</a>
+</li>
+<li>init_contexts()
+: <a class="el" href="classdja_1_1djModule.html#a183a931680480730936d6cedf9884cfd">dja.djModule</a>
 </li>
 <li>init_gitignore()
 : <a class="el" href="classdja_1_1djModule.html#af13262ae50285be8d630ba3407712e0c">dja.djModule</a>
 , <a class="el" href="classllvm_1_1llModule.html#ae39aac29c565cf2bf1dd17c4d70a48f6">llvm.llModule</a>
 , <a class="el" href="classmetaL_1_1anyModule.html#a4e4d5530a85e61332c938517cce0ec2f">metaL.anyModule</a>
+, <a class="el" href="classmetaL_1_1dirModule.html#a9fb67258b86234f5336899d1c478cc31">metaL.dirModule</a>
 , <a class="el" href="classmetaL_1_1pyModule.html#a3b95fcd6bc5c7a3133f48308793b3919">metaL.pyModule</a>
+</li>
+<li>init_install()
+: <a class="el" href="classdja_1_1djModule.html#a848a11694831d1f454f72d3fb805a640">dja.djModule</a>
 </li>
 <li>init_launch()
 : <a class="el" href="classmetaL_1_1anyModule.html#a079b7f28763a09215a8805e7201f70d2">metaL.anyModule</a>
@@ -267,6 +306,7 @@ $(function() {
 : <a class="el" href="classdja_1_1djModule.html#ad0ca1c7525547d760c9261c8edc4921c">dja.djModule</a>
 , <a class="el" href="classllvm_1_1llModule.html#a3bf366e209deb83dba6461228c3e4a31">llvm.llModule</a>
 , <a class="el" href="classmetaL_1_1anyModule.html#af90b258e3501ea186df4318c4e337c0a">metaL.anyModule</a>
+, <a class="el" href="classmetaL_1_1dirModule.html#a19b0b32c71f1617f6fd3d61c96aa3322">metaL.dirModule</a>
 , <a class="el" href="classmetaL_1_1pyModule.html#aa1b1b13cbe124b1cf244a76d55ec8aec">metaL.pyModule</a>
 </li>
 <li>init_models()
@@ -316,6 +356,21 @@ $(function() {
 <h3><a id="index_k"></a>- k -</h3><ul>
 <li>keys()
 : <a class="el" href="classmetaL_1_1Object.html#aefc3df6f56e23de0dd5042c122fcd1a6">metaL.Object</a>
+</li>
+</ul>
+
+
+<h3><a id="index_l"></a>- l -</h3><ul>
+<li>ll_arg()
+: <a class="el" href="classllvm_1_1llFn.html#abff04ea941afb32614b0694ee5c70a5a">llvm.llFn</a>
+, <a class="el" href="classllvm_1_1llType.html#a39d83f0cd5a509da4b003d02be8124a7">llvm.llType</a>
+, <a class="el" href="classllvm_1_1llVoid.html#acf5809d1a312ffe1eacbcf38bbfda4f5">llvm.llVoid</a>
+</li>
+<li>ll_type()
+: <a class="el" href="classllvm_1_1llType.html#ab2d0d84579041b5b1f9bf3e3017d5902">llvm.llType</a>
+</li>
+<li>ll_val()
+: <a class="el" href="classllvm_1_1llType.html#a7070ad2a2a162ab55a1b04df43111ffe">llvm.llType</a>
 </li>
 </ul>
 

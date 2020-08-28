@@ -15,3 +15,6 @@ config.py
 
 poetry.lock
 bully*
+
+/home/
+/litres/

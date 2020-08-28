@@ -2,6 +2,7 @@ var searchData=
 [
   ['metacircular',['Metacircular',['../group__circ.html',1,'']]],
   ['metainfo',['metainfo',['../group__info.html',1,'']]],
+  ['main',['main',['../group__ll.html#gaa8d82e3514dcdbbcef477135048b4c12',1,'llvm']]],
   ['makefile',['Makefile',['../classmetaL_1_1Makefile.html',1,'metaL']]],
   ['manage',['manage',['../classdja_1_1djModule.html#ac1510ebb80ae29dd4a3f3837644cfdaf',1,'dja::djModule']]],
   ['meta',['Meta',['../classmetaL_1_1Meta.html',1,'metaL.Meta'],['../group__meta.html',1,'(Global Namespace)']]],
@@ -13,7 +14,8 @@ var searchData=
   ['mid',['mid',['../classmetaL_1_1File.html#a2c2d7aed488cca2d4acce04e33efc1a6',1,'metaL::File']]],
   ['minsize',['minsize',['../classmetaL_1_1Pswd.html#a876272d10cf441512216c893a9ff3325',1,'metaL::Pswd']]],
   ['minus',['minus',['../classmetaL_1_1Number.html#a746c07ac0c3f951c2a3f0e6a121ac747',1,'metaL::Number']]],
-  ['mk',['mk',['../classmetaL_1_1anyModule.html#af30f82d2a7703f58c4a8927264ccb698',1,'metaL.anyModule.mk()'],['../group__circ.html#ga4290dc4e47bd2bae56028e8bc68e6e3b',1,'metacircular.mk()'],['../group__demos.html#ga0267e2db028dd18637e545688c07a930',1,'demos.mk()']]],
+  ['mit',['MIT',['../group__doc.html#ga8c564b92bc491c038a5cacbafadb1337',1,'license']]],
+  ['mk',['mk',['../classmetaL_1_1dirModule.html#aa3c5b5534531ac4cd293a8d73f21c8e7',1,'metaL.dirModule.mk()'],['../group__circ.html#ga4290dc4e47bd2bae56028e8bc68e6e3b',1,'metacircular.mk()'],['../group__demos.html#ga0267e2db028dd18637e545688c07a930',1,'demos.mk()'],['../group__ll.html#ga8e16423e2954287ea140a004f3dee6fd',1,'llvm.mk()']]],
   ['mkrules',['mkrules',['../group__demos.html#ga814da2f0f126a3068af6aa780d10b19e',1,'demos']]],
   ['mksection',['mksection',['../group__demos.html#gadf79e78814985bc49a106ae07222167c',1,'demos']]],
   ['mksrc',['mksrc',['../classmetaL_1_1anyModule.html#aea8fa7381d91a5bd120c31da44bda3eb',1,'metaL::anyModule']]],

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['sicp_2emd',['SICP.md',['../SICP_8md.html',1,'(Global Namespace)'],['../ru_2SICP_8md.html',1,'(Global Namespace)']]],
-  ['sicp_5f1_5f1_5f1_5fexpressions_2emd',['SICP_1_1_1_Expressions.md',['../SICP__1__1__1__Expressions_8md.html',1,'']]],
-  ['smalltalk_2emd',['Smalltalk.md',['../Smalltalk_8md.html',1,'']]],
-  ['smalltalk_2epy',['Smalltalk.py',['../Smalltalk_8py.html',1,'']]]
+  ['rdbms_2epy',['rdbms.py',['../rdbms_8py.html',1,'']]],
+  ['readme_2emd',['README.md',['../README_8md.html',1,'']]]
 ];

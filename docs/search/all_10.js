@@ -42,6 +42,7 @@ var searchData=
   ['precedence',['precedence',['../group__parser.html#gadfff79106ef6047a82ed5d9e6849c2f7',1,'metaL']]],
   ['primitive',['Primitive',['../group__prim.html',1,'']]],
   ['primitive',['Primitive',['../classmetaL_1_1Primitive.html',1,'metaL']]],
+  ['printf',['printf',['../group__ll.html#gaffaaf5e7a9e6dc3f74526fcd0b54ca62',1,'llvm']]],
   ['project',['Project',['../group__prj.html',1,'']]],
   ['pswd',['Pswd',['../classmetaL_1_1Pswd.html',1,'metaL']]],
   ['push',['push',['../classmetaL_1_1Object.html#a65c47279aa42d5dfb7f3539a70cef29a',1,'metaL::Object']]],

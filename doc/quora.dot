@@ -1,0 +1,13 @@
+digraph {
+    rankdir=LR
+    design -> compile [label=".c .java\nsource code \nin text files"]
+    design -> assembler [label=".s .asm .ll"]
+    compile-> assembler [label=".tmp.s / RPC"]
+    assembler -> runtime [label=".dll .exe\nfirmware"]
+    design -> runtime [label=".py .php\n.js .html\nmisc data files"]
+    design [label="design-time:\nPython/metaL"]
+    compile [label="compile-time\nC/C++/Rust/Java/.."]
+    assembler [label="assembler\nLLVM"]
+    runtime [label="runtime\nmachine code/scipts"]
+    design -> runtime [label="or your language can be run directly in interpretation mode\n(not recommended, only for prototyping and debug)",color=red]
+}

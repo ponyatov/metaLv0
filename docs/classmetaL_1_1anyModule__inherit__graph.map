@@ -1,10 +1,11 @@
 <map id="metaL.anyModule" name="metaL.anyModule">
-<area shape="rect" id="node5" href="$classllvm_1_1llModule.html" title="llvm.llModule" alt="" coords="5,304,104,331"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="129,304,247,331"/>
-<area shape="rect" id="node9" href="$classtcc_1_1ccModule.html" title="tcc.ccModule" alt="" coords="271,304,371,331"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="136,155,240,181"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="143,80,233,107"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="138,5,238,32"/>
-<area shape="rect" id="node7" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="70,379,165,405"/>
-<area shape="rect" id="node8" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="189,379,331,405"/>
+<area shape="rect" id="node6" href="$classllvm_1_1llModule.html" title="llvm.llModule" alt="" coords="5,379,104,405"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="129,379,247,405"/>
+<area shape="rect" id="node10" href="$classtcc_1_1ccModule.html" title="tcc.ccModule" alt="" coords="271,379,371,405"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="129,229,247,256"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="136,155,240,181"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="143,80,233,107"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="138,5,238,32"/>
+<area shape="rect" id="node8" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="70,453,165,480"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="189,453,331,480"/>
 </map>

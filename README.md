@@ -261,6 +261,10 @@ interpreters vs the compilers into machine code).
 
 [iSICP] [interactive SICP](https://xuanji.appspot.com/isicp)
 
+[plai] Shriram Krishnamurthi [Programming Languages: Application and Interpretation](https://www.plai.org)
+
+[papl] Joe Politz, Ben Lerner [Programming and Programming Languages](https://papl.cs.brown.edu/2020/)
+
 [minsky] Marvin Minsky [**A Framework for Representing Knowledge**](https://web.media.mit.edu/~minsky/papers/Frames/frames.html)
 // MIT-AI Laboratory Memo 306, June, 1974. Reprinted in The Psychology of Computer Vision, P. Winston (Ed.), McGraw-Hill, 1975.
 
@@ -327,6 +331,8 @@ XeroxParc lab, Addison-Wesley, 1983
 
 [little] Tim Budd [A Little Smalltalk](http://stephane.ducasse.free.fr/FreeBooks/LittleSmalltalk/ALittleSmalltalk.pdf) Addison-Wesley 1987
 
+### Misc
+
 [dbms] **Database Systems. The Complete Book** 2nd ed.
 Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom
 
@@ -336,7 +342,3 @@ Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom
 **Meta-Programming and Model-Driven Meta-Program Development: Principles,
 Processes and Techniques**
 Springer London, 2013, ISBN 978-1-4471-4126-6
-
-[plai] Shriram Krishnamurthi [Programming Languages: Application and Interpretation](https://www.plai.org)
-
-[papl] Joe Politz, Ben Lerner [Programming and Programming Languages](https://papl.cs.brown.edu/2020/)

@@ -345,11 +345,15 @@ class String(Primitive):
 
     def py(self): return self.val
 
+    def cc_arg(self): return '"%s"' % self._val()
+
 ## @ingroup prim
 ## floating point
 class Number(Primitive):
     def __init__(self, V):
         Primitive.__init__(self, float(V))
+
+    def file(self): return '%s' % self.val
 
     ## @name operator
     ## @{
@@ -423,11 +427,18 @@ class Container(Object):
 ## @ingroup cont
 ## var size array (Python list)
 class Vector(Container):
+    def __init__(self, V=''):
+        super().__init__(V)
+
     def eval(self, ctx):
         res = self.__class__(self.val)
         for i in self.nest:
             res // i.eval(ctx)
         return res
+
+    def cc_arg(self):
+        ret = ','.join([j.cc_arg() for j in self.nest])
+        return '/* %s */ %s' % (self.head(), ret)
 
 ## @ingroup cont
 ## FIFO stack
@@ -597,9 +608,16 @@ class File(IO):
         self.mid = self['mid'] = Section('mid', comment)
         self.bot = self['bot'] = Section('bot', comment)
         if self.comment:
-            self.top // ('%s powered by metaL: https://repl.it/@metaLmasters/metaL#README.md' %
-                         self.comment + ' ')
-            self.top // ('%s @file' % self.comment * 2)
+            powered = "powered by metaL: https://repl.it/@metaLmasters/metaL#README.md"
+            if self.comment == '#':
+                self.top // ("#  %s" % powered)
+                self.top // ("## @file")
+            elif self.comment == '//':
+                self.top // ("// %s" % powered)
+                self.top // ("// @file")
+
+            else:
+                raise Error((self.comment))
 
     def sync(self):
         if self.fh:
@@ -637,11 +655,11 @@ class Port(Net):
 
 ## @ingroup net
 class Email(Net):
-    pass
+    def file(self): return '<%s>' % self.val
 
 ## @ingroup net
 class Url(Net):
-    pass
+    def file(self): return self.val
 
 ## @ingroup net
 class User(Net):
@@ -660,7 +678,7 @@ class Pswd(Net):
 
 ## @ingroup doc
 class Doc(Object):
-    pass
+    def file(self): return '%s' % self.val
 
 ## @ingroup doc
 class Title(Doc):
@@ -671,10 +689,8 @@ class Title(Doc):
 class Author(Doc):
     pass
 
-## @ingroup doc
-class License(Doc):
-    pass
 
+from license import License, MIT
 
 ## @ingroup info
 ## @{
@@ -684,7 +700,7 @@ vm['ABOUT'] = ABOUT = String(ABOUT)
 vm['EMAIL'] = EMAIL = Email(EMAIL)
 vm['AUTHOR'] = AUTHOR = Author(AUTHOR) << EMAIL
 vm['YEAR'] = YEAR = Integer(YEAR)
-vm['LICENSE'] = LICENSE = License(LICENSE)
+vm['LICENSE'] = LICENSE = MIT
 vm['GITHUB'] = GITHUB = Url(GITHUB)
 vm['LOGO'] = LOGO = File(LOGO)
 ## @}
@@ -720,26 +736,7 @@ class README(File):
 ## @ingroup prj
 class Makefile(File):
     def __init__(self, V='Makefile'):
-        File.__init__(self, V, comment='#')
-        vars = Section('vars')
-        self.top // vars
-        vars // 'CWD     = $(CURDIR)'
-        vars // 'MODULE  = $(notdir $(CWD))'
-        vars // 'OS     ?= $(shell uname -s)'
-        self.top // (Section('git') // 'NOW = $(shell date +%d%m%y)' //
-                     'REL = $(shell git rev-parse --short=4 HEAD)')
-        self.install = self['install'] = Section('install')
-        self.update = self['update'] = Section('update')
-        self.bot // self.install
-        self.bot // self.update
-        self.install // '.PHONY: install'
-        self.install // 'install:\n\t$(MAKE) $(OS)_install'
-        self.update // '.PHONY: update'
-        self.update // 'update:\n\t$(MAKE) $(OS)_update'
-        self.bot // '.PHONY: Linux_install Linux_update'
-        self.bot // 'Linux_install Linux_update:'
-        self.bot // '\tsudo apt update'
-        self.bot // '\tsudo apt install -u `cat apt.txt`\n'
+        super().__init__(V, comment='#')
 
 ## @ingroup prj
 ## system setting
@@ -770,18 +767,18 @@ class multiCommand(Setting):
         return ret
 
 ## @ingroup prj
-class anyModule(Module):
+## module with its own directory (root module = project)
+class dirModule(Module):
     def __init__(self, V=None):
         if not V:
             V = __import__('sys').argv[0]
             V = V.split('/')[-1]
             V = V.split('.')[0]
         super().__init__(V)
-        self['AUTHOR'] = vm['AUTHOR']
-        self['EMAIL'] = vm['EMAIL']
-        self['YEAR'] = vm['YEAR']
+        self['AUTHOR'] = self.AUTHOR = vm['AUTHOR']
+        self['EMAIL'] = self.EMAIL = vm['EMAIL']
+        self['YEAR'] = self.YEAR = vm['YEAR']
         self['LICENSE'] = vm['LICENSE']
-        self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
         # diroot
         self['dir'] = self.diroot = Dir(V)
         # Makefile
@@ -790,24 +787,136 @@ class anyModule(Module):
         self.init_apt()
         # gitignore
         self.init_gitignore()
+
+    def init_mk(self):
+        self.diroot['mk'] = self.mk = Makefile()
+        self.diroot // self.mk
+        # vars
+        self.mk['vars'] = self.mk.vars = Section('vars')
+        self.mk.top // self.mk.vars
+        self.mk.vars // f'{"MODULE":<8} = $(notdir $(CURDIR))'
+        self.mk.vars // f'{"OS":<7} ?= $(shell uname -s)'
+        # version
+        self.mk['version'] = self.mk.version = Section('version')
+        self.mk.top // self.mk.version
+        self.mk.version // f'{"NOW":<8} = $(shell date +%d%m%y)'
+        self.mk.version // f'{"REL":<8} = $(shell git rev-parse --short=4 HEAD)'
+        # dirs
+        self.mk['dirs'] = self.mk.dirs = Section('dirs')
+        self.mk.top // self.mk.dirs
+        self.mk.dirs // f'{"CWD":<8} = $(CURDIR)'
+        self.mk.dirs // f'{"TMP":<8} = $(CWD)/tmp'
+        self.mk.dirs // f'{"SOURCE":<8} = $(TMP)/src'
+        # tools
+        self.mk['tools'] = self.mk.tools = Section('tools')
+        self.mk.top // self.mk.tools
+        self.mk.tools // f'{"WGET":<8} = wget -c --no-check-certificate'
+        self.mk.tools // f'{"CORES":<8} = $(shell grep proc /proc/cpuinfo|wc -l)'
+        self.mk.tools // f'{"XMAKE":<8} = $(XPATH) $(MAKE) -j$(CORES)'
+        # install/update
+        self.mk['install'] = self.mk.install = Section('install')
+        self.mk.bot // self.mk.install
+        self.mk.install // '.PHONY: install'
+        self.mk.install // 'install:\n\t$(MAKE) $(OS)_install'
+        self.mk['update'] = self.mk.update = Section('update')
+        self.mk.bot // self.mk.update
+        self.mk.update // '.PHONY: update'
+        self.mk.update // 'update:\n\t$(MAKE) $(OS)_update'
+        self.mk['linux'] = self.mk.linux = Section('linux/install')
+        self.mk.bot // self.mk.linux
+        self.mk.linux // '.PHONY: Linux_install Linux_update'
+        self.mk.linux // 'Linux_install Linux_update:'
+        self.mk.linux // '\tsudo apt update'
+        self.mk.linux // '\tsudo apt install -u `cat apt.txt`\n'
+        # merge master/shadow
+        self.mk['merge'] = self.mk.merge = Section('merge')
+        self.mk.bot // self.mk.merge
+        self.mk.merge // 'MERGE  = Makefile apt.txt .gitignore'
+        self.mk.merge // 'MERGE += README.md'
+        # master
+        self.mk.bot // 'master:'
+        self.mk.bot // '\tgit checkout $@'
+        self.mk.bot // '\tgit pull -v'
+        self.mk.bot // '\tgit checkout shadow -- $(MERGE)'
+        # shadow
+        self.mk.bot // 'shadow:'
+        self.mk.bot // '\tgit checkout $@'
+        self.mk.bot // '\tgit pull -v'
+        # release
+        self.mk.bot // 'release:'
+        self.mk.bot // '\tgit tag $(NOW)-$(REL)'
+        self.mk.bot // '\tgit push -v && git push -v --tags'
+        self.mk.bot // '\t$(MAKE) shadow'
+        #
+        self.mk.sync()
+
+    def init_apt(self):
+        self['apt'] = self.apt = File('apt.txt', comment=None)
+        self.diroot // self.apt
+        #
+        self.apt // 'git make wget'
+        self.apt.sync()
+
+    def init_gitignore(self):
+        self['gitignore'] = self.gitignore = File('.gitignore')
+        self.diroot // self.gitignore
+        # common files
+        self.gitignore.top // '*~' // '*.swp'
+        self.gitignore.top // ''
+        self.gitignore.top // '*.log' // '/tmp/'
+        #
+        self.gitignore.sync()
+
+## @ingroup prj
+class anyModule(dirModule):
+    def __init__(self, V=None):
+        super().__init__(V)
+        self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
+        # LICENSE
+        self.lic = File('LICENSE', comment=None)
+        self.diroot // self.lic
+        self.lic // (
+            self['LICENSE'].val + 
+            self['LICENSE'].nest[0].val.format(
+                YEAR=self.YEAR.file(),
+                AUTHOR=self.AUTHOR.file(), EMAIL=self.EMAIL.file()
+            ))
+        self.lic.sync()
         # vscode
         self.init_vscode()
         # tasks
         self.init_tasks()
-
-    def init_gitignore(self):
-        self.diroot['gitignore'] = self.gitignore = File('.gitignore')
-        self.diroot // self.gitignore
-        self.gitignore.top // '*~' // '*.swp' // '' // '*.log'
-        self.gitignore.bot // ('/%s.exe\n/%s' % (self.val, self.val))
-        self.gitignore.bot  // '*.o' // '*.objdump'
-        self.gitignore.sync()
 
     def init_vscode(self):
         self.diroot['vscode'] = self.vscode = Dir('.vscode')
         self.diroot // self.vscode
         self.init_settings()
         self.init_launch()
+
+    def init_mk(self):
+        super().init_mk()
+        # tools
+        self.mk.tools = self['tools'] = Section('tools')
+        self.mk.mid // self.mk.tools
+        self.mk.tools // 'WGET    = wget -c --no-check-certificate'
+        # src
+        self.mk.src = self['src'] = Section('src')
+        self.mk.mid // self.mk.src
+        # obj
+        self.mk.obj = self['obj'] = Section('obj')
+        self.mk.mid // self.mk.obj
+        # all
+        self.mk.all = self['all'] = Section('all')
+        self.mk.mid // self.mk.all
+        # rules
+        self.mk.rules = self['rules'] = Section('rules')
+        self.mk.mid // self.mk.rules
+
+    def init_gitignore(self):
+        super().init_gitignore()
+        # self.gitignore.bot // ('/%s.exe\n/%s' % (self.val, self.val))
+        # self.gitignore.bot // '*.o' // '*.objdump'
+        # self.gitignore.sync()
 
     def init_settings(self):
         self.vscode['settings'] = self.settings = File(
@@ -837,6 +946,13 @@ class anyModule(Module):
         self.settings.mid // '},'
         self.settings.sync()
 
+    def init_tasks(self):
+        self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
+        self.vscode // self.tasks
+        self.tasks.top // '{' // '\t"version": "2.0.0",' // '\t"tasks": ['
+        self.tasks.bot // '\t]' // '}'
+        self.tasks.sync()
+
     def init_launch(self):
         self.vscode['launch'] = self.launch = File('launch.json', comment='//')
         self.vscode // self.launch
@@ -845,50 +961,7 @@ class anyModule(Module):
         self.launch.top // '\t"configurations": ['
         self.launch.bot // '\t]'
         self.launch.bot // '}'
-        # self.launch.mid // '\t\t{'
-        # self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
-        # self.launch.mid // '\t\t\t"type": "python",'
-        # self.launch.mid // '\t\t\t"request": "launch",'
-        # self.launch.mid // ('\t\t\t"program": "%s.py",' % self.val)
-        # self.launch.mid // '\t\t\t"console": "integratedTerminal"'
-        # self.launch.mid // '\t\t}'
         self.launch.sync()
-
-    def init_tasks(self):
-        self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
-        self.vscode // self.tasks
-        self.tasks.top // '{' // '\t"version": "2.0.0",' // '\t"tasks": ['
-        self.tasks.bot // '\t]' // '}'
-        self.tasks.sync()
-
-    def init_mk(self):
-        # mk
-        self.diroot['mk'] = self.mk = Makefile()
-        self.diroot // self.mk
-        self.mk.sync()
-        # tools
-        self.mk.tools = self['tools'] = Section('tools')
-        self.mk.mid // self.mk.tools
-        self.mk.tools // 'WGET    = wget -c --no-check-certificate'
-        # src
-        self.mk.src = self['src'] = Section('src')
-        self.mk.mid // self.mk.src
-        # obj
-        self.mk.obj = self['obj'] = Section('obj')
-        self.mk.mid // self.mk.obj
-        # all
-        self.mk.all = self['all'] = Section('all')
-        self.mk.mid // self.mk.all
-        # rules
-        self.mk.rules = self['rules'] = Section('rules')
-        self.mk.mid // self.mk.rules
-
-    def init_apt(self):
-        # apt
-        self.diroot['apt'] = self.apt = File('apt.txt', comment=None)
-        self.diroot // self.apt
-        self.apt // 'git make'
-        self.apt.sync()
 
     def mksrc(self, file):
         assert isinstance(file, File)
@@ -907,6 +980,61 @@ class CC(Object):
 class ccFile(CC, File):
     def __init__(self, V, comment='//'):
         super().__init__(V + '.c', comment)
+        self.top // stdint
+
+## @ingroup cc
+class ccInclude(CC, Module):
+    def file(self): return '#include <%s.h>' % self.val
+
+
+stdint = ccInclude('stdint')
+
+## @ingroup cc
+## C type
+class ccType(CC):
+    def file(self): return '%s %s' % (self.cc_type(), self.cc_val())
+    ## C type (without first `cc` prefix)
+    def cc_type(self): return self._type()[2:]
+    ## object value
+    def cc_val(self): return '%s' % self.val
+
+class ccInt(ccType):
+    pass
+
+
+ccint = ccInt(0)
+
+## @ingroup cc
+class ccVoid(ccType):
+    def cc_arg(self): return ''
+
+
+ccvoid = ccVoid('')
+
+
+## @ingroup cc
+## function
+class ccFn(CC, Fn):
+    def __init__(self, name, args=ccvoid, returns=ccvoid):
+        super().__init__(name)
+        assert isinstance(args, Object)
+        self['args'] = args
+        assert isinstance(returns, Object)
+        self['ret'] = returns
+
+    def file(self):
+        ret = '\n%s %s(%s) {' % (
+            self['ret'].cc_type(), self.val, self['args'].cc_arg())
+        for j in self.nest:
+            ret += '\n\t%s;' % j.cc_call()
+        ret += '\n\treturn %s;\n}' % self['ret'].cc_val()
+        return ret
+
+    def cc_call(self):
+        return '%s(%s)' % (self.val, self['args'].cc_arg())
+
+    def cc_arg(self):
+        return self._val()
 
 
 ## @defgroup py Python
@@ -931,7 +1059,8 @@ class pyFn(PY):
 ## @ingroup py
 class pyFile(PY, File):
     def __init__(self, V):
-        super().__init__(V + '.py', comment='//')
+        super().__init__(V, comment='#')
+        self.val += '.py'
 
 ## @ingroup py
 class pyModule(anyModule):
@@ -952,7 +1081,7 @@ class pyModule(anyModule):
         self.reqs.sync()
 
     def init_gitignore(self):
-        anyModule.init_gitignore(self)
+        super().init_gitignore()
         pygnore = Section('python/venv')
         self.gitignore.mid // pygnore
         pygnore // '*.pyc'
@@ -965,13 +1094,13 @@ class pyModule(anyModule):
         self.gitignore.sync()
 
     def init_settings(self):
-        anyModule.init_settings(self)
+        super().init_settings()
         self.settings.top // '    "python.pythonPath": "./bin/python3",'
         self.settings.top // '    "python.formatting.provider": "autopep8",'
         self.settings.top // '    "python.formatting.autopep8Path": "./bin/autopep8",'
         self.settings.top // '    "python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
-        self.settings.f11 // 'make repl'
-        self.settings.f12 // 'exit()'
+        # self.settings.f11 // 'make repl'
+        # self.settings.f12 // 'exit()'
         # files
         t = '\t"**/bin/**": true, "**/include/**":true,'
         self.settings.watcher // t
@@ -987,7 +1116,7 @@ class pyModule(anyModule):
         self.settings.sync()
 
     def init_launch(self):
-        super().init_launch(self)
+        super().init_launch()
         self.launch.mid // '\t\t{'
         self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
         self.launch.mid // '\t\t\t"type": "python",'
@@ -1009,7 +1138,7 @@ class pyModule(anyModule):
             pass
         self.py = pyFile(self)
         self.mksrc(self.py)
-        self.py.top // ('## @file %s' % self.file())
+        # self.py.top // ('## @file %s' % self.file())
         self.diroot['py'] = self.py
         self.diroot // self.py
         self.py['metal'] = self.py.metal = Section('metaL')

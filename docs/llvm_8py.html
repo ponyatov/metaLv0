@@ -83,6 +83,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llType.html">llvm.llType</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">type  <a href="classllvm_1_1llType.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llI32.html">llvm.llI32</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llVoid.html">llvm.llVoid</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html">llvm.llFn</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">function  <a href="classllvm_1_1llFn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,15 +115,27 @@ Variables</h2></td></tr>
 <tr class="separator:gae853a09c0efea8ca18a289fa70f4e2b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab6e7a6565aa8c213d666005b3ddec649"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gab6e7a6565aa8c213d666005b3ddec649">llvm.README</a> = README(MODULE)</td></tr>
 <tr class="separator:gab6e7a6565aa8c213d666005b3ddec649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8e16423e2954287ea140a004f3dee6fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#ga8e16423e2954287ea140a004f3dee6fd">llvm.mk</a> = MODULE.mk</td></tr>
+<tr class="separator:ga8e16423e2954287ea140a004f3dee6fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacf33bd4b0fa87aa76a0403379e7910a4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gacf33bd4b0fa87aa76a0403379e7910a4">llvm.empty</a> = src(ccFile, 'empty')</td></tr>
 <tr class="separator:gacf33bd4b0fa87aa76a0403379e7910a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae9ba575f0d735b6ca448f6e279ae3c97"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gae9ba575f0d735b6ca448f6e279ae3c97">llvm.a</a> = llI32('%a')</td></tr>
+<tr class="separator:gae9ba575f0d735b6ca448f6e279ae3c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa6880bd45d685eabeaf5822319dea636"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gaa6880bd45d685eabeaf5822319dea636">llvm.foo</a> = llFn('foo', a, a)</td></tr>
+<tr class="separator:gaa6880bd45d685eabeaf5822319dea636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga149f51f6b88bcf304b6b348cae5a38e7"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#ga149f51f6b88bcf304b6b348cae5a38e7">llvm.hello</a> = src(ccFile, 'hello')</td></tr>
 <tr class="separator:ga149f51f6b88bcf304b6b348cae5a38e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa8d82e3514dcdbbcef477135048b4c12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gaa8d82e3514dcdbbcef477135048b4c12">llvm.main</a> = ccFn('main', returns=ccint)</td></tr>
+<tr class="separator:gaa8d82e3514dcdbbcef477135048b4c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaffaaf5e7a9e6dc3f74526fcd0b54ca62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gaffaaf5e7a9e6dc3f74526fcd0b54ca62">llvm.printf</a> = ccFn('printf', Vector() // &quot;foo:%i\\n&quot; // foo)</td></tr>
+<tr class="separator:gaffaaf5e7a9e6dc3f74526fcd0b54ca62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacc8ac3b59f2c9bad22632cc64a135f14"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#gacc8ac3b59f2c9bad22632cc64a135f14">llvm.ll</a> = src(llFile, 'll')</td></tr>
 <tr class="separator:gacc8ac3b59f2c9bad22632cc64a135f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">types</div></td></tr>
-<tr class="memitem:ga463ad9c54104637d2cd7fc0a245cb6db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#ga463ad9c54104637d2cd7fc0a245cb6db">llvm.i32</a> = llType('i32')</td></tr>
+<tr class="memitem:ga463ad9c54104637d2cd7fc0a245cb6db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#ga463ad9c54104637d2cd7fc0a245cb6db">llvm.i32</a> = llI32(0)</td></tr>
 <tr class="separator:ga463ad9c54104637d2cd7fc0a245cb6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f0d67687e0b7a61383c83151ca658af"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ll.html#ga2f0d67687e0b7a61383c83151ca658af">llvm.void</a> = llVoid('')</td></tr>
+<tr class="separator:ga2f0d67687e0b7a61383c83151ca658af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>LLVM hacking. </p>

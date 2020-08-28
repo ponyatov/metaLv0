@@ -99,10 +99,18 @@ Collaboration diagram for llvm.llFn:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a875730b94d176ffcb846336804468d53"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#a875730b94d176ffcb846336804468d53">__init__</a> (self, returns, name)</td></tr>
-<tr class="separator:a875730b94d176ffcb846336804468d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b7200f851eb580b3d453f5a4966fd1c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#a7b7200f851eb580b3d453f5a4966fd1c">__init__</a> (self, name, args=<a class="el" href="group__ll.html#ga2f0d67687e0b7a61383c83151ca658af">void</a>, returns=<a class="el" href="group__ll.html#ga2f0d67687e0b7a61383c83151ca658af">void</a>)</td></tr>
+<tr class="separator:a7b7200f851eb580b3d453f5a4966fd1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a6a1f8183d5bc6aac4e0cb120857a3b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#a6a6a1f8183d5bc6aac4e0cb120857a3b">file</a> (self)</td></tr>
 <tr class="separator:a6a6a1f8183d5bc6aac4e0cb120857a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade670ecc007a72590a6919def5df454e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#ade670ecc007a72590a6919def5df454e">cc_arg</a> (self)</td></tr>
+<tr class="separator:ade670ecc007a72590a6919def5df454e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff04ea941afb32614b0694ee5c70a5a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#abff04ea941afb32614b0694ee5c70a5a">ll_arg</a> (self)</td></tr>
+<tr class="separator:abff04ea941afb32614b0694ee5c70a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6ce69d2efe54d564bba8d5a3506ef19"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#ae6ce69d2efe54d564bba8d5a3506ef19">cc_call</a> (self)</td></tr>
+<tr class="separator:ae6ce69d2efe54d564bba8d5a3506ef19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad10e5bf4007160447a1f68f9f0d17681"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classllvm_1_1llFn.html#ad10e5bf4007160447a1f68f9f0d17681">cc_extern</a> (self)</td></tr>
+<tr class="separator:ad10e5bf4007160447a1f68f9f0d17681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classmetaL_1_1Object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classmetaL_1_1Object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classmetaL_1_1Object.html">metaL.Object</a></td></tr>
 <tr class="memitem:a99ef965c4a47b2d47a62d197004e7597 inherit pub_methods_classmetaL_1_1Object"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmetaL_1_1Object.html#a99ef965c4a47b2d47a62d197004e7597">__init__</a> (self, V)</td></tr>
 <tr class="memdesc:a99ef965c4a47b2d47a62d197004e7597 inherit pub_methods_classmetaL_1_1Object"><td class="mdescLeft">&#160;</td><td class="mdescRight">construct object  <a href="classmetaL_1_1Object.html#a99ef965c4a47b2d47a62d197004e7597">More...</a><br /></td></tr>
@@ -199,8 +207,8 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>function </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a875730b94d176ffcb846336804468d53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a875730b94d176ffcb846336804468d53">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="a7b7200f851eb580b3d453f5a4966fd1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b7200f851eb580b3d453f5a4966fd1c">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -215,13 +223,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>returns</em>, </td>
+          <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>name</em>&#160;</td>
+          <td class="paramname"><em>args</em> = <code><a class="el" href="group__ll.html#ga2f0d67687e0b7a61383c83151ca658af">void</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>returns</em> = <code><a class="el" href="group__ll.html#ga2f0d67687e0b7a61383c83151ca658af">void</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -234,6 +248,60 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ade670ecc007a72590a6919def5df454e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade670ecc007a72590a6919def5df454e">&#9670;&nbsp;</a></span>cc_arg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def llvm.llFn.cc_arg </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6ce69d2efe54d564bba8d5a3506ef19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6ce69d2efe54d564bba8d5a3506ef19">&#9670;&nbsp;</a></span>cc_call()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def llvm.llFn.cc_call </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad10e5bf4007160447a1f68f9f0d17681"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad10e5bf4007160447a1f68f9f0d17681">&#9670;&nbsp;</a></span>cc_extern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def llvm.llFn.cc_extern </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6a6a1f8183d5bc6aac4e0cb120857a3b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a6a1f8183d5bc6aac4e0cb120857a3b">&#9670;&nbsp;</a></span>file()</h2>
 
@@ -242,6 +310,24 @@ Additional Inherited Members</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">def llvm.llFn.file </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abff04ea941afb32614b0694ee5c70a5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abff04ea941afb32614b0694ee5c70a5a">&#9670;&nbsp;</a></span>ll_arg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def llvm.llFn.ll_arg </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em></td><td>)</td>

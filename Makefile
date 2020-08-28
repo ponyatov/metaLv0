@@ -45,7 +45,7 @@ pep:
 	echo $(SRC) | xargs -n1 -P0 $(PEP) -i
 
 .PHONY: doxy
-doxy: doc/tutorial.svg doc/taxonomy.svg doc/hosttarget.svg
+doxy: doc/tutorial.svg doc/taxonomy.svg doc/hosttarget.svg doc/quora.svg
 #	doxygen -g doxy.gen
 	doxygen doxy.gen 1>/dev/null
 doc/%.svg: doc/%.dot
@@ -102,7 +102,7 @@ Linux_install Linux_update:
 MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
 MERGE += requirements.txt pyproject.toml .replit doc
-MERGE += $(MODULE) metacircular.py
+MERGE += $(MODULE) metacircular.py license.py
 MERGE += tcc tcc.py
 MERGE += Smalltalk.py
 MERGE += dja dja.py
@@ -110,6 +110,7 @@ MERGE += demos demos.py
 MERGE += webook webook.py
 MERGE += rdbms rdbms.py
 MERGE += llvm llvm.py
+# MERGE += home home.py
 MERGE += AkkaLA.py
 
 master:
