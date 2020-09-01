@@ -44,6 +44,7 @@ var searchData=
   ['primitive',['Primitive',['../classmetaL_1_1Primitive.html',1,'metaL']]],
   ['printf',['printf',['../group__ll.html#gaffaaf5e7a9e6dc3f74526fcd0b54ca62',1,'llvm']]],
   ['project',['Project',['../group__prj.html',1,'']]],
+  ['proj',['proj',['../classdja_1_1djModule.html#a6b0a61bb91237e8ec2c2be10b2909b15',1,'dja::djModule']]],
   ['pswd',['Pswd',['../classmetaL_1_1Pswd.html',1,'metaL']]],
   ['push',['push',['../classmetaL_1_1Object.html#a65c47279aa42d5dfb7f3539a70cef29a',1,'metaL::Object']]],
   ['push_5f1',['PUSH_1',['../classSmalltalk_1_1PUSH__1.html',1,'Smalltalk']]],

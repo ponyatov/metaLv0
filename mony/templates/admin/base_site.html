@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block extrahead %}
+<link rel="shortcut icon" href="{% static "logo.png" %}" type="image/png">
+<style>
+* { background:#111 !important; color: #aaa; }
+input,select { background-color: lightyellow !important; color:black !important; }
+a:hover { color:lightblue; }
+.required { color:yellow !important; }
+</style>
+{% endblock %}

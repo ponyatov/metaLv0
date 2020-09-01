@@ -60,6 +60,8 @@ class djModule(DJ, pyModule):
         # routes
         self.index = djRoute('index')
         self.admin = djRoute('admin')
+        # proj
+        self.init_proj()
         # app
         self.init_app()
         # manage.py
@@ -80,72 +82,123 @@ class djModule(DJ, pyModule):
         self.init_models()
         # cotext processors
         self.init_contexts()
+        # migrations
+        self.init_migrations()
+
+    def init_migrations(self):
+        self['migrations'] = self.migrations = Dir('migrations')
+        self.app // self.migrations
+        self.migrations.sync()
+        self.migrations // File('__init__.py').sync()
+        giti = File('.gitignore', comment=None)
+        self.migrations // giti
+        giti // '????_*.py'
+        giti.sync()
+        # self.migrations.user = pyFile('0000_initial')
+        # self.migrations // self.migrations.user
+        # self.migrations.user.top // "from django.conf import settings"
+        # self.migrations.user.top // "from django.db import migrations, models"
+        # self.migrations.user.mid // "class Migration(migrations.Migration):"
+        # self.migrations.user.mid // "\tdependencies = ["
+        # self.migrations.user.mid // "\t\tmigrations.swappable_dependency(settings.AUTH_USER_MODEL),"
+        # self.migrations.user.mid // "\t]"
+        # self.migrations.user.mid // "\toperations = ["
+        # self.migrations.user.mid // "\t]"
+        # self.migrations.user.sync()
 
     def init_install(self):
-        self.diroot['install'] = self.app.install = pyFile('install')
-        self.diroot // self.app.install
-        self.app.install.top //\
+        self.diroot['install'] = self.proj.install = pyFile('install')
+        self.diroot // self.proj.install
+        self.proj.install.top //\
             'import os' //\
             'os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")' //\
             'import django' //\
             'django.setup()' //\
             'from django.contrib.auth.models import User'
-        self.app.install.mid //\
+        self.proj.install.mid //\
             'su = User.objects.create_superuser(' //\
             "\tusername='dponyatov'," //\
             "\temail='dponyatov@gmail.com'," //\
             "\tpassword='passwd'" //\
             ')' //\
             'su.save()'
-        self.app.install.sync()
-        self.mk.install // '\t$(PY) install.py'
+        self.proj.install.sync()
+        self.mk.install // '\t$(MAKE) createsuperuser'
+        # self.mk.install // '\t$(PY) install.py'
         self.mk.sync()
 
     def init_contexts(self):
-        self.app['context'] = self.app.context = pyFile('context')
-        self.app // self.app.context
-        self.app.context.top // 'from django.contrib.auth.models import User'
-        self.app.context.mid // 'def user(request):'
-        self.app.context.mid // "\tuser = User.objects.get(id=request.user.id)"
-        # self.app.context.mid // "\tuser = request.user"
-        # self.app.context.mid // "\tuser.f = 'Фамилия'"
-        # self.app.context.mid // "\tuser.i = 'Имя'"
-        # self.app.context.mid // "\tuser.o = 'Отчество'"
-        # self.app.context.mid // "\tuser.email = 'no@mail.ru'"
-        # self.app.context.mid // "\tuser.tel = '+79171234567'"
-        self.app.context.mid // "\treturn {'user':user}"
-        self.app.context.sync()
+        self.proj['context'] = self.proj.context = pyFile('context')
+        self.proj // self.proj.context
+        self.proj.context.top // 'from django.contrib.auth.models import User'
+        # self.proj.context.mid // "\tuser = request.user"
+        # self.proj.context.mid // "\tuser.f = 'Фамилия'"
+        # self.proj.context.mid // "\tuser.i = 'Имя'"
+        # self.proj.context.mid // "\tuser.o = 'Отчество'"
+        # self.proj.context.mid // "\tuser.email = 'no@mail.ru'"
+        # self.proj.context.mid // "\tuser.tel = '+79171234567'"
+        self.proj.context.mid //\
+            "from app.apps import AppConfig" //\
+            "def title(request):" //\
+            "\treturn {'title':AppConfig.verbose_name}" //\
+            ''
+        self.proj.context.mid //\
+            'def user(request):' //\
+            '\ttry:' //\
+            "\t\tuser = User.objects.get(id=request.user.id)" //\
+            "\texcept User.DoesNotExist:" //\
+            "\t\tuser = None" //\
+            "\treturn {'user':user}" //\
+            self.proj.context.sync()
 
     def init_admin(self):
-        self.app['admin'] = self.app.admin = pyFile('admin')
-        self.app // self.app.admin
-        self.app.admin.top // 'from django.contrib import admin'
-        self.app.admin.mid // 'from .models import *'
-        self.app.admin.sync()
+        self.app['admin'] = self.proj.admin = pyFile('admin')
+        self.app // self.proj.admin
+        self.proj.admin.top // 'from django.contrib import admin'
+        self.proj.admin.mid // 'from .models import *'
+        self.proj.admin.sync()
 
     def init_models(self):
         self['models'] = self.models = pyFile('models')
         self.app // self.models
         self.models.top // '# https://tproger.ru/translations/extending-django-user-model/#var2'
         self.models.top // "from django.db import models"
-        self.models.top // "from django.contrib.auth.models import User"
-        locs = Section('locations')
-        self.models.mid // locs
-        locs // "LOCATIONS = [('Samara','Самара'),]"
-        profile = Section('profile')
-        self.models.mid // profile
-        profile // "class Profile(models.Model):" //\
-            "\tuser = models.OneToOneField(User, verbose_name='пользователь', on_delete=models.CASCADE)" //\
-            "\tloc = models.CharField('регион', max_length=0x22, blank=True, choices=LOCATIONS)" //\
-            "\tphone = models.CharField('телефон',max_length=0x11,blank=True)" //\
+        #
+        user = Section('user')
+        self.models.mid // user
+        user //\
+            "from django.contrib.auth.models import AbstractUser" //\
+            "class CustomUser(AbstractUser):" //\
+            "\tpass"
+        user.sync()
+        #
+        location = Section('location')
+        self.models.mid // location
+        self.proj.admin.bot // 'admin.site.register(Location)'
+        location // 'class Location(models.Model):' //\
+            "\tname = models.CharField('название', max_length=0x22, blank=False)" //\
             "\tclass Meta:" //\
-            "\t\tverbose_name = 'профиль пользователя'" //\
-            "\t\tverbose_name_plural = 'профили пользователей'" //\
+            "\t\tverbose_name = 'регион'" //\
+            "\t\tverbose_name_plural = 'регионы'" //\
             "\tdef __str__(self):" //\
-            "\t\treturn '%s @ %s | %s'%(self.user,self.loc,self.phone)"
+            "\t\treturn '%s'%self.name"
+        # profile = Section('profile')
+        # self.models.mid // profile
+        # self.proj.admin.bot // 'admin.site.register(Profile)'
+        # profile // "class Profile(models.Model):" //\
+        # "from django.contrib.auth.models import User"//\
+        #     "\tuser = models.OneToOneField(User, verbose_name='пользователь', on_delete=models.CASCADE)" //\
+        #     "\tloc = models.ForeignKey(Location, verbose_name='регион', on_delete=models.DO_NOTHING)" //\
+        #     "\tphone = models.CharField('телефон',max_length=0x11,blank=True)" //\
+        #     "\tclass Meta:" //\
+        #     "\t\tverbose_name = 'профиль пользователя'" //\
+        #     "\t\tverbose_name_plural = 'профили пользователей'" //\
+        #     "\tdef __str__(self):" //\
+        #     "\t\treturn '%s @ %s | %s'%(self.user,self.loc,self.phone)"
         self.models.sync()
-        self.app.admin.bot // 'admin.site.register(Profile)'
-        self.app.admin.sync()
+        self.proj.admin.sync()
+        self.mk.src // 'SRC += app/models.py'
+        self.mk.sync()
 
     def init_tasks(self):
         pyModule.init_tasks(self)
@@ -181,6 +234,8 @@ class djModule(DJ, pyModule):
         admin = Dir('admin')
         self.templates // admin
         admin.sync()
+        self.mk.src // 'SRC += app/admin.py'
+        self.mk.sync()
         base_site = File('base_site.html', comment=None)
         admin // base_site
         base_site //\
@@ -208,10 +263,18 @@ class djModule(DJ, pyModule):
             '\t\t<meta charset="utf-8">' //\
             '\t\t<meta http-equiv="X-UA-Compatible" content="IE=edge">' //\
             '\t\t<meta name="viewport" content="width=device-width, initial-scale=1">' //\
-            '\t\t{% block title %}{% endblock %}' //\
+            '\t\t{% block title %}<title>{{title}}</title>{% endblock %}' //\
             '\t\t<link href="{% static "bootstrap.css" %}" rel="stylesheet">' //\
             '\t\t<link rel="shortcut icon" href="{% static "logo.png" %}" type="image/png">' //\
             '\t</head>'
+        self.templates.all //\
+            "\t<style>" //\
+            "\t\tbody { padding:4mm; }" //\
+            "\t\t@media print {" //\
+            "\t\t\tbody { padding:0; }" //\
+            "\t\t\ta[href]:after { display: none !important; }" //\
+            "\t\t}" //\
+            "\t</style>"
         self.templates.all // '\t<body>' //\
             '\t\t{% block body %}{% endblock %}' //\
             '\t\t<script src="{% static "jquery.js" %}"></script>' //\
@@ -228,126 +291,152 @@ class djModule(DJ, pyModule):
         self.templates.index.top // "{% load static %}" // ''
         self.templates.index.sync()
 
+    def init_proj(self):
+        self.proj = self['proj'] = Dir('proj')
+        self.diroot // self.proj
+        self.proj.sync()
+        self.proj // pyFile('__init__')
+
+    ## `/app/apps.py`
     def init_app(self):
         self.app = self['app'] = Dir('app')
         self.diroot // self.app
+        self.app.sync()
         self.app // pyFile('__init__')
         self.mk.src.drop() # config.py
         self.mk.src.drop() # $(module).py
         self.init_app_settings()
-        self.init_app_views()
-        self.init_app_urls()
+        self.init_proj_views()
+        self.init_proj_urls()
+        self.app['apps'] = self.app.apps = pyFile('apps')
+        self.app // self.app.apps
+        self.app.apps.top // 'from django.apps import AppConfig'
+        self.app.apps.mid // "class AppConfig(AppConfig):"
+        self.app.apps.mid // "\tname = 'app'"
+        self.app.apps.mid // ("\tverbose_name = '%s'" % self['TITLE'].val)
+        self.app.apps.sync()
+        self.mk.src // 'SRC += app/apps.py'
+        self.mk.src.sync()
 
-    def init_app_i18n(self):
-        self.app['i18n'] = self.app.i18n = Section('i18n')
-        self.app.settings.mid // self.app.i18n
-        self.app.i18n // "LANGUAGE_CODE = 'ru-ru'"#'en-us'"
-        # self.app.i18n // "USE_I18N = True"
-        # self.app.i18n // "USE_L10N = True"
-        # self.app.i18n // "TIME_ZONE = 'UTC'"
-        # self.app.i18n // "USE_TZ = True"
+    ## intercept `A[key]=B` operations
+    def __setitem__(self, key, that):
+        super().__setitem__(key, that)
+        if isinstance(that, Title):
+            self.init_app()
+
+    def init_proj_i18n(self):
+        self.app['i18n'] = self.proj.i18n = Section('i18n')
+        self.proj.settings.mid // self.proj.i18n
+        self.proj.i18n // "LANGUAGE_CODE = 'ru-ru'"#'en-us'"
+        # self.proj.i18n // "USE_I18N = True"
+        # self.proj.i18n // "USE_L10N = True"
+        # self.proj.i18n // "TIME_ZONE = 'UTC'"
+        # self.proj.i18n // "USE_TZ = True"
 
     def init_app_settings(self):
-        self.app['settings'] = self.app.settings = pyFile('settings')
-        self.app // self.app.settings
-        self.app.settings.top // '## @brief Django settings'
-        self.app.settings.top // 'from pathlib import Path'
-        self.app.settings.mid // 'BASE_DIR = Path(__file__).resolve(strict=True).parent.parent'
-        self.app.settings.top // pyImport('os')
-        self.app.settings.mid // 'SECRET_KEY = "abcdefgh"#"os.urandom(64)"'
-        self.app.settings.mid // 'DEBUG = True'
-        self.app.settings.mid // 'ALLOWED_HOSTS = []'
-        self.init_app_installed()
+        self.proj['settings'] = self.proj.settings = pyFile('settings')
+        self.proj // self.proj.settings
+        self.proj.settings.top // '## @brief Django settings'
+        self.proj.settings.top // 'from pathlib import Path'
+        self.proj.settings.mid // 'BASE_DIR = Path(__file__).resolve(strict=True).parent.parent'
+        self.proj.settings.top // pyImport('os')
+        self.proj.settings.mid // 'SECRET_KEY = "abcdefgh"#"os.urandom(64)"'
+        self.proj.settings.mid // 'DEBUG = True'
+        self.proj.settings.mid // 'ALLOWED_HOSTS = []'
+        self.init_proj_installed()
+        self.proj.settings.mid // "AUTH_USER_MODEL = 'app.CustomUser'"
         self.app_init_middleware()
-        self.app.settings.mid // "ROOT_URLCONF = 'app.urls'"
-        self.init_app_templates()
-        self.init_app_databases()
-        self.init_app_i18n()
-        self.init_app_static()
-        self.app.settings.sync()
+        self.proj.settings.mid // "ROOT_URLCONF = 'proj.urls'"
+        self.init_proj_templates()
+        self.init_proj_databases()
+        self.init_proj_i18n()
+        self.init_proj_static()
+        self.proj.settings.sync()
         self.mk.src // 'SRC += app/settings.py'
         self.mk.sync()
 
     def app_init_middleware(self):
-        self.app.settings.mid // 'MIDDLEWARE = ['
-        self.app['middleware'] = self.app.middleware = Section('middleware')
-        self.app.settings.mid // self.app.middleware
-        self.app.settings.mid // ']'
-        # self.app.middleware // "\t'django.middleware.security.SecurityMiddleware',"
-        self.app.middleware // "\t'django.contrib.sessions.middleware.SessionMiddleware',"
-        self.app.middleware // "\t'django.contrib.auth.middleware.AuthenticationMiddleware',"
-        self.app.middleware // "\t'django.contrib.messages.middleware.MessageMiddleware',"
+        self.proj.settings.mid // 'MIDDLEWARE = ['
+        self.app['middleware'] = self.proj.middleware = Section('middleware')
+        self.proj.settings.mid // self.proj.middleware
+        self.proj.settings.mid // ']'
+        # self.proj.middleware // "\t'django.middleware.security.SecurityMiddleware',"
+        self.proj.middleware // "\t'django.contrib.sessions.middleware.SessionMiddleware',"
+        self.proj.middleware // "\t'django.contrib.auth.middleware.AuthenticationMiddleware',"
+        self.proj.middleware // "\t'django.contrib.messages.middleware.MessageMiddleware',"
 
-    def init_app_templates(self):
-        self.app.settings.mid // 'TEMPLATES = ['
-        self.app['templates'] = self.app.templates = Section('templates')
-        self.app.settings.mid // self.app.templates
-        self.app.settings.mid // ']'
-        self.app.templates // '\t{'
-        self.app.templates // "\t\t'BACKEND': 'django.template.backends.django.DjangoTemplates',"
-        # self.app.templates // "\t\t'DIRS': [],"
+    def init_proj_templates(self):
+        self.proj.settings.mid // 'TEMPLATES = ['
+        self.app['templates'] = self.proj.templates = Section('templates')
+        self.proj.settings.mid // self.proj.templates
+        self.proj.settings.mid // ']'
+        self.proj.templates // '\t{'
+        self.proj.templates // "\t\t'BACKEND': 'django.template.backends.django.DjangoTemplates',"
+        # self.proj.templates // "\t\t'DIRS': [],"
         # req for /template resolve
-        self.app.templates // "\t\t'DIRS': [BASE_DIR/'templates'],"
-        self.app.templates // "\t\t'APP_DIRS': True," # req for admin/login.html template
-        self.app.templates // "\t\t'OPTIONS': {"
-        self.app.templates // "\t\t\t'context_processors': ["
-        # self.app.templates // "\t\t\t'django.template.context_processors.debug',"
-        self.app.templates // "\t\t\t\t'django.template.context_processors.request',"
-        self.app.templates // "\t\t\t\t'django.contrib.auth.context_processors.auth',"
-        self.app.templates // "\t\t\t\t'django.contrib.messages.context_processors.messages',"
-        self.app.templates // "\t\t\t\t'app.context.user',"
-        self.app.templates // '\t\t\t],'
-        self.app.templates // '\t\t},'
-        self.app.templates // '\t},'
+        self.proj.templates // "\t\t'DIRS': [BASE_DIR/'templates'],"
+        # req for admin/login.html template
+        self.proj.templates // "\t\t'APP_DIRS': True,"
+        self.proj.templates // "\t\t'OPTIONS': {"
+        self.proj.templates // "\t\t\t'context_processors': ["
+        # self.proj.templates // "\t\t\t'django.template.context_processors.debug',"
+        self.proj.templates // "\t\t\t\t'django.template.context_processors.request',"
+        self.proj.templates // "\t\t\t\t'django.contrib.auth.context_processors.auth',"
+        self.proj.templates // "\t\t\t\t'django.contrib.messages.context_processors.messages',"
+        self.proj.templates // "\t\t\t\t'proj.context.user', 'proj.context.title', "
+        self.proj.templates // '\t\t\t],'
+        self.proj.templates // '\t\t},'
+        self.proj.templates // '\t},'
 
-    def init_app_databases(self):
-        self.app.settings.mid // "DATABASES = {"
-        self.app['databases'] = self.app.databases = Section('databases')
-        self.app.settings.mid // self.app.databases
-        self.app.databases // "\t'default': {"
-        self.app.databases // "\t\t'ENGINE': 'django.db.backends.sqlite3',"
-        self.app.databases // ("\t\t'NAME': BASE_DIR/'%s.sqlite3'," % self.val)
-        self.app.databases // "\t}"
-        self.app.settings.mid // "}"
+    def init_proj_databases(self):
+        self.proj.settings.mid // "DATABASES = {"
+        self.proj['databases'] = self.proj.databases = Section('databases')
+        self.proj.settings.mid // self.proj.databases
+        self.proj.databases // "\t'default': {"
+        self.proj.databases // "\t\t'ENGINE': 'django.db.backends.sqlite3',"
+        self.proj.databases // ("\t\t'NAME': BASE_DIR/'%s.sqlite3'," % self.val)
+        self.proj.databases // "\t}"
+        self.proj.settings.mid // "}"
 
-    def init_app_installed(self):
-        self.app['installed'] = self.app.installed = Section('installed')
-        self.app.settings.mid // 'INSTALLED_APPS = [' // self.app.installed // ']'
-        self.app.installed // "\t'app',"
-        self.app.installed // "\t'django.contrib.admin',"
-        self.app.installed // "\t'django.contrib.auth',"
-        self.app.installed // "\t'django.contrib.contenttypes',"
-        self.app.installed // "\t'django.contrib.sessions',"
-        self.app.installed // "\t'django.contrib.messages',"
+    def init_proj_installed(self):
+        self.app['installed'] = self.proj.installed = Section('installed')
+        self.proj.settings.mid // 'INSTALLED_APPS = [' // self.proj.installed // ']'
+        self.proj.installed //\
+            "\t'django.contrib.admin'," //\
+            "\t'django.contrib.auth'," //\
+            "\t'django.contrib.contenttypes'," //\
+            "\t'django.contrib.sessions'," //\
+            "\t'django.contrib.messages'," //\
+            "\t'django.contrib.staticfiles'," //\
+            "\t'app',"
 
-    def init_app_static(self):
-        self.app.installed // "\t'django.contrib.staticfiles',"
+    def init_proj_static(self):
         static = Section('static')
-        self.app.settings.mid // static
+        self.proj.settings.mid // static
         static // "STATIC_URL = '/static/'"
         static // "STATICFILES_DIRS = [BASE_DIR/'static']"
 
-    def init_app_views(self):
-        self.app['views'] = self.app.views = pyFile('views')
-        self.app // self.app.views
-        self.app.views.top // "from django.http import HttpResponse"
-        self.app.views.top // "from django.template import loader"
-        self.app.views.mid // self.index.py_view()
-        self.app.views.sync()
+    def init_proj_views(self):
+        self.app['views'] = self.proj.views = pyFile('views')
+        self.app // self.proj.views
+        self.proj.views.top // "from django.http import HttpResponse"
+        self.proj.views.top // "from django.template import loader"
+        self.proj.views.mid // self.index.py_view()
+        self.proj.views.sync()
 
-    def init_app_urls(self):
-        self.app['urls'] = self.app.urls = pyFile('urls')
-        self.app // self.app.urls
-        self.app.urls.top // '## @brief URL routing'
-        self.app.urls.top // 'from django.contrib import admin'
-        self.app.urls.top // 'from django.urls import path' // ''
-        self.app.urls.top // 'from . import views' // ''
-        self.app.urls.top // 'urlpatterns = ['
-        self.app.urls.mid // self.index.py_url(route='')
-        self.app.urls.mid // self.admin.py_url(request='admin.site.urls')
-        self.app.urls.bot // ']'
-        self.app.urls.sync()
-        self.mk.src // 'SRC += app/urls.py'
+    def init_proj_urls(self):
+        self.proj['urls'] = self.proj.urls = pyFile('urls')
+        self.proj // self.proj.urls
+        self.proj.urls.top // '## @brief URL routing'
+        self.proj.urls.top // 'from django.contrib import admin'
+        self.proj.urls.top // 'from django.urls import path' // ''
+        self.proj.urls.top // 'from app import views' // ''
+        self.proj.urls.top // 'urlpatterns = ['
+        self.proj.urls.mid // self.index.py_url(route='')
+        self.proj.urls.mid // self.admin.py_url(request='admin.site.urls')
+        self.proj.urls.bot // ']'
+        self.proj.urls.sync()
+        self.mk.src // 'SRC += proj/urls.py'
         self.mk.sync()
 
     def init_py(self):
@@ -374,7 +463,7 @@ class djModule(DJ, pyModule):
         self.manage.top // pyImport('os') // pyImport('sys')
         self.manage.main = pyFn('main')
         self.manage.main // (
-            "os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')")
+            "os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'proj.settings')")
         self.manage.main // "from django.core.management import execute_from_command_line"
         self.manage.main // "execute_from_command_line(sys.argv)"
         self.manage.mid // self.manage.main
@@ -427,7 +516,11 @@ class djModule(DJ, pyModule):
         # createsuperuser
         createsuperuser = Section('createsuperuser')
         self.mk.mid // createsuperuser
-        createsuperuser // '.PHONY: createsuperuser\ncreatesuperuser: $(PY) manage.py\n\t$^ $@'
+        createsuperuser // '.PHONY: createsuperuser\ncreatesuperuser: $(PY) manage.py'
+        createsuperuser // '\t$^ $@ \\'
+        createsuperuser // ('\t\t--username %s \\' %
+                            self['EMAIL'].val.split('@')[0])
+        createsuperuser // ('\t\t--email %s' % self['EMAIL'].val)
         # shell
         shell = Section('shell')
         shell // '.PHONY: shell\nshell: $(PY) manage.py\n\t$^ $@'

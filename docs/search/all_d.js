@@ -12,6 +12,7 @@ var searchData=
   ['metal_2emd',['metaL.md',['../metaL_8md.html',1,'']]],
   ['metal_2epy',['metaL.py',['../metaL_8py.html',1,'']]],
   ['mid',['mid',['../classmetaL_1_1File.html#a2c2d7aed488cca2d4acce04e33efc1a6',1,'metaL::File']]],
+  ['migrations',['migrations',['../classdja_1_1djModule.html#a809b4a0fb90f635f8e14099c6fa5bf43',1,'dja::djModule']]],
   ['minsize',['minsize',['../classmetaL_1_1Pswd.html#a876272d10cf441512216c893a9ff3325',1,'metaL::Pswd']]],
   ['minus',['minus',['../classmetaL_1_1Number.html#a746c07ac0c3f951c2a3f0e6a121ac747',1,'metaL::Number']]],
   ['mit',['MIT',['../group__doc.html#ga8c564b92bc491c038a5cacbafadb1337',1,'license']]],
@@ -21,7 +22,9 @@ var searchData=
   ['mksrc',['mksrc',['../classmetaL_1_1anyModule.html#aea8fa7381d91a5bd120c31da44bda3eb',1,'metaL::anyModule']]],
   ['mktools',['mktools',['../group__demos.html#ga70547a03e5e60bb78dee0283787c4654',1,'demos']]],
   ['models',['models',['../classdja_1_1djModule.html#a3378b06c906177fea36170067918cb39',1,'dja::djModule']]],
-  ['module',['Module',['../classmetaL_1_1Module.html',1,'metaL.Module'],['../classmetaL_1_1README.html#a13e1431418de61e0d18683308b7ac002',1,'metaL.README.module()'],['../group__info.html#gaef5fe1e14020599c2c6fad4ed7fa67bf',1,'metaL.MODULE()'],['../group__hello.html#ga2beea867cab97ad177371bfb533884d2',1,'hello.MODULE()'],['../namespacetcc.html#ab2f9d68c2a228bd482f3fc381f2b0dff',1,'tcc.MODULE()'],['../group__circ.html#ga0139012e5f82241fd37cef871e5966d0',1,'metacircular.MODULE()'],['../group__demos.html#ga79786a8b16ca7a5c752eb64cce21b7c4',1,'demos.MODULE()'],['../group__rdbms.html#gad12a10d714904f5ccfbb934d61ca5330',1,'rdbms.MODULE()'],['../group__webook.html#ga474c0c1f32a61e7cc0bae96e9db9c6cb',1,'webook.MODULE()'],['../group__ll.html#ga3a7f12d3203be4d7cf7a6f3f315a44c6',1,'llvm.MODULE()']]],
+  ['module',['Module',['../classmetaL_1_1Module.html',1,'metaL.Module'],['../classmetaL_1_1README.html#a13e1431418de61e0d18683308b7ac002',1,'metaL.README.module()'],['../group__info.html#gaef5fe1e14020599c2c6fad4ed7fa67bf',1,'metaL.MODULE()'],['../group__hello.html#ga2beea867cab97ad177371bfb533884d2',1,'hello.MODULE()'],['../namespacetcc.html#ab2f9d68c2a228bd482f3fc381f2b0dff',1,'tcc.MODULE()'],['../group__mony.html#ga40492ecb55c58c233363b0b1493f49b4',1,'mony.MODULE()'],['../group__circ.html#ga0139012e5f82241fd37cef871e5966d0',1,'metacircular.MODULE()'],['../group__demos.html#ga79786a8b16ca7a5c752eb64cce21b7c4',1,'demos.MODULE()'],['../group__rdbms.html#gad12a10d714904f5ccfbb934d61ca5330',1,'rdbms.MODULE()'],['../group__webook.html#ga474c0c1f32a61e7cc0bae96e9db9c6cb',1,'webook.MODULE()'],['../group__ll.html#ga3a7f12d3203be4d7cf7a6f3f315a44c6',1,'llvm.MODULE()']]],
+  ['mony',['mony',['../namespacemony.html',1,'mony'],['../group__mony.html',1,'(Global Namespace)']]],
+  ['mony_2epy',['mony.py',['../mony_8py.html',1,'']]],
   ['mul',['mul',['../classmetaL_1_1Number.html#ad9523416b3e6808f5adb2afe016be658',1,'metaL::Number']]],
   ['multicommand',['multiCommand',['../classmetaL_1_1multiCommand.html',1,'metaL']]]
 ];

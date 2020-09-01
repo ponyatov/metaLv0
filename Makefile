@@ -111,6 +111,7 @@ MERGE += webook webook.py
 MERGE += rdbms rdbms.py
 MERGE += llvm llvm.py
 # MERGE += home home.py
+MERGE += mony mony.py
 MERGE += AkkaLA.py
 
 master:

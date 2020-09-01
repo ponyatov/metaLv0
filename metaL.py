@@ -720,16 +720,18 @@ class README(File):
         self.module = module
         self // ('#  `%s`' % module.val)
         self // ('## %s' % module['TITLE'].val)
-        try:
-            self // ('%s' % module['ABOUT'].val)
-        except KeyError:
-            self // ''
+        # self // ''
+        about = module['ABOUT'].val
+        while about[-1] in '\r\n': about = about[:-1]
+        about += '\n* powered by `metaL`'
+        self // ('%s' % about)
+        self // ''
         self // ('(c) %s <<%s>> %s %s' % (
             module['AUTHOR'].val, module['EMAIL'].val,
             module['YEAR'].val, module['LICENSE'].val))
         self.github = Section('github', comment=None)
         self // self.github
-        self.github // ('github: %s/%s%s' %
+        self.github // ('github: %s%s%s' %
                         (module['GITHUB'].val, module.val, module['GITHUB']['branch'].val))
 
 

@@ -1,0 +1,21 @@
+
+// \ <section:top>
+// powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
+// @file
+// https://code.visualstudio.com/docs/python/debugging
+{
+	"configurations": [
+// / <section:top>
+// \ <section:mid>
+		{
+			"name": "Python: mony",
+			"type": "python",
+			"request": "launch",
+			"program": "mony.py",
+			"console": "integratedTerminal"
+		}
+// / <section:mid>
+// \ <section:bot>
+	]
+}
+// / <section:bot>

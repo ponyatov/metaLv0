@@ -1,0 +1,30 @@
+
+# \ <section:top>
+#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
+## @file
+*~
+*.swp
+
+*.log
+/tmp/
+# / <section:top>
+# \ <section:mid>
+
+# \ <section:python/venv>
+*.pyc
+/bin/
+/include/
+/lib/
+/lib64
+/share/
+/pyvenv.cfg
+# / <section:python/venv>
+mony.sqlite3
+# / <section:mid>
+# \ <section:bot>
+
+# \ <section:metaL>
+/mony/
+# / <section:metaL>
+/monyz/
+# / <section:bot>
