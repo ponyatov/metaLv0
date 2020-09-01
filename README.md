@@ -12,6 +12,8 @@ doxygen manual: https://ponyatov.github.io/metaL
 * https://blog.repl.it/langjam
 * https://repl.it/talk/share/metaL-for-replit-Language-Jam-contest/46470
 
+LinkedIn post: https://www.linkedin.com/pulse/how-hard-develop-your-own-programming-language-worth-dmitry-ponyatov/
+
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
 
 github: https://github.com/ponyatov/metaL
