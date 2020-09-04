@@ -80,6 +80,8 @@ class djModule(DJ, pyModule):
         self.init_admin()
         # models
         self.init_models()
+        # forms
+        self.init_forms()
         # cotext processors
         self.init_contexts()
         # migrations
@@ -130,23 +132,17 @@ class djModule(DJ, pyModule):
     def init_contexts(self):
         self.proj['context'] = self.proj.context = pyFile('context')
         self.proj // self.proj.context
-        self.proj.context.top // 'from django.contrib.auth.models import User'
-        # self.proj.context.mid // "\tuser = request.user"
-        # self.proj.context.mid // "\tuser.f = 'Фамилия'"
-        # self.proj.context.mid // "\tuser.i = 'Имя'"
-        # self.proj.context.mid // "\tuser.o = 'Отчество'"
-        # self.proj.context.mid // "\tuser.email = 'no@mail.ru'"
-        # self.proj.context.mid // "\tuser.tel = '+79171234567'"
         self.proj.context.mid //\
             "from app.apps import AppConfig" //\
             "def title(request):" //\
             "\treturn {'title':AppConfig.verbose_name}" //\
             ''
         self.proj.context.mid //\
+            'from app.models import CustomUser' //\
             'def user(request):' //\
             '\ttry:' //\
-            "\t\tuser = User.objects.get(id=request.user.id)" //\
-            "\texcept User.DoesNotExist:" //\
+            "\t\tuser = CustomUser.objects.get(id=request.user.id)" //\
+            "\texcept CustomUser.DoesNotExist:" //\
             "\t\tuser = None" //\
             "\treturn {'user':user}" //\
             self.proj.context.sync()
@@ -155,7 +151,7 @@ class djModule(DJ, pyModule):
         self.app['admin'] = self.proj.admin = pyFile('admin')
         self.app // self.proj.admin
         self.proj.admin.top // 'from django.contrib import admin'
-        self.proj.admin.mid // 'from .models import *'
+        self.proj.admin.top // 'from .models import *'
         self.proj.admin.sync()
 
     def init_models(self):
@@ -163,18 +159,61 @@ class djModule(DJ, pyModule):
         self.app // self.models
         self.models.top // '# https://tproger.ru/translations/extending-django-user-model/#var2'
         self.models.top // "from django.db import models"
+        # https://webdevblog.ru/sovremennyj-sposob-sozdanie-polzovatelskoj-modeli-user-v-django/
+        # https://habr.com/ru/post/313764/
+        # https://testdriven.io/blog/django-custom-user-model/
+        #
+        manager = Section('manager')
+        self.models.mid // manager
+        manager //\
+            "from django.contrib.auth.base_user import BaseUserManager" //\
+            "class CustomUserManager(BaseUserManager):" //\
+            "\tdef create_user(self, username, email=None, password=None, **extra_fields):" //\
+            "\t\tuser = self.model(username=username, email=email, **extra_fields)" //\
+            "\t\tuser.set_password(password)" //\
+            "\t\tuser.save()" //\
+            "\t\treturn user" //\
+            "\tdef create_superuser(self, username, email=None, password=None, **extra_fields):" //\
+            "\t\textra_fields.setdefault('is_staff', True)" //\
+            "\t\textra_fields.setdefault('is_superuser', True)" //\
+            "\t\textra_fields.setdefault('is_active', True)" //\
+            "\t\tassert extra_fields.get('is_staff')" //\
+            "\t\tassert extra_fields.get('is_superuser')" //\
+            "\t\treturn self.create_user(username=username, email=email, password=password, **extra_fields)" //\
+            ''
+        #     "\t\tuser = CustomUser.objects.create_user(" //\
+        #     "\t\t\tusername, email, password," //\
+        #     "\t\t\tfirst_name = 'Dmitry', last_name = 'Ponyatov'" //\
+        manager.sync()
         #
         user = Section('user')
         self.models.mid // user
         user //\
             "from django.contrib.auth.models import AbstractUser" //\
-            "class CustomUser(AbstractUser):" //\
-            "\tpass"
+            "class CustomUser(AbstractUser): # AbstractBaseUser" //\
+            "\tfather_name = models.CharField('father name', max_length=0x22, null=True, blank=True)" //\
+            ''
+        #
+        self.proj.admin.mid //\
+            "from django.contrib.auth.admin import UserAdmin" //\
+            "from .forms import CustomUserCreationForm, CustomUserChangeForm" //\
+            "class CustomUserAdmin(UserAdmin):" //\
+            "\tadd_form = CustomUserCreationForm" //\
+            "\tform = CustomUserChangeForm" //\
+            "\tmodel = CustomUser" //\
+            'admin.site.register(CustomUser,CustomUserAdmin)' //\
+            ''
+        # "\tUSERNAME_FIELD = 'username'" //\
+        # "\tREQUIRED_FIELDS = ['email']" //\
+        # "\tobjects = CustomUserManager()" //\
+        # "\tdef __str__(self): return '%s %s' % (self.username, self.email)" //\
         user.sync()
         #
         location = Section('location')
         self.models.mid // location
-        self.proj.admin.bot // 'admin.site.register(Location)'
+        self.proj.admin.bot //\
+            'admin.site.register(Location)' //\
+            ''
         location // 'class Location(models.Model):' //\
             "\tname = models.CharField('название', max_length=0x22, blank=False)" //\
             "\tclass Meta:" //\
@@ -199,6 +238,21 @@ class djModule(DJ, pyModule):
         self.proj.admin.sync()
         self.mk.src // 'SRC += app/models.py'
         self.mk.sync()
+
+    def init_forms(self):
+        self['forms'] = self.forms = pyFile('forms')
+        self.app // self.forms
+        meta = '' +\
+            "\tclass Meta(UserCreationForm):" +\
+            "\n\t\tmodel = CustomUser" +\
+            "\n\t\tfields = '__all__'"
+        self.forms.mid //\
+            "from django.contrib.auth.forms import UserCreationForm, UserChangeForm" //\
+            "from .models import CustomUser" //\
+            "class CustomUserCreationForm(UserCreationForm):" // meta //\
+            "class CustomUserChangeForm(UserChangeForm):" // meta //\
+            ''
+        self.forms.sync()
 
     def init_tasks(self):
         pyModule.init_tasks(self)

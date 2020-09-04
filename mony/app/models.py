@@ -9,9 +9,31 @@ from django.db import models
 
 # \ <section:user>
 from django.contrib.auth.models import AbstractUser
-class CustomUser(AbstractUser):
+class CustomUser(AbstractUser): # AbstractBaseUser
 	pass
 # / <section:user>
+
+# \ <section:manager>
+from django.contrib.auth.base_user import BaseUserManager
+class CustomUserManager(BaseUserManager):
+	def create_user(self, username, email=None, password=None, **extra_fields):
+		# user = self.model(email=email, **extra_fields)
+		user = CustomUser.objects.create_user(
+			username, email, password,
+			first_name = 'Dmitry', last_name = 'Ponyatov'
+		)
+		user.set_password(password)
+		user.save()
+		return user
+	def create_superuser(self, username, email=None, password=None, **extra_fields):
+		assert extra_fields.get('is_staff')
+		assert extra_fields.get('is_superuser')
+		extra_fields.setdefault('is_staff', True)
+		extra_fields.setdefault('is_superuser', True)
+		extra_fields.setdefault('is_active', True)
+		return self.create_user(username, email=None, password=None, **extra_fields)
+
+# / <section:manager>
 
 # \ <section:location>
 class Location(models.Model):

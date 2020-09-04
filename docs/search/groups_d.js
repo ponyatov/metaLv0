@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tests',['tests',['../group__test.html',1,'']]],
-  ['tutorial',['Tutorial',['../group__tutorial.html',1,'']]]
+  ['system_20init',['system init',['../group__init.html',1,'']]],
+  ['smalltalk',['Smalltalk',['../group__st.html',1,'']]]
 ];

@@ -1,0 +1,21 @@
+
+# \ <section:top>
+#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
+## @file
+*~
+*.swp
+
+*.log
+/tmp/
+# / <section:top>
+# \ <section:mid>
+*.exe
+*.o
+lexer.c
+parser.c
+parser.h
+# / <section:mid>
+# \ <section:bot>
+/bcx
+/asm
+# / <section:bot>

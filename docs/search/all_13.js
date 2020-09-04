@@ -20,6 +20,8 @@ var searchData=
   ['stbytecode',['stBytecode',['../classSmalltalk_1_1stBytecode.html',1,'Smalltalk']]],
   ['stcompiler',['stCompiler',['../classSmalltalk_1_1stCompiler.html',1,'Smalltalk']]],
   ['stdint',['stdint',['../namespacemetaL.html#a50a679bb55fcd64369755fff841f2c95',1,'metaL']]],
+  ['stdio',['stdio',['../namespacemetaL.html#ac551deacdeb5a0835646369e07206286',1,'metaL']]],
+  ['stdlib',['stdlib',['../namespacemetaL.html#aff02e730516e664e34e246f139a56330',1,'metaL']]],
   ['sthal',['stHAL',['../classSmalltalk_1_1stHAL.html',1,'Smalltalk']]],
   ['stimage',['stImage',['../classSmalltalk_1_1stImage.html',1,'Smalltalk']]],
   ['stinterpreter',['stInterpreter',['../classSmalltalk_1_1stInterpreter.html',1,'Smalltalk']]],
@@ -30,5 +32,6 @@ var searchData=
   ['stvm',['stVM',['../classSmalltalk_1_1stVM.html',1,'Smalltalk']]],
   ['sub',['sub',['../classmetaL_1_1Number.html#ae569af68d6803694f2d0a174d1577059',1,'metaL::Number']]],
   ['symbol',['Symbol',['../classmetaL_1_1Symbol.html',1,'metaL']]],
-  ['sync',['sync',['../group__persist.html#ga436db7cb43830723e880b2ac862b3a99',1,'metaL.Object.sync()'],['../classmetaL_1_1Dir.html#ac7d4df4ad5598955057d52e2a0c7b20c',1,'metaL.Dir.sync()'],['../classmetaL_1_1File.html#abd921769ece61135ecdd838201f194d4',1,'metaL.File.sync()']]]
+  ['sync',['sync',['../group__persist.html#ga436db7cb43830723e880b2ac862b3a99',1,'metaL.Object.sync()'],['../classmetaL_1_1Dir.html#ac7d4df4ad5598955057d52e2a0c7b20c',1,'metaL.Dir.sync()'],['../classmetaL_1_1File.html#abd921769ece61135ecdd838201f194d4',1,'metaL.File.sync()']]],
+  ['syntax_5fheader',['syntax_header',['../group__bcx.html#ga26e95cdfd9d3491a42a6e33fbc3be477',1,'bcx']]]
 ];

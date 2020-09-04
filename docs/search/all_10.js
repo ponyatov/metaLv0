@@ -34,6 +34,8 @@ var searchData=
   ['p_5fvector_5fsingle',['p_vector_single',['../group__parser.html#gaf635930c2580c6d889ec28d68bcb8563',1,'metaL']]],
   ['papl_2emd',['PAPL.md',['../PAPL_8md.html',1,'']]],
   ['parser',['parser',['../group__parser.html#gaff73940099573f5b838a1c71331ad4f9',1,'metaL.parser()'],['../group__parser.html',1,'(Global Namespace)']]],
+  ['parserc',['parserc',['../group__bcx.html#ga8e15504c25abdf08508f80b9b1ca156e',1,'bcx']]],
+  ['parserh',['parserh',['../group__bcx.html#ga26b1ae82bd3cf9718cb6c4a46d585c80',1,'bcx']]],
   ['persistence',['Persistence',['../group__persist.html',1,'']]],
   ['plot',['plot',['../classmetaL_1_1Object.html#a2d9a9ce60d9a30b2034612f21865744c',1,'metaL::Object']]],
   ['plus',['plus',['../classmetaL_1_1Number.html#a222886e633e358c6e3c89925108a7848',1,'metaL::Number']]],

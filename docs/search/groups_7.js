@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['metacircular',['Metacircular',['../group__circ.html',1,'']]],
-  ['metainfo',['metainfo',['../group__info.html',1,'']]],
-  ['meta',['Meta',['../group__meta.html',1,'']]],
-  ['mony',['mony',['../group__mony.html',1,'']]]
+  ['lexer',['lexer',['../group__lexer.html',1,'']]],
+  ['llvm',['LLVM',['../group__ll.html',1,'']]]
 ];

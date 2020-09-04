@@ -112,6 +112,7 @@ MERGE += rdbms rdbms.py
 MERGE += llvm llvm.py
 # MERGE += home home.py
 MERGE += mony mony.py
+MERGE += bcx bcx.py
 MERGE += AkkaLA.py
 
 master:

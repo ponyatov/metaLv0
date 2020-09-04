@@ -600,24 +600,26 @@ class Dir(IO):
 
 ## @ingroup io
 class File(IO):
-    def __init__(self, V, comment='#'):
+    def __init__(self, V, ext='', comment='#'):
         self.fh = None
         self.comment = comment
-        IO.__init__(self, V)
+        super().__init__(V)
+        self.ext = ext
         self.top = self['top'] = Section('top', comment)
         self.mid = self['mid'] = Section('mid', comment)
         self.bot = self['bot'] = Section('bot', comment)
         if self.comment:
             powered = "powered by metaL: https://repl.it/@metaLmasters/metaL#README.md"
-            if self.comment == '#':
-                self.top // ("#  %s" % powered)
-                self.top // ("## @file")
-            elif self.comment == '//':
-                self.top // ("// %s" % powered)
-                self.top // ("// @file")
-
+            if len(self.comment) == len('#'):
+                self.top // ("%s  %s" % (self.comment, powered))
+                self.top // ("%s%s @file" % (self.comment, self.comment,))
+            elif len(self.comment) == len('//'):
+                self.top // ("%s %s" % (self.comment, powered))
+                self.top // ("%s @file" % self.comment)
             else:
                 raise Error((self.comment))
+
+    def file(self): return '%s%s' % (self.val, self.ext)
 
     def sync(self):
         if self.fh:
@@ -629,13 +631,13 @@ class File(IO):
             self.fh.write(self.bot.file())
             self.fh.truncate()
             self.fh.flush()
-        return IO.sync(self)
+        return super().sync()
 
     ## push object/line
     ## @param[in] that `B` operand: string of section will be pushed into file
     ## @param[in] sync `=False` default w/o flush to disk (via `sync()``)
     def __floordiv__(self, that, sync=False):
-        return IO.__floordiv__(self, that, sync)
+        return super().__floordiv__(that, sync)
 
 ## @defgroup net Networking
 ## @ingroup io
@@ -722,7 +724,8 @@ class README(File):
         self // ('## %s' % module['TITLE'].val)
         # self // ''
         about = module['ABOUT'].val
-        while about[-1] in '\r\n': about = about[:-1]
+        while about[-1] in '\r\n':
+            about = about[:-1]
         about += '\n* powered by `metaL`'
         self // ('%s' % about)
         self // ''
@@ -792,6 +795,7 @@ class dirModule(Module):
 
     def init_mk(self):
         self.diroot['mk'] = self.mk = Makefile()
+        self['mk'] = self.mk
         self.diroot // self.mk
         # vars
         self.mk['vars'] = self.mk.vars = Section('vars')
@@ -878,7 +882,7 @@ class anyModule(dirModule):
         self.lic = File('LICENSE', comment=None)
         self.diroot // self.lic
         self.lic // (
-            self['LICENSE'].val + 
+            self['LICENSE'].val +
             self['LICENSE'].nest[0].val.format(
                 YEAR=self.YEAR.file(),
                 AUTHOR=self.AUTHOR.file(), EMAIL=self.EMAIL.file()
@@ -897,10 +901,6 @@ class anyModule(dirModule):
 
     def init_mk(self):
         super().init_mk()
-        # tools
-        self.mk.tools = self['tools'] = Section('tools')
-        self.mk.mid // self.mk.tools
-        self.mk.tools // 'WGET    = wget -c --no-check-certificate'
         # src
         self.mk.src = self['src'] = Section('src')
         self.mk.mid // self.mk.src
@@ -911,14 +911,16 @@ class anyModule(dirModule):
         self.mk.all = self['all'] = Section('all')
         self.mk.mid // self.mk.all
         # rules
-        self.mk.rules = self['rules'] = Section('rules')
+        self.mk['rules'] = self.mk.rules = Section('rules')
         self.mk.mid // self.mk.rules
+        self.mk.sync()
 
     def init_gitignore(self):
         super().init_gitignore()
+        self.gitignore.bot // ('/%s' % self.val)
         # self.gitignore.bot // ('/%s.exe\n/%s' % (self.val, self.val))
         # self.gitignore.bot // '*.o' // '*.objdump'
-        # self.gitignore.sync()
+        self.gitignore.sync()
 
     def init_settings(self):
         self.vscode['settings'] = self.settings = File(
@@ -978,18 +980,88 @@ class CC(Object):
     pass
 
 ## @ingroup cc
-## C'99 syntax file (`.c`/`.h`)
-class ccFile(CC, File):
-    def __init__(self, V, comment='//'):
-        super().__init__(V + '.c', comment)
+class ccModule(anyModule):
+    def init_mk(self):
+        super().init_mk()
+        #
+        self.mk.tools // f'{"TCC":<8} = tcc'
+        self.mk.tools // f'{"CC":<8} = $(TCC)'
+        self.mk.tools // f'{"CXX":<8} = g++'
+        self.mk.tools // f'{"AS":<8} = $(CC)'
+        self.mk.tools // f'{"LD":<8} = $(CC)'
+        self.mk.tools // f'{"OBJDUMP":<8} = objdump'
+        self.mk.tools // f'{"SIZE":<8} = size'
+        #
+        self.mk['flags'] = self.mk.flags = Section('flags')
+        self.mk.top // self.mk.flags
+        self.mk.flags // f'{"OPT":<8} = -O0 -g2 '
+        self.mk.flags // f'{"CFLAGS":<8} = $(OPT) -I.'
+        #
+        self.mk.obj // ('OBJ += %s' % self.val)
+        #
+        self.mk.all // 'all: $(MODULE)'
+        self.mk.all // "\t./$^"
+        # self.mk.mid // '$(MODULE): $(C) $(H)'
+        # self.mk.mid // '\t$(CC) $(CFLAGS) -o $@ $(C)'
+        #
+        self.mk.sync()
+        #
+        self.init_h()
+        self.init_c()
+
+    def init_h(self):
+        self['h'] = self.h = hFile(self.val)
+        self.diroot // self.h
+        self.h.top // stdlib // stdio
+        self.h.top // ccInclude('assert.h')
+        self.h.sync()
+        self.mk.src // ('H += %s' % self.h.file())
+
+    def init_c(self):
+        self['c'] = self.c = cFile(self.val)
+        self.diroot // self.c
+        # self.c.top // ccInclude(self.h)
+        self.c.sync()
+        self.mk.src // ('C += %s' % self.c.file())
+
+    def init_apt(self):
+        super().init_apt()
+        self.apt // 'tcc binutils'
+        self.apt.sync()
+
+    def init_gitignore(self):
+        super().init_gitignore()
+        self.gitignore.mid // '*.exe' // '*.o'
+        self.gitignore.sync()
+
+## @ingroup cc
+class cFile(CC, File):
+    def __init__(self, V, ext='.c', comment='//'):
+        super().__init__(V, ext=ext, comment=comment)
+        self.top // ccInclude(self)
+
+## @ingroup cc
+class hFile(CC, File):
+    def __init__(self, V, ext='.h', comment='//'):
+        super().__init__(V, ext=ext, comment=comment)
+        self.top // ('#ifndef _%s_H' % V.upper())
         self.top // stdint
+        self.bot // ('#endif %s _%s_H' % (comment, V.upper()))
+
 
 ## @ingroup cc
 class ccInclude(CC, Module):
-    def file(self): return '#include <%s.h>' % self.val
+    def __init__(self, V):
+        if isinstance(V, File):
+            V = V.file()
+        super().__init__(V)
+
+    def file(self): return '#include <%s>' % self.val
 
 
-stdint = ccInclude('stdint')
+stdint = ccInclude('stdint.h')
+stdlib = ccInclude('stdlib.h')
+stdio = ccInclude('stdio.h')
 
 ## @ingroup cc
 ## C type
@@ -1074,10 +1146,10 @@ class pyModule(anyModule):
         self.init_py()
 
     def init_reqs(self):
-        self.reqs = File('requirements.txt', comment=None)
-        self.diroot['reqs'] = self.reqs
+        self.diroot['reqs'] = self.reqs = File(
+            'requirements.txt', comment=None)
         self.diroot // self.reqs
-        self.reqs['metal'] = self.reqs.metal = Section('metal', comment=None)
+        self.reqs['metal'] = self.reqs.metal = Section('metaL', comment=None)
         self.reqs // self.reqs.metal
         self.reqs.metal // 'xxhash' // 'ply'
         self.reqs.sync()
@@ -1129,7 +1201,7 @@ class pyModule(anyModule):
         self.launch.sync()
 
     def init_apt(self):
-        anyModule.init_apt(self)
+        super().init_apt()
         self.apt // 'python3 python3-venv python3-pip'
         self.apt.sync()
 
