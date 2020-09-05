@@ -5,11 +5,13 @@
 <area shape="rect" id="node2" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="133,80,223,107"/>
 <area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="128,5,228,32"/>
 <area shape="rect" id="node7" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="258,304,383,331"/>
-<area shape="rect" id="node8" href="$classllvm_1_1llModule.html" title="llvm.llModule" alt="" coords="67,379,166,405"/>
-<area shape="rect" id="node9" href="$classmetaL_1_1ccModule.html" title="metaL.ccModule" alt="" coords="191,379,309,405"/>
-<area shape="rect" id="node11" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="333,379,452,405"/>
-<area shape="rect" id="node14" href="$classtcc_1_1ccModule.html" title="tcc.ccModule" alt="" coords="476,379,576,405"/>
-<area shape="rect" id="node10" href="$classbcx_1_1bcxModule.html" title="bcx.bcxModule" alt="" coords="195,453,305,480"/>
-<area shape="rect" id="node12" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="337,453,432,480"/>
-<area shape="rect" id="node13" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="456,453,599,480"/>
+<area shape="rect" id="node8" href="$classllvm_1_1llModule.html" title="llvm.llModule" alt="" coords="62,379,161,405"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1ccModule.html" title="metaL.ccModule" alt="" coords="185,379,304,405"/>
+<area shape="rect" id="node11" href="$classmetaL_1_1minpyModule.html" title="metaL.minpyModule" alt="" coords="329,379,467,405"/>
+<area shape="rect" id="node16" href="$classtcc_1_1ccModule.html" title="tcc.ccModule" alt="" coords="492,379,592,405"/>
+<area shape="rect" id="node10" href="$classbcx_1_1bcxModule.html" title="bcx.bcxModule" alt="" coords="189,453,300,480"/>
+<area shape="rect" id="node12" href="$classdistill_1_1meModule.html" title="distill.meModule" alt="" coords="332,453,448,480"/>
+<area shape="rect" id="node13" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="472,453,591,480"/>
+<area shape="rect" id="node14" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="413,528,508,555"/>
+<area shape="rect" id="node15" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="532,528,675,555"/>
 </map>
