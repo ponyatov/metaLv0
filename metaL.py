@@ -38,6 +38,8 @@ class Object:
         self.slot = {}
         ## nested AST = vector = stack = queue
         self.nest = []
+        ## parent nodes registry
+        self.par = set()
         ## global storage id
         ## @ingroup persist
         self.gid = self.sync().gid
@@ -255,11 +257,31 @@ class Object:
         if isinstance(that, str):
             that = String(that)
         self.nest.append(that)
+        that.par.add(self)
         if sync:
             return self.sync()
         return self
 
+    ## insert `that` into parent node after the current
+    def after(self, that):
+        assert len(self.par) == 1
+        for parent in self.par:
+            index = parent.index(self)
+            parent.insert(index+1,that)
+        return self
+
+    ## insert `A[index]=B`
+    ## @param[in] index integer indsex in `.nest[]`
+    ## @param[in] that `B` operand to be inserted
+    def insert(self,index,that):
+        self.nest.insert(index,that)
+        return self
+
     def drop(self): self.nest.pop(); return self
+
+    ## find index of subgraph
+    def index(self, that):
+        return self.nest.index(that)
 
     ## @}
 
@@ -791,7 +813,7 @@ class dirModule(Module):
         # apt.txt
         self.init_apt()
         # gitignore
-        self.init_gitignore()
+        self.init_giti()
 
     def init_mk(self):
         self.diroot['mk'] = self.mk = Makefile()
@@ -863,15 +885,14 @@ class dirModule(Module):
         self.apt // 'git make wget'
         self.apt.sync()
 
-    def init_gitignore(self):
-        self['gitignore'] = self.gitignore = File('.gitignore')
-        self.diroot // self.gitignore
+    def init_giti(self):
+        self['gitignore'] = self.giti = File('.gitignore')
+        self.diroot // self.giti
         # common files
-        self.gitignore.top // '*~' // '*.swp'
-        self.gitignore.top // ''
-        self.gitignore.top // '*.log' // '/tmp/'
+        self.giti.top // '*~' // '*.swp'
+        self.giti.top // '*.log' // '/tmp/'
         #
-        self.gitignore.sync()
+        self.giti.sync()
 
 ## @ingroup prj
 class anyModule(dirModule):
@@ -915,12 +936,12 @@ class anyModule(dirModule):
         self.mk.mid // self.mk.rules
         self.mk.sync()
 
-    def init_gitignore(self):
-        super().init_gitignore()
-        self.gitignore.bot // ('/%s' % self.val)
-        # self.gitignore.bot // ('/%s.exe\n/%s' % (self.val, self.val))
-        # self.gitignore.bot // '*.o' // '*.objdump'
-        self.gitignore.sync()
+    def init_giti(self):
+        super().init_giti()
+        self.giti.bot // ('/%s' % self.val)
+        # self.giti.bot // ('/%s.exe\n/%s' % (self.val, self.val))
+        # self.giti.bot // '*.o' // '*.objdump'
+        self.giti.sync()
 
     def init_settings(self):
         self.vscode['settings'] = self.settings = File(
@@ -1029,10 +1050,10 @@ class ccModule(anyModule):
         self.apt // 'tcc binutils'
         self.apt.sync()
 
-    def init_gitignore(self):
-        super().init_gitignore()
-        self.gitignore.mid // '*.exe' // '*.o'
-        self.gitignore.sync()
+    def init_giti(self):
+        super().init_giti()
+        self.giti.mid // '*.exe' // '*.o'
+        self.giti.sync()
 
 ## @ingroup cc
 class cFile(CC, File):
@@ -1137,35 +1158,75 @@ class pyFile(PY, File):
         self.val += '.py'
 
 ## @ingroup py
-class pyModule(anyModule):
+class minpyModule(anyModule):
     def __init__(self, V=None):
         super().__init__(V)
-        # reqs
-        self.init_reqs()
-        # py
         self.init_py()
 
+    def init_apt(self):
+        super().init_apt()
+        self.apt // 'python3 python3-venv python3-pip'
+        self.apt.sync()
+
+    def init_py(self):
+        self.init_reqs()
+
     def init_reqs(self):
-        self.diroot['reqs'] = self.reqs = File(
-            'requirements.txt', comment=None)
+        self.reqs = File('requirements.txt', comment=None)
+        self.diroot['reqs'] = self.reqs
         self.diroot // self.reqs
-        self.reqs['metal'] = self.reqs.metal = Section('metaL', comment=None)
-        self.reqs // self.reqs.metal
-        self.reqs.metal // 'xxhash' // 'ply'
         self.reqs.sync()
 
-    def init_gitignore(self):
-        super().init_gitignore()
+    def init_giti(self):
+        super().init_giti()
         pygnore = Section('python/venv')
-        self.gitignore.mid // pygnore
-        pygnore // '*.pyc'
-        pygnore // '/bin/'
-        pygnore // '/include/'
-        pygnore // '/lib/\n/lib64'
-        pygnore // '/share/'
-        pygnore // '/pyvenv.cfg'
-        self.gitignore.bot // (Section('metaL') // ('/%s/' % self.val))
-        self.gitignore.sync()
+        self.giti.mid // '*.pyc' // '/bin/' // '/include/'
+        self.giti.mid // '/lib/' // '/lib64' // '/share/' // '/pyvenv.cfg'
+        self.giti.sync()
+
+    def init_mk(self):
+        super().init_mk()
+        self.mk.tools // '' //\
+            f'{"PIP":<8} = $(CWD)/bin/pip3' //\
+            f'{"PY":<8} = $(CWD)/bin/python3' //\
+            f'{"PYT":<8} = $(CWD)/bin/pytest' //\
+            f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402' //\
+            ''
+        self.mk.install //\
+            '\t$(MAKE) $(PIP)' //\
+            '\t$(PIP) install    -r requirements.txt' //\
+            ''
+        self.mk.update //\
+            '\t$(PIP) install -U    pip' //\
+            '\t$(PIP) install -U -r requirements.txt' //\
+            ''
+        pyinst = Section('py/install')
+        self.mk.update.after(pyinst)
+        pyinst //\
+            '$(PIP) $(PY):' //\
+            '\tpython3 -m venv .' //\
+            '\t$(PIP) install -U pip pylint autopep8' //\
+            '$(PYT):' //\
+            '\t$(PIP) install -U pytest' //\
+            ''
+        # self.mk['all'] = mkall = Section(self)
+        # self.mk.mid // mkall
+        # mkall['repl'] = repl = Section('repl')
+        # mkall // repl
+        # repl // '.PHONY: repl\nrepl: $(PY) $(MODULE).py'
+        # repl // '\t$(PY) -i $(MODULE).py'
+        # repl // '\t$(MAKE) $@'
+        self.mk.src // 'SRC += $(MODULE).py'
+        self.mk.merge // 'MERGE += $(MODULE).py'
+        self.mk.sync()
+
+## @ingroup py
+class pyModule(minpyModule):
+
+    def init_giti(self):
+        super().init_giti()
+        self.giti.bot // (Section('metaL') // ('/%s/' % self.val))
+        self.giti.sync()
 
     def init_settings(self):
         super().init_settings()
@@ -1259,35 +1320,6 @@ class pyModule(anyModule):
         config['head'] // '## @{'
         config['tail'] // '\n## @}'
         config.sync()
-
-    def init_mk(self):
-        super().init_mk()
-        pytools = Section('py/tools')
-        self.mk.top // pytools
-        pytools // 'PIP = $(CWD)/bin/pip3'
-        pytools // 'PY  = $(CWD)/bin/python3'
-        pytools // 'PYT = $(CWD)/bin/pytest'
-        pytools // 'PEP = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
-        self.mk.install // '\t$(MAKE) $(PIP)'
-        self.mk.install // '\t$(PIP) install    -r requirements.txt'
-        self.mk.update // '\t$(PIP) install -U    pip'
-        self.mk.update // '\t$(PIP) install -U -r requirements.txt' // ''
-        pyinst = Section('py/install')
-        self.mk.bot // pyinst
-        pyinst // '$(PIP) $(PY):'
-        pyinst // '\tpython3 -m venv .'
-        pyinst // '\t$(PIP) install -U pip pylint autopep8'
-        pyinst // '$(PYT):'
-        pyinst // '\t$(PIP) install -U pytest'
-        self.mk['all'] = mkall = Section(self)
-        self.mk.mid // mkall
-        mkall['repl'] = repl = Section('repl')
-        mkall // repl
-        repl // '.PHONY: repl\nrepl: $(PY) $(MODULE).py'
-        repl // '\t$(PY) -i $(MODULE).py'
-        repl // '\t$(MAKE) $@'
-        self.mk.src // 'SRC += $(MODULE).py'
-        self.mk.sync()
 
     def py(self):
         s = '## @brief %s' % self.head(test=True)

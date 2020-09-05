@@ -1,0 +1,21 @@
+
+# \ <section:top>
+#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
+## @file
+*~
+*.swp
+*.log
+/tmp/
+# / <section:top>
+# \ <section:mid>
+*.pyc
+/bin/
+/include/
+/lib/
+/lib64
+/share/
+/pyvenv.cfg
+# / <section:mid>
+# \ <section:bot>
+/distill
+# / <section:bot>
