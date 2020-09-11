@@ -1,14 +1,28 @@
 
-// \ <section:top>
 // powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
 // @file
+// \ <section:top>
 // https://code.visualstudio.com/docs/python/debugging
 {
-	"configurations": [
 // / <section:top>
 // \ <section:mid>
+"configurations": [
+	// \ <section:>
+	{
+		"name": "Python: distill",
+		"type": "python",
+		"request": "launch",
+		// \ <section:program>
+		"program": "metaL.py",
+		// / <section:program>
+		"args": [
+			],
+		"debugOptions": [
+			],
+		"console": "integratedTerminal"}
+	// / <section:>
+	]
 // / <section:mid>
 // \ <section:bot>
-	]
 }
 // / <section:bot>

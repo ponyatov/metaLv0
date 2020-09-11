@@ -64,18 +64,29 @@ $(function() {
 <div class="title">![logo](static/logo.png) `metaL` </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>version for Repl.it Language Jam contest</h2>
-<p><a href="https://repl.it/@metaLmasters/metaL">https://repl.it/@metaLmasters/metaL</a></p>
-<p>Discord: <a href="https://discord.gg/5CYZdt6">https://discord.gg/5CYZdt6</a></p>
-<p>tutorial: <a href="https://ponyatov.github.io/metaL/tutorial.html">https://ponyatov.github.io/metaL/tutorial.html</a></p>
-<p>doxygen manual: <a href="https://ponyatov.github.io/metaL">https://ponyatov.github.io/metaL</a></p>
+<div class="textblock"><h2>Homoiconic [meta]programming [L]anguage/[L]ayer</h2>
+<p>(c) Dmitry Ponyatov &lt;<a href="#" onclick="location.href='mai'+'lto:'+'dpo'+'ny'+'ato'+'v@'+'gma'+'il'+'.co'+'m'; return false;">dpony<span style="display: none;">.nosp@m.</span>atov<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a>&gt; 2020 MIT</p>
 <ul>
+<li><code>github</code>: <a href="https://github.com/ponyatov/metaL">https://github.com/ponyatov/metaL</a></li>
+<li>Discord: <a href="https://discord.gg/5CYZdt6">https://discord.gg/5CYZdt6</a></li>
+<li><a href="https://www.notion.so/metalang/Wiki-18ae2c8192bd4b5c8548bf7f56f390d6">book drafts</a> en/ru<ul>
+<li><a href="https://www.notion.so/metalang/metaL-manifest-f7c2e3c9f4494986a620f3a71cf39cff"><code>metaL</code> manifest</a></li>
+<li><a href="https://www.notion.so/metalang/Distilled-metaL-SICP-chapter-4-237378d385024f899e5a24597da7a19d">Distilled <code>metaL</code></a></li>
+<li><a href="https://www.notion.so/metalang/4-eb7dfcf3dbb04e6eb8015337af850aab">глава 4 Металингвистическая абстракция</a> (частичный перевод с адаптацией)</li>
+</ul>
+</li>
+<li><code>doxygen</code> manual: <a href="https://ponyatov.github.io/metaL">https://ponyatov.github.io/metaL</a><ul>
+<li>tutorial: <a href="https://ponyatov.github.io/metaL/tutorial.html">https://ponyatov.github.io/metaL/tutorial.html</a></li>
+</ul>
+</li>
+<li><a href="https://repl.it/@metaLmasters/metaL">version for Repl.it Language Jam contest</a><ul>
 <li><a href="https://blog.repl.it/langjam">https://blog.repl.it/langjam</a></li>
 <li><a href="https://repl.it/talk/share/metaL-for-replit-Language-Jam-contest/46470">https://repl.it/talk/share/metaL-for-replit-Language-Jam-contest/46470</a></li>
 </ul>
-<p>LinkedIn post: <a href="https://www.linkedin.com/pulse/how-hard-develop-your-own-programming-language-worth-dmitry-ponyatov/">https://www.linkedin.com/pulse/how-hard-develop-your-own-programming-language-worth-dmitry-ponyatov/</a></p>
-<p>(c) Dmitry Ponyatov &lt;<a href="#" onclick="location.href='mai'+'lto:'+'dpo'+'ny'+'ato'+'v@'+'gma'+'il'+'.co'+'m'; return false;">dpony<span style="display: none;">.nosp@m.</span>atov<span style="display: none;">.nosp@m.</span>@gmai<span style="display: none;">.nosp@m.</span>l.co<span style="display: none;">.nosp@m.</span>m</a>&gt; 2020 MIT</p>
-<p>github: <a href="https://github.com/ponyatov/metaL">https://github.com/ponyatov/metaL</a></p>
+</li>
+<li><a href="https://www.linkedin.com/pulse/how-hard-develop-your-own-programming-language-worth-dmitry-ponyatov/">LinkedIn post</a></li>
+<li><a href="https://github.com/ponyatov/metaLold">old repository</a></li>
+</ul>
 <h2>Language Ideas Promo</h2>
 <ul>
 <li>take Lisp homoiconic nature and port it to CPython3 stack (VM &amp; libs)</li>
@@ -127,7 +138,7 @@ $(function() {
 <p><a href="https://www.youtube.com/watch?v=nXJ_2uGWM-M">https://www.youtube.com/watch?v=nXJ_2uGWM-M</a></p>
 <p>Frames originated as a technology used for knowledge representation in artificial intelligence. They are very close to objects and class hierarchies in object-oriented languages although their fundamental design goals are different. Frames are focused on the explicit and intuitive representation of knowledge whereas objects focus on encapsulation and binding data with processing procedures. Original Marvin Minsky's concept <em>lacks some principal features for software design</em>, so it must be extended with the ability to <em>store sequential collections</em>.</p>
 <p>In practice, the techniques and capabilities of the frame model and object-oriented languages overlap significantly so much as we can treat frames not only a native superset of OOP but they drastically extend object design concepts wider: we can represent any knowledge in frames, and use any programming paradigms as we desire.</p>
-<div class="fragment"><div class="line"><span class="keyword">class </span>Frame:</div><div class="line">    <span class="keyword">def </span>__init__(self, V):</div><div class="line">        <span class="comment"># scalar data value</span></div><div class="line">        <span class="comment"># mostly names the frame, but also can store things like numbers and strings</span></div><div class="line">        self.val = V</div><div class="line">        <span class="comment"># named slots = attributes = string-keyed associative array</span></div><div class="line">        self.slot = {}</div><div class="line">        <span class="comment"># ordered storage = program AST nested elemens = vector = stack</span></div><div class="line">        self.nest = []</div><div class="line">        <span class="comment"># unique storage id (Redis,RDBMS,..)</span></div><div class="line">        self.sid = <span class="stringliteral">&#39;@%x&#39;</span> % id(self)</div></div><!-- fragment --><p>This data node structure which combines named slots with the ordered collection is definitively required for representing any program source code, as this is very close to classical AST and attribute grammar but uses graph in place of the attributed tree. The object graph (frame) representation of a program as a primary form is effective and <em>native for any work involved with source code transformations</em>: synthesis, modifications, analysis, cross-language translation, etc.</p>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Frame:</div><div class="line">    <span class="keyword">def </span>__init__(self, V):</div><div class="line">        <span class="comment"># scalar data value</span></div><div class="line">        <span class="comment"># mostly names the frame, but also can store things like numbers and strings</span></div><div class="line">        self.val = V</div><div class="line">        <span class="comment"># named slots = attributes = string-keyed associative array</span></div><div class="line">        self.slot = {}</div><div class="line">        <span class="comment"># ordered storage = program AST nested elemens = vector = stack</span></div><div class="line">        self.nest = []</div><div class="line">        <span class="comment"># unique storage id (Redis,RDBMS,..)</span></div><div class="line">        self.gid = <span class="stringliteral">&#39;@%x&#39;</span> % id(self)</div></div><!-- fragment --><p>This data node structure which combines named slots with the ordered collection is definitively required for representing any program source code, as this is very close to classical AST and attribute grammar but uses graph in place of the attributed tree. The object graph (frame) representation of a program as a primary form is effective and <em>native for any work involved with source code transformations</em>: synthesis, modifications, analysis, cross-language translation, etc.</p>
 <p>Factically, <b>we don't require any text programming language at all</b>, as this <em>Executable Data Structure</em> can</p>
 <ul>
 <li>hold any program statically (as storage),</li>

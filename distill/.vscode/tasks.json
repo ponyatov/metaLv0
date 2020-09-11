@@ -1,14 +1,14 @@
 
-// \ <section:top>
 // powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
 // @file
+// \ <section:top>
 {
 	"version": "2.0.0",
-	"tasks": [
 // / <section:top>
 // \ <section:mid>
+	"tasks": [
+	]
 // / <section:mid>
 // \ <section:bot>
-	]
 }
 // / <section:bot>

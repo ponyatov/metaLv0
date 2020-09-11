@@ -1,6 +1,10 @@
 <map id="metaL.Fn" name="metaL.Fn">
 <area shape="rect" id="node4" href="$classllvm_1_1llFn.html" title="function " alt="" coords="5,229,76,256"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1ccFn.html" title="function " alt="" coords="101,229,191,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Active.html" title="executable data elements " alt="" coords="43,80,142,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="43,5,143,32"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Method.html" title="metaL.Method" alt="" coords="216,229,321,256"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1pyFn.html" title="metaL.pyFn" alt="" coords="346,229,437,256"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Active.html" title="executable data elements " alt="" coords="158,80,257,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="157,5,257,32"/>
+<area shape="rect" id="node8" href="$classmetaL_1_1pyMethod.html" title="metaL.pyMethod" alt="" coords="265,304,384,331"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1pyTest.html" title="metaL.pyTest" alt="" coords="408,304,511,331"/>
 </map>

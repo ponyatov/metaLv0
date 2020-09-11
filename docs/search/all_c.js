@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['launch',['launch',['../classmetaL_1_1anyModule.html#ac3c7230e6e14680a7afe0220a417afdd',1,'metaL::anyModule']]],
   ['ldfile',['ldfile',['../group__demos.html#ga464e6a507d61756865bc822f7c80d83d',1,'demos']]],
   ['lex',['lex',['../group__bcx.html#ga8fe38b2bd4952f566c0a86620594810e',1,'bcx']]],
   ['lexer',['lexer',['../group__lexer.html#ga101babfc77a2eedfd55778d01fde6dfe',1,'metaL.lexer()'],['../group__lexer.html',1,'(Global Namespace)']]],

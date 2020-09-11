@@ -1,22 +1,22 @@
 #  ![logo](static/logo.png) `metaL`
-## version for Repl.it Language Jam contest
-
-https://repl.it/@metaLmasters/metaL
-
-Discord: https://discord.gg/5CYZdt6
-
-tutorial: https://ponyatov.github.io/metaL/tutorial.html
-
-doxygen manual: https://ponyatov.github.io/metaL
-
-* https://blog.repl.it/langjam
-* https://repl.it/talk/share/metaL-for-replit-Language-Jam-contest/46470
-
-LinkedIn post: https://www.linkedin.com/pulse/how-hard-develop-your-own-programming-language-worth-dmitry-ponyatov/
+## Homoiconic [meta]programming [L]anguage/[L]ayer
 
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT
 
-github: https://github.com/ponyatov/metaL
+* `github`: https://github.com/ponyatov/metaL
+* Discord: https://discord.gg/5CYZdt6
+* [book drafts](https://www.notion.so/metalang/Wiki-18ae2c8192bd4b5c8548bf7f56f390d6) en/ru
+  * [`metaL` manifest](https://www.notion.so/metalang/metaL-manifest-f7c2e3c9f4494986a620f3a71cf39cff)
+  * [Distilled `metaL`](https://www.notion.so/metalang/Distilled-metaL-SICP-chapter-4-237378d385024f899e5a24597da7a19d)
+  * [глава 4 Металингвистическая абстракция](https://www.notion.so/metalang/4-eb7dfcf3dbb04e6eb8015337af850aab)
+    (частичный перевод с адаптацией)
+* `doxygen` manual: https://ponyatov.github.io/metaL
+  * tutorial: https://ponyatov.github.io/metaL/tutorial.html
+* [version for Repl.it Language Jam contest](https://repl.it/@metaLmasters/metaL)
+  * https://blog.repl.it/langjam
+  * https://repl.it/talk/share/metaL-for-replit-Language-Jam-contest/46470
+* [LinkedIn post](https://www.linkedin.com/pulse/how-hard-develop-your-own-programming-language-worth-dmitry-ponyatov/)
+* [old repository](https://github.com/ponyatov/metaLold)
 
 ## Language Ideas Promo
 
@@ -161,7 +161,7 @@ class Frame:
         # ordered storage = program AST nested elemens = vector = stack
         self.nest = []
         # unique storage id (Redis,RDBMS,..)
-        self.sid = '@%x' % id(self)
+        self.gid = '@%x' % id(self)
 ```
 
 This data node structure which combines named slots with the ordered collection

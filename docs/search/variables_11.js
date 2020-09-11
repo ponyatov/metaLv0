@@ -1,12 +1,15 @@
 var searchData=
 [
-  ['t_5fignore',['t_ignore',['../group__lexer.html#gace3d26619631fd6fdbb32261e904167a',1,'metaL']]],
-  ['t_5fignore_5fcomment',['t_ignore_comment',['../group__lexer.html#ga88d3b2297708e87d8876f2ba12b96bab',1,'metaL']]],
-  ['t_5fstr_5fignore',['t_str_ignore',['../group__lexer.html#ga19f900f84ac2ffbfe73be594ad3aaddb',1,'metaL']]],
-  ['tasks',['tasks',['../classmetaL_1_1anyModule.html#a4cc16294a759efaa68403b77175a3bc8',1,'metaL::anyModule']]],
-  ['tcc',['TCC',['../group__config.html#ga1f9c1d64bb0e49a6f3caa35843d8ccb0',1,'config']]],
-  ['templates',['templates',['../classdja_1_1djModule.html#afbd3882d534e780951dedd2112a71f37',1,'dja::djModule']]],
-  ['title',['TITLE',['../group__info.html#ga200c3999a61f52c347270452e9ed094a',1,'metaL.TITLE()'],['../group__mony.html#ga4db0ef43e8c56e1d4639e829e3da6e51',1,'mony.TITLE()'],['../group__demos.html#ga76d04d1fd87b66e20f7d2ce5343711fe',1,'demos.TITLE()'],['../group__rdbms.html#ga016095c78837f105358ee1aca806994b',1,'rdbms.TITLE()'],['../group__webook.html#ga0340114ab0d6f3d517146f11bee24c43',1,'webook.TITLE()'],['../group__ll.html#ga0595a4300977481689db5b8a6373e03d',1,'llvm.TITLE()'],['../group__bcx.html#ga04d8c340bd5bbdc37064348ad3ee034c',1,'bcx.TITLE()'],['../group__distill.html#ga715856d249f7595ec74f21fe5ddfdde6',1,'distill.TITLE()']]],
-  ['tokens',['tokens',['../group__lexer.html#ga8383b5e06f5dd4e0811107934bb747bf',1,'metaL']]],
-  ['top',['top',['../classmetaL_1_1File.html#a63358cefb32a2fe7fc27d9d2cc23ae77',1,'metaL::File']]]
+  ['set',['set',['../group__distill.html#ga710d2244828810ef66e9bc4671ae5ff1',1,'distill']]],
+  ['slot',['slot',['../classmetaL_1_1Object.html#a8ec1ff04d05d52ef03fbb84d15d54f0d',1,'metaL::Object']]],
+  ['stack',['stack',['../group__distill.html#gac13ff18de198eb056cadbaef1b23ac4c',1,'distill']]],
+  ['states',['states',['../group__lexer.html#gadc487383591bb2dbdc86bd0b1cb7e3ff',1,'metaL']]],
+  ['static',['static',['../classdja_1_1djModule.html#a5a2da8ff7eb630b6095970203634ed5f',1,'dja::djModule']]],
+  ['stdint',['stdint',['../namespacemetaL.html#a50a679bb55fcd64369755fff841f2c95',1,'metaL']]],
+  ['stdio',['stdio',['../namespacemetaL.html#ac551deacdeb5a0835646369e07206286',1,'metaL']]],
+  ['stdlib',['stdlib',['../namespacemetaL.html#aff02e730516e664e34e246f139a56330',1,'metaL']]],
+  ['str',['str',['../group__distill.html#ga7706e07c96c0d28aa9bec4ced016644c',1,'distill']]],
+  ['sup',['sup',['../classmetaL_1_1Class.html#ae016898e4422f57caff54b01d81aaf3a',1,'metaL::Class']]],
+  ['sym',['sym',['../group__distill.html#gac78cd38013af7de530e3651fa3fb783d',1,'distill']]],
+  ['syntax_5fheader',['syntax_header',['../group__bcx.html#ga26e95cdfd9d3491a42a6e33fbc3be477',1,'bcx']]]
 ];

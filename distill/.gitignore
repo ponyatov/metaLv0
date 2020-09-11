@@ -1,7 +1,7 @@
 
-# \ <section:top>
 #  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
 ## @file
+# \ <section:top>
 *~
 *.swp
 *.log
@@ -15,7 +15,6 @@
 /lib64
 /share/
 /pyvenv.cfg
+/__pycache__/
+/.pytest_cache/
 # / <section:mid>
-# \ <section:bot>
-/distill
-# / <section:bot>

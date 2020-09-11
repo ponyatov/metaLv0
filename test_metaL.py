@@ -216,10 +216,17 @@ class TestFn:
 
     def test_empty(self):
         ast = parser.parse('{}')
-        assert ast.test() == '\n<ast:>\n\t0: <fn:>'
+        assert ast.test() == \
+            '\n<ast:>' +\
+            '\n\t0: <fn:>' +\
+            '\n\t\targs = <args:>' +\
+            '\n\t\tret = <nil:>'
 
     def test_single(self):
         ast = parser.parse('{123}')
-        assert ast.test() == '\n<ast:>' +\
+        assert ast.test() == \
+            '\n<ast:>' +\
             '\n\t0: <fn:>' +\
+            '\n\t\targs = <args:>' +\
+            '\n\t\tret = <nil:>' +\
             '\n\t\t0: <integer:123>'

@@ -14,7 +14,7 @@ GITHUB = 'https://github.com/ponyatov'
 LOGO = 'logo.png'
 ## @}
 
-import os, sys, random
+import os, sys, random, re
 
 ## @defgroup persist Persistence
 ## @brief inherit `Unison` *immutable global storage*: https://www.unisonweb.org
@@ -124,7 +124,13 @@ class Object:
         return tree
 
     ## paddig for @ref dump
-    def _pad(self, depth): return '\n' + '\t' * depth
+    def _pad(self, depth, block=True):
+        if block:
+            ret = '\n'
+        else:
+            ret = ''
+        ret += '\t' * depth
+        return ret
 
     ## short `<T:V>` header only
     ## @param[in] prefix optional prefix in `<T:V>` header
@@ -200,10 +206,11 @@ class Object:
         if isinstance(key, int):
             return self.nest[key]
         if isinstance(key, str):
-            try:
-                return self.slot[key]
-            except KeyError:
-                return Undef(key) // self
+            return self.slot[key]
+            # try:
+            #     return self.slot[key]
+            # except KeyError:
+            #     return Undef(key) // self
         raise TypeError(key)
 
     ## `A.B`
@@ -248,7 +255,9 @@ class Object:
     ## @{
 
     ## clean `.nest[]`
-    def dropall(self): self.nest = []
+    def dropall(self):
+        self.nest = []
+        return self
 
     ## push to `.nest[]`
     ## @param[in] sync push with sync
@@ -267,14 +276,14 @@ class Object:
         assert len(self.par) == 1
         for parent in self.par:
             index = parent.index(self)
-            parent.insert(index+1,that)
+            parent.insert(index + 1, that)
         return self
 
     ## insert `A[index]=B`
     ## @param[in] index integer indsex in `.nest[]`
     ## @param[in] that `B` operand to be inserted
-    def insert(self,index,that):
-        self.nest.insert(index,that)
+    def insert(self, index, that):
+        self.nest.insert(index, that)
         return self
 
     def drop(self): self.nest.pop(); return self
@@ -305,7 +314,8 @@ class Object:
 
     ## to generic text file: use `.json` in place of `Error`
     ## @ingroup gen
-    def file(self, comment=None): return self.json()
+    def file(self, depth=0, block=False, comment=None):
+        return self._pad(depth, block) + self.json()
 
     ## to Python code: use `.json` in place of `Error`
     ## @ingroup py
@@ -314,6 +324,12 @@ class Object:
     ## @}
 
 
+## @ingroup object
+## nil value
+class Nil(Object):
+    def __init__(self):
+        super().__init__('')
+
 ## @defgroup error Error
 ## @ingroup object
 
@@ -321,9 +337,9 @@ class Object:
 class Error(Object, BaseException):
     pass
 
-## @ingroup error
-class Undef(Object):
-    pass
+# ## @ingroup error
+# class Undef(Object):
+#     pass
 
 ## @defgroup prim Primitive
 ## @ingroup object
@@ -363,7 +379,11 @@ class String(Primitive):
                 s += c
         return s
 
-    def file(self): return self.val
+    def file(self, depth=0, block=False):
+        ret = self._pad(depth, block) + self.val
+        for i in self.nest:
+            ret += i.file(depth + 1, block)
+        return ret
 
     def py(self): return self.val
 
@@ -449,8 +469,10 @@ class Container(Object):
 ## @ingroup cont
 ## var size array (Python list)
 class Vector(Container):
-    def __init__(self, V=''):
+    def __init__(self, V='', nest=None):
         super().__init__(V)
+        if nest:
+            self.nest = nest
 
     def eval(self, ctx):
         res = self.__class__(self.val)
@@ -461,6 +483,10 @@ class Vector(Container):
     def cc_arg(self):
         ret = ','.join([j.cc_arg() for j in self.nest])
         return '/* %s */ %s' % (self.head(), ret)
+
+## @ingroup cont
+class Tuple(Vector):
+    pass
 
 ## @ingroup cont
 ## FIFO stack
@@ -484,6 +510,12 @@ class Active(Object):
 ## @ingroup active
 ## function
 class Fn(Active):
+
+    def __init__(self, V):
+        super().__init__(V)
+        self['args'] = self.args = Args()
+        self['ret'] = self.ret = Nil()
+
     def eval(self, ctx): return self
 
     def apply(self, that, ctx):
@@ -551,22 +583,92 @@ vm << vm
 class Meta(Object):
     pass
 
+## @ingroup prim
+## source code
+class S(Meta, String):
+    pass
+
+## @ingroup meta
+class Return(S):
+    def __init__(self, V):
+        super().__init__('return %s' % V)
+
+## @ingroup meta
+class Arg(Meta, Symbol):
+    def __int__(self): return self.val
+
+    def file(self, depth=0, block=False):
+        return self._val()
+
+    def __format__(self, spec=None):
+        if not spec:
+            return f'{self.val}'
+        if spec == 'd':
+            return self.dump()
+        raise TypeError(spec)
+
+## @ingroup meta
+class Args(Meta, Tuple):
+    def file(self, depth=0, block=False):
+        return '%s' % (', '.join([j.file() for j in self.nest]))
+
 ## @ingroup meta
 class Class(Meta):
-    def __init__(self, C):
-        assert type(C) == type(Class)
-        Meta.__init__(self, C.__name__)
-        self.C = C
+    def __init__(self, C, sup=None):
+        if type(C) == type(Class):
+            super().__init__(C.__name__)
+            self.C = C
+        else:
+            super().__init__(C)
+        if sup:
+            self['sup'] = self.sup = Args('super', nest=sup)
 
     def colon(self, that, ctx):
         return self.C(that)
 
-    def py(self):
-        return 'class %s: pass' % self.val
+    # def py(self):
+    #     return 'class %s: pass' % self.val
+
+    def file(self, depth=0, block=True):
+        ret = '\n' + self._pad(depth, block) + 'class %s' % self.val
+        try:
+            ret += '(%s)' % (','.join([i.val for i in self.sup.nest]))
+        except AttributeError:
+            pass
+        ret += ':'
+        if self.nest:
+            for j in self.nest:
+                ret += j.file(depth + 1)
+        else:
+            ret += ' pass'
+        return ret
+
+## @ingroup meta
+class Method(Meta, Fn):
+    pass
+
+## @ingroup meta
+class pyInterface(Meta):
+    def __init__(self, V, ext=[]):
+        super().__init__(V)
+        for i in ext:
+            self // i
+
+    def file(self, depth=0, block=True):
+        ret = self._pad(depth, block) + '## @name %s' % self.val
+        if 'url' in self.keys():
+            ret += self._pad(depth, block) + '## ' + self['url'].file()
+        ret += self._pad(depth, block) + '## @{'
+        z = ''
+        for i in self.nest:
+            ret += i.file(depth + 1, block)
+        ret = re.sub(r'[ \t\r\n]+$', '', ret, re.S)
+        ret += self._pad(depth, block) + '## @}'
+        return ret
 
 ## @ingroup meta
 class Module(Meta):
-    def file(self): return self.head(test=True)
+    def file(self, depth=0): return self.head(test=True)
 
 
 vm['module'] = Class(Module)
@@ -574,17 +676,22 @@ vm['module'] = Class(Module)
 ## @ingroup meta
 class Section(Meta):
     def __init__(self, V, comment='#'):
+        super().__init__(V)
         self.comment = comment
-        Meta.__init__(self, V)
 
-    def file(self):
-        ret = ''
+    def file(self, depth=0, block=True):
+        if not self.nest:
+            return ''
+        ret = self._pad(depth, block)
+        if not self.comment:
+            ret = ret[1:]
         if self.comment:
-            ret += '\n%s \\ %s' % (self.comment, self.head(test=True))
+            ret += '%s \\ %s' % (self.comment, self.head(test=True))
         for i in self.nest:
-            ret += '\n%s' % i.file()
+            ret += i.file(depth, block)
         if self.comment:
-            ret += '\n%s / %s' % (self.comment, self.head(test=True))
+            ret += self._pad(depth, block)
+            ret += '%s / %s' % (self.comment, self.head(test=True))
         return ret
 
     def py(self): return self.file()
@@ -599,8 +706,6 @@ class IO(Object):
 
 ## @ingroup io
 class Dir(IO):
-    def __init__(self, V):
-        IO.__init__(self, V)
 
     def sync(self):
         try:
@@ -612,7 +717,7 @@ class Dir(IO):
     ## append file
     def __floordiv__(self, that):
         if isinstance(that, File):
-            that.fh = open('%s/%s' % (self.val, that.val), 'w')
+            that.fh = open('%s/%s%s' % (self.val, that.val, that.ext), 'w')
             return IO.__floordiv__(self, that)
         if isinstance(that, Dir):
             that.val = '%s/%s' % (self.val, that.val)
@@ -626,40 +731,40 @@ class File(IO):
         self.fh = None
         self.comment = comment
         super().__init__(V)
-        self.ext = ext
-        self.top = self['top'] = Section('top', comment)
-        self.mid = self['mid'] = Section('mid', comment)
-        self.bot = self['bot'] = Section('bot', comment)
+        self['ext'] = self.ext = ext
         if self.comment:
             powered = "powered by metaL: https://repl.it/@metaLmasters/metaL#README.md"
             if len(self.comment) == len('#'):
-                self.top // ("%s  %s" % (self.comment, powered))
-                self.top // ("%s%s @file" % (self.comment, self.comment,))
+                self // ("%s  %s" % (self.comment, powered))
+                self // ("%s%s @file" % (self.comment, self.comment,))
             elif len(self.comment) == len('//'):
-                self.top // ("%s %s" % (self.comment, powered))
-                self.top // ("%s @file" % self.comment)
+                self // ("%s %s" % (self.comment, powered))
+                self // ("%s @file" % self.comment)
             else:
                 raise Error((self.comment))
+        self['top'] = self.top = Section('top', comment)
+        self // self.top
+        self['mid'] = self.mid = Section('mid', comment)
+        self // self.mid
+        self['bot'] = self.bot = Section('bot', comment)
+        self // self.bot
 
     def file(self): return '%s%s' % (self.val, self.ext)
 
     def sync(self):
         if self.fh:
             self.fh.seek(0)
-            self.fh.write(self.top.file())
-            self.fh.write(self.mid.file())
             for j in self.nest:
-                self.fh.write(j.file() + '\n')
-            self.fh.write(self.bot.file())
+                self.fh.write(j.file(block=True))
             self.fh.truncate()
             self.fh.flush()
         return super().sync()
 
-    ## push object/line
-    ## @param[in] that `B` operand: string of section will be pushed into file
-    ## @param[in] sync `=False` default w/o flush to disk (via `sync()``)
-    def __floordiv__(self, that, sync=False):
-        return super().__floordiv__(that, sync)
+    # ## push object/line
+    # ## @param[in] that `B` operand: string of section will be pushed into file
+    # ## @param[in] sync `=False` default w/o flush to disk (via `sync()``)
+    # def __floordiv__(self, that, sync=False):
+    #     return super().__floordiv__(that, sync)
 
 ## @defgroup net Networking
 ## @ingroup io
@@ -683,7 +788,8 @@ class Email(Net):
 
 ## @ingroup net
 class Url(Net):
-    def file(self): return self.val
+    def file(self, depth=0, block=False):
+        return self._pad(depth, block) + self.val
 
 ## @ingroup net
 class User(Net):
@@ -708,6 +814,7 @@ class Doc(Object):
 class Title(Doc):
     ## @ingroup py
     def py(self): return '## @brief %s' % self.val
+    def __format__(self, spec): return self.val
 
 ## @ingroup doc
 class Author(Doc):
@@ -783,15 +890,15 @@ class multiCommand(Setting):
     def __init__(self, key, val):
         Setting.__init__(self, key, val)
 
-    def file(self):
-        ret = '\t{'
-        ret += '"command":"multiCommand.%s",' % self.key
-        ret += '"sequence":['
-        ret += '\n\t\t"workbench.action.files.saveAll",'
-        ret += '\n\t\t{"command": "workbench.action.terminal.sendSequence",'
-        ret += '\n\t\t "args": {"text": "\\u000D%s\\u000D"}}' % self.nest[0].val
-        ret += '\n\t],},'
-        return ret
+    def file(self, depth=0, block=True):
+        ret = (S('{"command":"multiCommand.%s",' % self.key) //
+               (S('"sequence":[') //
+                '"workbench.action.files.saveAll",' //
+                (S('{"command": "workbench.action.terminal.sendSequence",') //
+                 ('"args": {"text": "\\u000D%s\\u000D"}}' % self.val)) //
+                '],') //
+               '},')
+        return ret.file(depth, block)
 
 ## @ingroup prj
 ## module with its own directory (root module = project)
@@ -822,7 +929,9 @@ class dirModule(Module):
         # vars
         self.mk['vars'] = self.mk.vars = Section('vars')
         self.mk.top // self.mk.vars
-        self.mk.vars // f'{"MODULE":<8} = $(notdir $(CURDIR))'
+        self.mk['module'] = self.mk.module = Section('module', comment='')
+        self.mk.module // f'{"MODULE":<8} = $(notdir $(CURDIR))'
+        self.mk.vars // self.mk.module
         self.mk.vars // f'{"OS":<7} ?= $(shell uname -s)'
         # version
         self.mk['version'] = self.mk.version = Section('version')
@@ -841,11 +950,22 @@ class dirModule(Module):
         self.mk.tools // f'{"WGET":<8} = wget -c --no-check-certificate'
         self.mk.tools // f'{"CORES":<8} = $(shell grep proc /proc/cpuinfo|wc -l)'
         self.mk.tools // f'{"XMAKE":<8} = $(XPATH) $(MAKE) -j$(CORES)'
+        # src
+        self.mk.src = self['src'] = Section('src')
+        self.mk.mid // self.mk.src
+        # obj
+        self.mk.obj = self['obj'] = Section('obj')
+        self.mk.mid // self.mk.obj
+        # all
+        self.mk.all = self['all'] = Section('all')
+        self.mk.mid // self.mk.all
         # install/update
         self.mk['install'] = self.mk.install = Section('install')
         self.mk.bot // self.mk.install
-        self.mk.install // '.PHONY: install'
-        self.mk.install // 'install:\n\t$(MAKE) $(OS)_install'
+        self.mk.install //\
+            '.PHONY: install' //\
+            (S('install:') //
+             '$(MAKE) $(OS)_install')
         self.mk['update'] = self.mk.update = Section('update')
         self.mk.bot // self.mk.update
         self.mk.update // '.PHONY: update'
@@ -855,7 +975,7 @@ class dirModule(Module):
         self.mk.linux // '.PHONY: Linux_install Linux_update'
         self.mk.linux // 'Linux_install Linux_update:'
         self.mk.linux // '\tsudo apt update'
-        self.mk.linux // '\tsudo apt install -u `cat apt.txt`\n'
+        self.mk.linux // '\tsudo apt install -u `cat apt.txt`'
         # merge master/shadow
         self.mk['merge'] = self.mk.merge = Section('merge')
         self.mk.bot // self.mk.merge
@@ -879,58 +999,46 @@ class dirModule(Module):
         self.mk.sync()
 
     def init_apt(self):
-        self['apt'] = self.apt = File('apt.txt', comment=None)
+        self['apt'] = self.apt = File('apt.txt', comment='')
         self.diroot // self.apt
-        #
         self.apt // 'git make wget'
         self.apt.sync()
 
     def init_giti(self):
         self['gitignore'] = self.giti = File('.gitignore')
         self.diroot // self.giti
-        # common files
         self.giti.top // '*~' // '*.swp'
         self.giti.top // '*.log' // '/tmp/'
-        #
         self.giti.sync()
 
 ## @ingroup prj
 class anyModule(dirModule):
     def __init__(self, V=None):
         super().__init__(V)
-        self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
-        # LICENSE
+        self.init_lic()
+        self.init_vscode()
+
+    def init_lic(self):
+        # self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
         self.lic = File('LICENSE', comment=None)
         self.diroot // self.lic
-        self.lic // (
-            self['LICENSE'].val +
+        self.lic //\
+            self['LICENSE'].val //\
             self['LICENSE'].nest[0].val.format(
-                YEAR=self.YEAR.file(),
-                AUTHOR=self.AUTHOR.file(), EMAIL=self.EMAIL.file()
-            ))
+                YEAR=self.YEAR.val,
+                AUTHOR=self.AUTHOR.val, EMAIL=self.EMAIL.file()
+            )
         self.lic.sync()
-        # vscode
-        self.init_vscode()
-        # tasks
-        self.init_tasks()
 
     def init_vscode(self):
         self.diroot['vscode'] = self.vscode = Dir('.vscode')
         self.diroot // self.vscode
-        self.init_settings()
-        self.init_launch()
+        self.init_vscode_settings()
+        self.init_vscode_launch()
+        self.init_vscode_tasks()
 
     def init_mk(self):
         super().init_mk()
-        # src
-        self.mk.src = self['src'] = Section('src')
-        self.mk.mid // self.mk.src
-        # obj
-        self.mk.obj = self['obj'] = Section('obj')
-        self.mk.mid // self.mk.obj
-        # all
-        self.mk.all = self['all'] = Section('all')
-        self.mk.mid // self.mk.all
         # rules
         self.mk['rules'] = self.mk.rules = Section('rules')
         self.mk.mid // self.mk.rules
@@ -938,55 +1046,73 @@ class anyModule(dirModule):
 
     def init_giti(self):
         super().init_giti()
-        self.giti.bot // ('/%s' % self.val)
+        # self.giti.bot // ('/%s' % self.val)
         # self.giti.bot // ('/%s.exe\n/%s' % (self.val, self.val))
         # self.giti.bot // '*.o' // '*.objdump'
-        self.giti.sync()
+        # self.giti.sync()
 
-    def init_settings(self):
-        self.vscode['settings'] = self.settings = File(
-            'settings.json', comment='//')
-        self.vscode // self.settings
-        self.settings.top // '{'
-        self.settings.bot // '\t"editor.tabSize": 4,'
-        self.settings.bot // '}'
-        self.settings.multiCommand = Section('multiCommand', comment='//')
-        self.settings.multiCommand // '"multiCommand.commands": ['
-        self.settings.f11 = multiCommand('f11', 'make test')
-        self.settings.f12 = multiCommand('f12', 'make all')
-        self.settings.multiCommand // self.settings.f11 // self.settings.f12
-        self.settings.multiCommand // '],'
-        self.settings.mid // self.settings.multiCommand
-        self.settings.watcher = Section('watcher', comment='//')
-        self.settings.mid // '"files.watcherExclude": {'
-        self.settings.mid // self.settings.watcher
-        self.settings.mid // '},'
-        self.settings.exclude = Section('exclude', comment='//')
-        self.settings.mid // '"files.exclude": {'
-        self.settings.mid // self.settings.exclude
-        self.settings.mid // '},'
-        self.settings.assoc = Section('associations', comment='//')
-        self.settings.mid // '"files.associations": {'
-        self.settings.mid // self.settings.assoc
-        self.settings.mid // '},'
-        self.settings.sync()
+    def init_vscode_settings(self):
+        settings = File('settings.json', comment='//')
+        self.vscode['settings'] = self.vscode.settings = settings
+        self.vscode // self.vscode.settings
+        settings.top // '{'
+        settings.bot // '\t"editor.tabSize": 4,'
+        settings.bot // '}'
+        #
+        settings.multiCommand = Section('multiCommand', comment='//')
+        settings.f11 = multiCommand('f11', 'make test')
+        settings.f12 = multiCommand('f12', 'make all')
+        settings.multiCommand // (S('"multiCommand.commands": [') //
+                                  settings.f11 //
+                                  settings.f12 //
+                                  '],')
+        settings.mid // settings.multiCommand
+        #
+        watcher = Section('watcher', comment='//') // ''
+        self.vscode['watcher'] = self.vscode.watcher = watcher
+        settings.mid // (S('"files.watcherExclude": {') // watcher // '},')
+        #
+        exclude = Section('exclude', comment='//') // ''
+        self.vscode['exclude'] = self.vscode.exclude = exclude
+        settings.mid // (S('"files.exclude": {') // exclude // '},')
+        #
+        assoc = Section('assoc', comment='//') // ''
+        self.vscode['assoc'] = self.vscode.assoc = assoc
+        settings.mid // (S('"files.associations": {') // assoc // '},')
 
-    def init_tasks(self):
+        # settings.mid // self.settings.watcher
+        # settings.mid // '},'
+        # self.settings. = Section('exclude', comment='//')
+        # settings.mid // '"files.exclude": {'
+        # settings.mid // self.settings.exclude
+        # settings.mid // '},'
+        # self.settings.assoc = Section('associations', comment='//')
+        # settings.mid //
+        # settings.mid // self.settings.assoc
+        # settings.mid // '},'
+        #
+        settings.sync()
+
+    def init_vscode_tasks(self):
         self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
         self.vscode // self.tasks
-        self.tasks.top // '{' // '\t"version": "2.0.0",' // '\t"tasks": ['
-        self.tasks.bot // '\t]' // '}'
+        self.tasks.top // '{' // '\t"version": "2.0.0",'
+        self.tasks.it = (S('\t"tasks": ['))
+        self.tasks.mid // self.tasks.it // '\t]'
+        self.tasks.bot // '}'
         self.tasks.sync()
 
-    def init_launch(self):
-        self.vscode['launch'] = self.launch = File('launch.json', comment='//')
-        self.vscode // self.launch
-        self.launch.top // '// https://code.visualstudio.com/docs/python/debugging'
-        self.launch.top // '{'
-        self.launch.top // '\t"configurations": ['
-        self.launch.bot // '\t]'
-        self.launch.bot // '}'
-        self.launch.sync()
+    def init_vscode_launch(self):
+        json = File('launch.json', comment='//')
+        self.vscode['launch'] = self.vscode.launch = json
+        self.vscode // json
+        json.top // '// https://code.visualstudio.com/docs/python/debugging'
+        json.top // '{'
+        json.bot // '}'
+        #
+        json['it'] = json.it = Section('', comment='//')
+        json.mid // (S('"configurations": [') // json.it // ']')
+        json.sync()
 
     def mksrc(self, file):
         assert isinstance(file, File)
@@ -1004,6 +1130,10 @@ class CC(Object):
 class ccModule(anyModule):
     def init_mk(self):
         super().init_mk()
+        self.init_h()
+        self.init_c()
+
+    def init_mk(self):
         #
         self.mk.tools // f'{"TCC":<8} = tcc'
         self.mk.tools // f'{"CC":<8} = $(TCC)'
@@ -1026,9 +1156,6 @@ class ccModule(anyModule):
         # self.mk.mid // '\t$(CC) $(CFLAGS) -o $@ $(C)'
         #
         self.mk.sync()
-        #
-        self.init_h()
-        self.init_c()
 
     def init_h(self):
         self['h'] = self.h = hFile(self.val)
@@ -1141,35 +1268,80 @@ class PY(Object):
 
 ## @ingroup py
 class pyImport(PY):
-    def file(self): return 'import %s' % self.val
+    def file(self, depth=0, block=True):
+        return self._pad(depth, block) + 'import %s' % self.val
 
 ## @ingroup py
-class pyFn(PY):
-    def file(self):
-        res = 'def %s():' % self.val
+class pyFn(PY, Fn):
+    def file(self, depth=0, block=True):
+        res = self._pad(depth, block)
+        res += 'def %s(%s):' % (self.val, self.args.file())
+        if not self.nest:
+            res += ' pass'
         for i in self.nest:
-            res += '\n    ' + i.file()
+            res += i.file(depth + 1, block)
         return res
+    ## self-copy
+
+    def cp(self):
+        assert not self.nest
+        ret = self.__class__(self.val)
+        ret.args.dropall()
+        for i in self.args:
+            ret.args // i
+        return ret
 
 ## @ingroup py
 class pyFile(PY, File):
+    def __init__(self, V, ext='.py', comment='#'):
+        super().__init__(V, ext, comment)
+    def __format__(self, spec): return self.val
+
+## @ingroup py
+class pyClass(Class):
+    pass
+
+## @ingroup py
+class pyMethod(pyFn):
+    def __init__(self, V, args=[]):
+        super().__init__(V)
+        self['args'] = self.args = (Args() // 'self')
+        for arg in args:
+            self.args // Arg(arg)
+
+## @ingroup py
+class pytestFile(pyFile):
+    def __init__(self, py):
+        super().__init__('test_%s' % py.val)
+        self.top // pyImport('pytest')
+        self['none'] = self.none = pyTest('none')
+        self.top // self.none
+        self.sync()
+
+## @ingroup py
+class pyTest(pyFn):
     def __init__(self, V):
-        super().__init__(V, comment='#')
-        self.val += '.py'
+        super().__init__('test_%s' % V)
+
+    def file(self, depth=0, block=True):
+        ret = ''
+        if 'for' in self.keys():
+            ret += self._pad(depth, block) + \
+                '## for %s' % self['for'].head(test=True)
+        ret += super().file(depth, block)
+        return ret
 
 ## @ingroup py
 class minpyModule(anyModule):
     def __init__(self, V=None):
         super().__init__(V)
+        self.init_reqs()
         self.init_py()
 
     def init_apt(self):
         super().init_apt()
         self.apt // 'python3 python3-venv python3-pip'
         self.apt.sync()
-
-    def init_py(self):
-        self.init_reqs()
 
     def init_reqs(self):
         self.reqs = File('requirements.txt', comment=None)
@@ -1179,9 +1351,9 @@ class minpyModule(anyModule):
 
     def init_giti(self):
         super().init_giti()
-        pygnore = Section('python/venv')
         self.giti.mid // '*.pyc' // '/bin/' // '/include/'
         self.giti.mid // '/lib/' // '/lib64' // '/share/' // '/pyvenv.cfg'
+        self.giti.mid // '/__pycache__/' // '/.pytest_cache/'
         self.giti.sync()
 
     def init_mk(self):
@@ -1194,72 +1366,80 @@ class minpyModule(anyModule):
             ''
         self.mk.install //\
             '\t$(MAKE) $(PIP)' //\
-            '\t$(PIP) install    -r requirements.txt' //\
-            ''
+            '\t$(PIP) install    -r requirements.txt'
         self.mk.update //\
             '\t$(PIP) install -U    pip' //\
-            '\t$(PIP) install -U -r requirements.txt' //\
-            ''
-        pyinst = Section('py/install')
-        self.mk.update.after(pyinst)
-        pyinst //\
+            '\t$(PIP) install -U -r requirements.txt'
+        self.mk.py = Section('py/install')
+        self.mk.update.after(self.mk.py)
+        self.mk.py //\
             '$(PIP) $(PY):' //\
             '\tpython3 -m venv .' //\
             '\t$(PIP) install -U pip pylint autopep8' //\
             '$(PYT):' //\
-            '\t$(PIP) install -U pytest' //\
-            ''
-        # self.mk['all'] = mkall = Section(self)
-        # self.mk.mid // mkall
-        # mkall['repl'] = repl = Section('repl')
-        # mkall // repl
-        # repl // '.PHONY: repl\nrepl: $(PY) $(MODULE).py'
-        # repl // '\t$(PY) -i $(MODULE).py'
-        # repl // '\t$(MAKE) $@'
+            '\t$(PIP) install -U pytest'
         self.mk.src // 'SRC += $(MODULE).py'
         self.mk.merge // 'MERGE += $(MODULE).py'
         self.mk.sync()
 
+    def init_vscode_settings(self):
+        super().init_vscode_settings()
+        settings = self.vscode.settings
+        #
+        settings.top // '\t"python.pythonPath":               "./bin/python3",'
+        settings.top // '\t"python.formatting.provider":      "autopep8",'
+        settings.top // '\t"python.formatting.autopep8Path":  "./bin/autopep8",'
+        settings.top // '\t"python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
+        #
+        self.vscode.settings.f11.val = 'make repl'
+        self.vscode.settings.f12.val = 'exit()'
+        #
+        files = Section('', settings.comment) //\
+            '"**/bin/**": true, "**/include/**":true,' //\
+            '"**/lib*/**":true, "**/share/**"  :true,' //\
+            '"**/*.pyc":  true, "**/pyvenv.cfg":true,' //\
+            '"**/__pycache__/": true, "**/.pytest_cache/": true,'
+        self.vscode.watcher // files
+        self.vscode.exclude // files
+        #
+        self.vscode.assoc //\
+            '"**/.py": "python",' //\
+            '"**/requirements{/**,*}.{txt,in}": "pip-requirements",'
+        #
+        settings.sync()
+
+    def init_vscode_launch(self):
+        super().init_vscode_launch()
+        launch = self.vscode.launch
+        # program
+        launch.program = Section('program', comment='//') //\
+            ('"program": "%s.py",' % self.val)
+        # args
+        launch.args = Section('args', comment='//')
+        # debugOptions
+        launch.opts = Section('opts', comment='//')
+
+        #
+        launch.it // (S('{') //
+                      ('"name": "Python: %s",' % self.val) //
+                      '"type": "python",' //
+                      '"request": "launch",' //
+                      launch.program //
+                      (S('"args": [') // launch.args // '],') //
+                      (S('"debugOptions": [') // launch.opts // '],') //
+                      '"console": "integratedTerminal"}'
+                      )
+    #     # console
+    #     self.launch.mid //
+    #     self.launch.mid // '\t\t}'
+        launch.sync()
+
+    # def init_py(self):
+    #     pass
+
+
 ## @ingroup py
 class pyModule(minpyModule):
-
-    def init_giti(self):
-        super().init_giti()
-        self.giti.bot // (Section('metaL') // ('/%s/' % self.val))
-        self.giti.sync()
-
-    def init_settings(self):
-        super().init_settings()
-        self.settings.top // '    "python.pythonPath": "./bin/python3",'
-        self.settings.top // '    "python.formatting.provider": "autopep8",'
-        self.settings.top // '    "python.formatting.autopep8Path": "./bin/autopep8",'
-        self.settings.top // '    "python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
-        # self.settings.f11 // 'make repl'
-        # self.settings.f12 // 'exit()'
-        # files
-        t = '\t"**/bin/**": true, "**/include/**":true,'
-        self.settings.watcher // t
-        self.settings.exclude // t
-        t = '\t"**/lib*/**":true, "**/share/**"  :true,'
-        self.settings.watcher // t
-        self.settings.exclude // t
-        t = '\t"**/*.pyc":  true, "**/pyvenv.cfg":true,'
-        self.settings.watcher // t
-        self.settings.exclude // t
-        r = '\t"**/requirements{/**,*}.{txt,in}": "pip-requirements",'
-        self.settings.assoc // r
-        self.settings.sync()
-
-    def init_launch(self):
-        super().init_launch()
-        self.launch.mid // '\t\t{'
-        self.launch.mid // ('\t\t\t"name": "Python: %s",' % self.val)
-        self.launch.mid // '\t\t\t"type": "python",'
-        self.launch.mid // '\t\t\t"request": "launch",'
-        self.launch.mid // ('\t\t\t"program": "%s.py",' % self.val)
-        self.launch.mid // '\t\t\t"console": "integratedTerminal"'
-        self.launch.mid // '\t\t}'
-        self.launch.sync()
 
     def init_apt(self):
         super().init_apt()
@@ -1306,24 +1486,24 @@ class pyModule(minpyModule):
         # meta // '## module source code\npy = diroot[\'py\']'
         # meta // "py['head'] // ('## @brief %s' % MODULE['title'].val) // ''"
         # meta // 'py.sync()'
-        self.py['tail'] // Section('init')
+        # self.py['tail'] // Section('init')
         self.py.sync()
         # config
         config = pyFile('config')
         self.mksrc(config)
         self.diroot['config'] = config
         self.diroot // config
-        config['head'] // '## @brief site-local private config'
-        config['head'] // ''
-        config['head'] // '## @defgroup config config'
-        config['head'] // '## @brief site-local private config'
-        config['head'] // '## @{'
-        config['tail'] // '\n## @}'
+        # config['head'] // '## @brief site-local private config'
+        # config['head'] // ''
+        # config['head'] // '## @defgroup config config'
+        # config['head'] // '## @brief site-local private config'
+        # config['head'] // '## @{'
+        # config['tail'] // '\n## @}'
         config.sync()
 
     def py(self):
-        s = '## @brief %s' % self.head(test=True)
-        return s
+        ret = '## @brief %s' % self.head(test=True)
+        return ret
 
 ## @ingroup py
 class bountyModule(pyModule):

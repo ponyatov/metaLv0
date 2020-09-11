@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['s',['S',['../classmetaL_1_1S.html',1,'metaL']]],
   ['section',['Section',['../classmetaL_1_1Section.html',1,'metaL']]],
   ['setting',['Setting',['../classmetaL_1_1Setting.html',1,'metaL']]],
   ['st',['ST',['../classSmalltalk_1_1ST.html',1,'Smalltalk']]],

@@ -1,5 +1,7 @@
 <map id="metaL.Vector" name="metaL.Vector">
-<area shape="rect" id="node4" href="$classmetaL_1_1AST.html" title="Abstract Syntax Tree =~= any metaL graph. " alt="" coords="21,229,109,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Container.html" title="generic data container " alt="" coords="5,80,124,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="15,5,115,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1AST.html" title="Abstract Syntax Tree =~= any metaL graph. " alt="" coords="5,229,93,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Tuple.html" title="metaL.Tuple" alt="" coords="118,229,213,256"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Container.html" title="generic data container " alt="" coords="47,80,166,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="57,5,157,32"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Args.html" title="metaL.Args" alt="" coords="121,304,210,331"/>
 </map>
