@@ -1,0 +1,14 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// @file
+// \ <section:top>
+{
+	"version": "2.0.0",
+// / <section:top>
+// \ <section:mid>
+	"tasks": [
+	]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

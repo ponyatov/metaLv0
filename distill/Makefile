@@ -12,12 +12,14 @@ REL      = $(shell git rev-parse --short=4 HEAD)
 # / <section:version>
 # \ <section:dirs>
 CWD      = $(CURDIR)
+BIN      = $(CWD)/bin
 TMP      = $(CWD)/tmp
 SOURCE   = $(TMP)/src
 # / <section:dirs>
 # \ <section:tools>
 WGET     = wget -c --no-check-certificate
 CORES    = $(shell grep proc /proc/cpuinfo|wc -l)
+XPATH    = PATH=$(BIN):$(PATH)
 XMAKE    = $(XPATH) $(MAKE) -j$(CORES)
 
 PIP      = $(CWD)/bin/pip3
@@ -47,14 +49,14 @@ repl: $(PYT) $(PY) metaL.py
 install:
 	$(MAKE) $(OS)_install
 	$(MAKE) $(PIP)
-	$(PIP) install    -r requirements.txt
+	$(PIP) install    -r requirements.pip
 # / <section:install>
 # \ <section:update>
 .PHONY: update
 update:
 	$(MAKE) $(OS)_update
 	$(PIP) install -U    pip
-	$(PIP) install -U -r requirements.txt
+	$(PIP) install -U -r requirements.pip
 # / <section:update>
 # \ <section:py/install>
 $(PIP) $(PY):
@@ -72,7 +74,7 @@ Linux_install Linux_update:
 # \ <section:merge>
 MERGE  = Makefile apt.txt .gitignore
 MERGE += README.md
-MERGE += $(MODULE).py
+MERGE += requirements.pip $(MODULE).py
 # / <section:merge>
 master:
 	git checkout $@

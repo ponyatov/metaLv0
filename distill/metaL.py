@@ -110,8 +110,13 @@ class Queue(Container): pass
 # \ <section:Active>
 
 class Active(Object): pass
+# \ <section:Context>
 
 class Context(Active): pass
+
+glob = Context('global')
+
+# / <section:Context>
 
 class Fn(Active): pass
 

@@ -115,6 +115,7 @@ MERGE += llvm llvm.py
 MERGE += mony mony.py
 MERGE += bcx bcx.py
 MERGE += AkkaLA.py
+MERGE += clojure clojure.py
 
 master:
 	rm -rf docs

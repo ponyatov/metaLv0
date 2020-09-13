@@ -12,6 +12,7 @@ YEAR = 2020
 LICENSE = 'MIT'
 GITHUB = 'https://github.com/ponyatov'
 LOGO = 'logo.png'
+MANIFEST = 'https://github.com/ponyatov/metaL/wiki/metaL-manifest'
 ## @}
 
 import os, sys, random, re
@@ -311,6 +312,11 @@ class Object:
 
     ## @name code generation
     ## @{
+
+    ## default f"format"ting for all nodes
+    def __format__(self, spec=None):
+        assert not spec
+        return f"{self.val}"
 
     ## to generic text file: use `.json` in place of `Error`
     ## @ingroup gen
@@ -733,7 +739,7 @@ class File(IO):
         super().__init__(V)
         self['ext'] = self.ext = ext
         if self.comment:
-            powered = "powered by metaL: https://repl.it/@metaLmasters/metaL#README.md"
+            powered = f"powered by metaL: {MANIFEST}"
             if len(self.comment) == len('#'):
                 self // ("%s  %s" % (self.comment, powered))
                 self // ("%s%s @file" % (self.comment, self.comment,))
@@ -750,6 +756,8 @@ class File(IO):
         self // self.bot
 
     def file(self): return '%s%s' % (self.val, self.ext)
+
+    def __format__(self, spec): return self.file()
 
     def sync(self):
         if self.fh:
@@ -792,6 +800,12 @@ class Url(Net):
         return self._pad(depth, block) + self.val
 
 ## @ingroup net
+class GitHub(Url):
+    def __init__(self, html=GITHUB, V=MODULE, branch=''):
+        super().__init__(f'{html}/{V}')
+        self['branch'] = branch
+
+## @ingroup net
 class User(Net):
     pass
 
@@ -832,7 +846,7 @@ vm['EMAIL'] = EMAIL = Email(EMAIL)
 vm['AUTHOR'] = AUTHOR = Author(AUTHOR) << EMAIL
 vm['YEAR'] = YEAR = Integer(YEAR)
 vm['LICENSE'] = LICENSE = MIT
-vm['GITHUB'] = GITHUB = Url(GITHUB)
+vm['GITHUB'] = GITHUB = GitHub(GITHUB, MODULE)
 vm['LOGO'] = LOGO = File(LOGO)
 ## @}
 
@@ -863,8 +877,7 @@ class README(File):
             module['YEAR'].val, module['LICENSE'].val))
         self.github = Section('github', comment=None)
         self // self.github
-        self.github // ('github: %s%s%s' %
-                        (module['GITHUB'].val, module.val, module['GITHUB']['branch'].val))
+        self.github // '' // f"github: {module['GITHUB']}" // ''
 
 
 ## @ingroup prj
@@ -876,7 +889,7 @@ class Makefile(File):
 ## system setting
 class Setting(Meta):
     def __init__(self, key, val):
-        Meta.__init__(self, key)
+        super().__init__(key)
         self.key = key
         self // val
 
@@ -888,14 +901,14 @@ class Setting(Meta):
 ## VSCode multicommand
 class multiCommand(Setting):
     def __init__(self, key, val):
-        Setting.__init__(self, key, val)
+        super().__init__(key, val)
 
     def file(self, depth=0, block=True):
         ret = (S('{"command":"multiCommand.%s",' % self.key) //
                (S('"sequence":[') //
                 '"workbench.action.files.saveAll",' //
                 (S('{"command": "workbench.action.terminal.sendSequence",') //
-                 ('"args": {"text": "\\u000D%s\\u000D"}}' % self.val)) //
+                 ('"args": {"text": "\\u000D%s\\u000D"}}' % f'{self.nest[0]}')) //
                 '],') //
                '},')
         return ret.file(depth, block)
@@ -903,25 +916,32 @@ class multiCommand(Setting):
 ## @ingroup prj
 ## module with its own directory (root module = project)
 class dirModule(Module):
+    ## @param[in] V default name is the current file name
     def __init__(self, V=None):
+        # current file name
         if not V:
             V = __import__('sys').argv[0]
             V = V.split('/')[-1]
             V = V.split('.')[0]
         super().__init__(V)
+        # fill metainformation from VM (metaL author/info)
+        self['TITLE'] = self
+        self['ABOUT'] = self
         self['AUTHOR'] = self.AUTHOR = vm['AUTHOR']
         self['EMAIL'] = self.EMAIL = vm['EMAIL']
         self['YEAR'] = self.YEAR = vm['YEAR']
         self['LICENSE'] = vm['LICENSE']
-        # diroot
+        self['GITHUB'] = self.GITHUB = GitHub(GITHUB,self)
+        # diroot: directory with same name as the module
         self['dir'] = self.diroot = Dir(V)
-        # Makefile
-        self.init_mk()
         # apt.txt
         self.init_apt()
         # gitignore
         self.init_giti()
+        # Makefile
+        self.init_mk()
 
+    ## create defaut Makefile
     def init_mk(self):
         self.diroot['mk'] = self.mk = Makefile()
         self['mk'] = self.mk
@@ -941,15 +961,19 @@ class dirModule(Module):
         # dirs
         self.mk['dirs'] = self.mk.dirs = Section('dirs')
         self.mk.top // self.mk.dirs
-        self.mk.dirs // f'{"CWD":<8} = $(CURDIR)'
-        self.mk.dirs // f'{"TMP":<8} = $(CWD)/tmp'
-        self.mk.dirs // f'{"SOURCE":<8} = $(TMP)/src'
+        self.mk.dirs //\
+            f'{"CWD":<8} = $(CURDIR)' //\
+            f'{"BIN":<8} = $(CWD)/bin' //\
+            f'{"TMP":<8} = $(CWD)/tmp' //\
+            f'{"SOURCE":<8} = $(TMP)/src'
         # tools
         self.mk['tools'] = self.mk.tools = Section('tools')
         self.mk.top // self.mk.tools
-        self.mk.tools // f'{"WGET":<8} = wget -c --no-check-certificate'
-        self.mk.tools // f'{"CORES":<8} = $(shell grep proc /proc/cpuinfo|wc -l)'
-        self.mk.tools // f'{"XMAKE":<8} = $(XPATH) $(MAKE) -j$(CORES)'
+        self.mk.tools //\
+            f'{"WGET":<8} = wget -c --no-check-certificate' //\
+            f'{"CORES":<8} = $(shell grep proc /proc/cpuinfo|wc -l)' //\
+            f'{"XPATH":<8} = PATH=$(BIN):$(PATH)' //\
+            f'{"XMAKE":<8} = $(XPATH) $(MAKE) -j$(CORES)'
         # src
         self.mk.src = self['src'] = Section('src')
         self.mk.mid // self.mk.src
@@ -979,7 +1003,7 @@ class dirModule(Module):
         # merge master/shadow
         self.mk['merge'] = self.mk.merge = Section('merge')
         self.mk.bot // self.mk.merge
-        self.mk.merge // 'MERGE  = Makefile apt.txt .gitignore'
+        self.mk.merge // f'MERGE  = {self.mk} {self.apt} {self.giti}'
         self.mk.merge // 'MERGE += README.md'
         # master
         self.mk.bot // 'master:'
@@ -1019,7 +1043,6 @@ class anyModule(dirModule):
         self.init_vscode()
 
     def init_lic(self):
-        # self['GITHUB'] = Url('https://repl.it/@metaLmasters/metaL#')
         self.lic = File('LICENSE', comment=None)
         self.diroot // self.lic
         self.lic //\
@@ -1061,7 +1084,9 @@ class anyModule(dirModule):
         #
         settings.multiCommand = Section('multiCommand', comment='//')
         settings.f11 = multiCommand('f11', 'make test')
-        settings.f12 = multiCommand('f12', 'make all')
+        self.f11 = settings.f11.nest[0]
+        settings.f12 = self.f12 = multiCommand('f12', 'make all')
+        self.f12 = settings.f12.nest[0]
         settings.multiCommand // (S('"multiCommand.commands": [') //
                                   settings.f11 //
                                   settings.f12 //
@@ -1079,17 +1104,6 @@ class anyModule(dirModule):
         assoc = Section('assoc', comment='//') // ''
         self.vscode['assoc'] = self.vscode.assoc = assoc
         settings.mid // (S('"files.associations": {') // assoc // '},')
-
-        # settings.mid // self.settings.watcher
-        # settings.mid // '},'
-        # self.settings. = Section('exclude', comment='//')
-        # settings.mid // '"files.exclude": {'
-        # settings.mid // self.settings.exclude
-        # settings.mid // '},'
-        # self.settings.assoc = Section('associations', comment='//')
-        # settings.mid //
-        # settings.mid // self.settings.assoc
-        # settings.mid // '},'
         #
         settings.sync()
 
@@ -1295,6 +1309,7 @@ class pyFn(PY, Fn):
 class pyFile(PY, File):
     def __init__(self, V, ext='.py', comment='#'):
         super().__init__(V, ext, comment)
+
     def __format__(self, spec): return self.val
 
 ## @ingroup py
@@ -1334,6 +1349,7 @@ class pyTest(pyFn):
 ## @ingroup py
 class minpyModule(anyModule):
     def __init__(self, V=None):
+        self.reqs = File('requirements.pip', comment=None)
         super().__init__(V)
         self.init_reqs()
         self.init_py()
@@ -1344,7 +1360,6 @@ class minpyModule(anyModule):
         self.apt.sync()
 
     def init_reqs(self):
-        self.reqs = File('requirements.txt', comment=None)
         self.diroot['reqs'] = self.reqs
         self.diroot // self.reqs
         self.reqs.sync()
@@ -1365,11 +1380,11 @@ class minpyModule(anyModule):
             f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402' //\
             ''
         self.mk.install //\
-            '\t$(MAKE) $(PIP)' //\
-            '\t$(PIP) install    -r requirements.txt'
+            f'\t$(MAKE) $(PIP)' //\
+            f'\t$(PIP) install    -r {self.reqs}'
         self.mk.update //\
-            '\t$(PIP) install -U    pip' //\
-            '\t$(PIP) install -U -r requirements.txt'
+            f'\t$(PIP) install -U    pip' //\
+            f'\t$(PIP) install -U -r {self.reqs}'
         self.mk.py = Section('py/install')
         self.mk.update.after(self.mk.py)
         self.mk.py //\
@@ -1379,7 +1394,7 @@ class minpyModule(anyModule):
             '$(PYT):' //\
             '\t$(PIP) install -U pytest'
         self.mk.src // 'SRC += $(MODULE).py'
-        self.mk.merge // 'MERGE += $(MODULE).py'
+        self.mk.merge // f'MERGE += {self.reqs} $(MODULE).py'
         self.mk.sync()
 
     def init_vscode_settings(self):

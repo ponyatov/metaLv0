@@ -85,11 +85,11 @@ class djModule(DJ, pyModule):
 #         # # forms
 #         # self.init_forms()
 
-    def init_settings(self):
-        pyModule.init_settings(self)
-        self.settings.f11 // 'make runserver'
-        self.settings.f12 // 'make check'
-        self.settings.sync()
+    def init_vscode_settings(self):
+        pyModule.init_vscode_settings(self)
+        self.vscode.settings.f11.val = 'make runserver'
+        self.vscode.settings.f12.val = 'make check'
+        self.vscode.settings.sync()
 
     def init_vscode_tasks(self):
         pyModule.init_vscode_tasks(self)

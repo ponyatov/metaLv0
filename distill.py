@@ -180,9 +180,13 @@ py.mid // py.actives
 py.active = Class('Active', [py.obj])
 py.actives // py.active
 
+# index for later patching
+ctxi = Section('Context')
+py.actives // ctxi
+
 ## `class Context` execution context
 py.ctx = Class('Context', [py.active])
-py.actives // py.ctx
+ctxi // py.ctx
 
 ## `class Fn` function
 py.fn = Class('Fn', [py.active])
@@ -424,6 +428,9 @@ py.prim // (evall.cp() // Return('self'))
 
 # symbol must lookup itself in context
 py.sym // (evall.cp() // Return(f'{ctx}[self.val]'))
+
+# for other class evaluation we need to define the global context
+ctxi // '' // "glob = Context('global')" // ''
 
 ## @}
 
