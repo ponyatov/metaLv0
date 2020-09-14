@@ -128,9 +128,9 @@ class Object:
     def _pad(self, depth, block=True):
         if block:
             ret = '\n'
+            ret += '\t' * depth
         else:
             ret = ''
-        ret += '\t' * depth
         return ret
 
     ## short `<T:V>` header only
@@ -592,7 +592,39 @@ class Meta(Object):
 ## @ingroup prim
 ## source code
 class S(Meta, String):
-    pass
+    def __init__(self, start, end=''):
+        String.__init__(self, start)
+        if end:
+            self.end = String(end)
+
+    def file(self, depth=0, block=False):
+        ret = String.file(self, depth, block)
+        try:
+            ret += String.file(self.end, depth, block)
+        except AttributeError:
+            pass
+        return ret
+
+class H(S):
+    def __init__(self, V, closing=True, block=True):
+        if closing:
+            super().__init__(f'{V}', f'</{V}>')
+        else:
+            super().__init__(f'{V}', f'')
+        self.block = block
+
+    def file(self, depth=0, block=False):
+        ret = self._pad(depth, block) + f'<{self.val}'
+        for i in self.slot:
+            ret += f' {i}={self.slot[i]}'
+        ret += '>'
+        for j in self.nest:
+            ret += j.file(depth + 1, self.block)
+        try:
+            ret += String.file(self.end, depth, self.block)
+        except AttributeError:
+            pass
+        return ret
 
 ## @ingroup meta
 class Return(S):
@@ -688,9 +720,7 @@ class Section(Meta):
     def file(self, depth=0, block=True):
         if not self.nest:
             return ''
-        ret = self._pad(depth, block)
-        if not self.comment:
-            ret = ret[1:]
+        ret = self._pad(depth, block) if self.comment else ''
         if self.comment:
             ret += '%s \\ %s' % (self.comment, self.head(test=True))
         for i in self.nest:
@@ -931,7 +961,7 @@ class dirModule(Module):
         self['EMAIL'] = self.EMAIL = vm['EMAIL']
         self['YEAR'] = self.YEAR = vm['YEAR']
         self['LICENSE'] = vm['LICENSE']
-        self['GITHUB'] = self.GITHUB = GitHub(GITHUB,self)
+        self['GITHUB'] = self.GITHUB = GitHub(GITHUB, self)
         # diroot: directory with same name as the module
         self['dir'] = self.diroot = Dir(V)
         # apt.txt
@@ -984,16 +1014,14 @@ class dirModule(Module):
         self.mk.all = self['all'] = Section('all')
         self.mk.mid // self.mk.all
         # install/update
-        self.mk['install'] = self.mk.install = Section('install')
-        self.mk.bot // self.mk.install
-        self.mk.install //\
-            '.PHONY: install' //\
-            (S('install:') //
-             '$(MAKE) $(OS)_install')
-        self.mk['update'] = self.mk.update = Section('update')
-        self.mk.bot // self.mk.update
-        self.mk.update // '.PHONY: update'
-        self.mk.update // 'update:\n\t$(MAKE) $(OS)_update'
+        install = Section('install')
+        self.mk.bot // install
+        self.mk.install = S('install:') // '$(MAKE) $(OS)_install'
+        install // '.PHONY: install' // self.mk.install
+        update = Section('update')
+        self.mk.bot // update
+        self.mk.update = S('update:') // '$(MAKE) $(OS)_update'
+        update // '.PHONY: update' // self.mk.update
         self.mk['linux'] = self.mk.linux = Section('linux/install')
         self.mk.bot // self.mk.linux
         self.mk.linux // '.PHONY: Linux_install Linux_update'
@@ -1059,6 +1087,7 @@ class anyModule(dirModule):
         self.init_vscode_settings()
         self.init_vscode_launch()
         self.init_vscode_tasks()
+        self.init_vscode_ext()
 
     def init_mk(self):
         super().init_mk()
@@ -1116,6 +1145,17 @@ class anyModule(dirModule):
         self.tasks.bot // '}'
         self.tasks.sync()
 
+    def init_vscode_ext(self):
+        self.vscode['ext'] = self.vscode.ext = File(
+            'extensions.json', comment='//')
+        self.vscode // self.vscode.ext
+        self.vscode.ext.top // '{'
+        self.vscode.ext.ext = Section('ext', comment='') // '"stkb.rewrap",'
+        self.vscode.ext.mid // (
+            S('"recommendations": [') // self.vscode.ext.ext // ']')
+        self.vscode.ext.bot // '}'
+        self.vscode.ext.sync()
+
     def init_vscode_launch(self):
         json = File('launch.json', comment='//')
         self.vscode['launch'] = self.vscode.launch = json
@@ -1131,6 +1171,9 @@ class anyModule(dirModule):
     def mksrc(self, file):
         assert isinstance(file, File)
         self.mk.src // ('SRC += %s' % file.val)
+
+    def file(self, depth=0, block=True):
+        return f'{self.__class__.__name__}:{self._val()}'
 
 ## @defgroup cc ANSI C'99
 ## @ingroup gen
@@ -1380,11 +1423,11 @@ class minpyModule(anyModule):
             f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402' //\
             ''
         self.mk.install //\
-            f'\t$(MAKE) $(PIP)' //\
-            f'\t$(PIP) install    -r {self.reqs}'
+            f'$(MAKE) $(PIP)' //\
+            f'$(PIP)  install    -r {self.reqs}'
         self.mk.update //\
-            f'\t$(PIP) install -U    pip' //\
-            f'\t$(PIP) install -U -r {self.reqs}'
+            f'$(PIP)  install -U    pip' //\
+            f'$(PIP)  install -U -r {self.reqs}'
         self.mk.py = Section('py/install')
         self.mk.update.after(self.mk.py)
         self.mk.py //\

@@ -99,7 +99,7 @@ Linux_install Linux_update:
 
 .PHONY: master shadow release
 
-MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen
+MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen do
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
 MERGE += requirements.txt pyproject.toml .replit doc
 MERGE += $(MODULE) metacircular.py license.py
@@ -116,6 +116,7 @@ MERGE += mony mony.py
 MERGE += bcx bcx.py
 MERGE += AkkaLA.py
 MERGE += clojure clojure.py
+MERGE += AlexML AlexML.py
 
 master:
 	rm -rf docs

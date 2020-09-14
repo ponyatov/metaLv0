@@ -1,11 +1,12 @@
 <map id="metaL.File" name="metaL.File">
-<area shape="rect" id="node4" href="$classllvm_1_1llFile.html" title="LLVM assembly file (.ll) " alt="" coords="5,229,83,256"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1cFile.html" title="metaL.cFile" alt="" coords="107,229,197,256"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1hFile.html" title="metaL.hFile" alt="" coords="221,229,312,256"/>
-<area shape="rect" id="node7" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="337,229,447,256"/>
-<area shape="rect" id="node8" href="$classmetaL_1_1pyFile.html" title="metaL.pyFile" alt="" coords="471,229,569,256"/>
-<area shape="rect" id="node10" href="$classmetaL_1_1README.html" title="metaL.README" alt="" coords="593,229,713,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="291,80,367,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="279,5,379,32"/>
-<area shape="rect" id="node9" href="$classmetaL_1_1pytestFile.html" title="metaL.pytestFile" alt="" coords="461,304,579,331"/>
+<area shape="rect" id="node4" href="$classclojure_1_1cljFile.html" title="clojure.cljFile" alt="" coords="419,5,517,32"/>
+<area shape="rect" id="node5" href="$classllvm_1_1llFile.html" title="LLVM assembly file (.ll) " alt="" coords="429,56,507,83"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1cFile.html" title="metaL.cFile" alt="" coords="423,107,513,133"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1hFile.html" title="metaL.hFile" alt="" coords="423,157,513,184"/>
+<area shape="rect" id="node8" href="$classmetaL_1_1Makefile.html" title="metaL.Makefile" alt="" coords="413,208,523,235"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1pyFile.html" title="metaL.pyFile" alt="" coords="419,259,517,285"/>
+<area shape="rect" id="node11" href="$classmetaL_1_1README.html" title="metaL.README" alt="" coords="408,309,528,336"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1IO.html" title="metaL.IO" alt="" coords="153,157,229,184"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,157,105,184"/>
+<area shape="rect" id="node10" href="$classmetaL_1_1pytestFile.html" title="metaL.pytestFile" alt="" coords="576,259,695,285"/>
 </map>

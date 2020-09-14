@@ -20,6 +20,8 @@ var searchData=
   ['cinclude',['cInclude',['../classtcc_1_1cInclude.html',1,'tcc']]],
   ['class',['Class',['../classmetaL_1_1Class.html',1,'metaL']]],
   ['clazz',['clazz',['../group__distill.html#ga3c6850e3ee9ff69fd899cea921aae847',1,'distill']]],
+  ['clj',['clj',['../classclojure_1_1cljModule.html#a06b8ea263f6f3121bebe9116e28a70ae',1,'clojure::cljModule']]],
+  ['cljfile',['cljFile',['../classclojure_1_1cljFile.html',1,'clojure']]],
   ['cljmodule',['cljModule',['../classclojure_1_1cljModule.html',1,'clojure']]],
   ['clojure',['clojure',['../namespaceclojure.html',1,'clojure'],['../group__clojure.html',1,'(Global Namespace)']]],
   ['clojure_2epy',['clojure.py',['../clojure_8py.html',1,'']]],

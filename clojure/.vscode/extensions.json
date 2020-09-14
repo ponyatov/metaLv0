@@ -1,0 +1,15 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// @file
+// \ <section:top>
+{
+// / <section:top>
+// \ <section:mid>
+"recommendations": [
+	"stkb.rewrap",
+	"avli.clojure",
+	]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

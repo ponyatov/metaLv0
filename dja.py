@@ -2,6 +2,7 @@
 ## @brief Django Apps Generator
 
 from metaL import *
+import config, datetime as dt
 
 ## @defgroup dja Dja
 ## @brief Django Apps Generator
@@ -69,6 +70,8 @@ class djModule(DJ, pyModule):
         self.init_proj()
         # app
         self.init_app()
+        # fixture
+        self.init_fixture()
 
 #         # # manage.py
 #         # self.init_manage()
@@ -85,10 +88,63 @@ class djModule(DJ, pyModule):
 #         # # forms
 #         # self.init_forms()
 
+    def init_fixture(self):
+        self['fixture'] = self.fixture = Dir('fixture')
+        self.diroot // self.fixture
+        self.fixture.sync()
+        #
+        self.fixture['user'] = self.fixture.user = File(
+            'user.json', comment=None)
+        self.fixture // self.fixture.user
+        self.fixture.user.top // '['
+        self.fixture.user.bot // ']'
+
+        now = dt.datetime.now().isoformat()
+
+        dponyatov = (S('{', '},') //
+                     '"model": "app.customuser",' //
+                     '"pk": 1,' //
+                     (S('"fields": {', '}') //
+                      f'"username": "{config.ADMIN.USERNAME}",' //
+                      f'"password": "{config.ADMIN.PASS_HASH}",' //
+                      f'"last_name": "{config.ADMIN.LAST}",' //
+                      f'"first_name": "{config.ADMIN.FIRST}",' //
+                      f'"father_name": "{config.ADMIN.FATHER}",' //
+                      f'"email": "{config.ADMIN.EMAIL}",' //
+                      f'"phone": "{config.ADMIN.PHONE}",' //
+                      f'"date_joined": "{now}",' //
+                      f'"last_login": "{now}",' //
+                      '"is_superuser": true,' //
+                      '"is_staff": true,' //
+                      '"is_active": true,' //
+                      '"groups": [],' //
+                      '"user_permissions": []'))
+        admin = (S('{', '}') //
+                     '"model": "app.customuser",' //
+                     '"pk": 2,' //
+                     (S('"fields": {', '}') //
+                      f'"username": "admin",' //
+                      f'"password": "{config.ADMIN.PASS_HASH}",' //
+                      f'"last_name": "Админов",' //
+                      f'"first_name": "Админ",' //
+                      f'"father_name": "Админович",' //
+                      f'"email": "{config.ADMIN.EMAIL}",' //
+                      f'"phone": "{config.ADMIN.PHONE}",' //
+                      f'"date_joined": "{now}",' //
+                      f'"last_login": "{now}",' //
+                      '"is_superuser": true,' //
+                      '"is_staff": true,' //
+                      '"is_active": true,' //
+                      '"groups": [],' //
+                      '"user_permissions": []'))
+
+        self.fixture.user.mid // dponyatov // admin
+        self.fixture.user.sync()
+
     def init_vscode_settings(self):
         pyModule.init_vscode_settings(self)
-        self.vscode.settings.f11.val = 'make runserver'
-        self.vscode.settings.f12.val = 'make check'
+        self.f11.val = 'make runserver'
+        self.f12.val = 'make check'
         self.vscode.settings.sync()
 
     def init_vscode_tasks(self):
@@ -147,9 +203,10 @@ class djModule(DJ, pyModule):
         self.mk.all // '.PHONY: all\nall: $(PY) manage.py\n\t$^'
         # install
         self.mk.install //\
-            '\t$(MAKE) js' //\
-            '\t$(MAKE) migrate' //\
-            '\t$(MAKE) createsuperuser'
+            '$(MAKE) js' //\
+            '$(MAKE) migrate' //\
+            '$(MAKE) createsuperuser' //\
+            '$(PY)   manage.py loaddata user.json'
         # js
         js = Section('js/install')
         self.mk.update.after(js)
@@ -171,7 +228,7 @@ class djModule(DJ, pyModule):
         # runserver
         runserver = Section('runserver')
         self.mk.mid // runserver
-        runserver // '.PHONY: runserver\nrunserver: $(PY) manage.py\n\t$^ $@'
+        runserver // '.PHONY: runserver\nrunserver: $(PY) manage.py\n\t$^ $@ 127.0.0.1:12345'
         # check
         check = Section('check')
         self.mk.mid // check
@@ -513,7 +570,9 @@ class djModule(DJ, pyModule):
         self.init_proj_installed()
         self.proj.settings.mid // "AUTH_USER_MODEL = 'app.CustomUser'"
         self.init_proj_middleware()
-        self.proj.settings.mid // "ROOT_URLCONF = 'proj.urls'"
+        self.proj.settings.mid //\
+            "ROOT_URLCONF = 'proj.urls'" //\
+            "FIXTURE_DIRS = [BASE_DIR/'fixture']"
         self.init_proj_templates()
         self.init_proj_databases()
         self.init_proj_i18n()
