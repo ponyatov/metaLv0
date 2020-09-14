@@ -67,8 +67,13 @@ class newTag(H):
                 H('of-old-plain-html', closing=False)
              )
 
+    # определяем дополнительный метод генерации кода
+    def html(self, depth=0, block=False):
+        return "<a><bunch/><of-old-plain-html/></a>"
 
-body // newTag()
+
+newtag = newTag()
+body // newtag // (H('P') // newtag.html())
 
 
 # записать изменения
