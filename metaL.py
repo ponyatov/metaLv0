@@ -247,8 +247,12 @@ class Object:
     ## @param[in] that `B`
     ## @param[in] sync push object with sync
     ## (hash/storage update, use `False` for massive & IO pushes)
-    def __floordiv__(self, that, sync=True):
-        return self.push(that, sync)
+    def __floordiv__(self, that):
+        if isinstance(that, str):
+            that = String(that)
+        self.nest.append(that)
+        that.par.add(self)
+        return self
 
     ## @}
 
@@ -263,14 +267,8 @@ class Object:
     ## push to `.nest[]`
     ## @param[in] sync push with sync
     ## @param[in] that `B` operand to be pushed
-    def push(self, that, sync=True):
-        if isinstance(that, str):
-            that = String(that)
-        self.nest.append(that)
-        that.par.add(self)
-        if sync:
-            return self.sync()
-        return self
+    def push(self, that):
+        return self // that
 
     ## insert `that` into parent node after the current
     def after(self, that):
@@ -320,8 +318,8 @@ class Object:
 
     ## to generic text file: use `.json` in place of `Error`
     ## @ingroup gen
-    def file(self, depth=0, block=False, comment=None):
-        return self._pad(depth, block) + self.json()
+    def file(self, depth=0, parent=None, comment=None):
+        return self._pad(depth, parent.block) + self.json()
 
     ## to Python code: use `.json` in place of `Error`
     ## @ingroup py
@@ -372,6 +370,10 @@ class Symbol(Primitive):
 
 ## @ingroup prim
 class String(Primitive):
+    def __init__(self, V, block=True):
+        super().__init__(V)
+        self.block = block
+
     def _val(self):
         s = ''
         for c in self.val:
@@ -385,10 +387,10 @@ class String(Primitive):
                 s += c
         return s
 
-    def file(self, depth=0, block=False):
-        ret = self._pad(depth, block) + self.val
+    def file(self, depth=0, parent=None):
+        ret = self._pad(depth, parent.block) + self.val
         for i in self.nest:
-            ret += i.file(depth + 1, block)
+            ret += i.file(depth + 1, self)
         return ret
 
     def py(self): return self.val
@@ -401,7 +403,7 @@ class Number(Primitive):
     def __init__(self, V):
         Primitive.__init__(self, float(V))
 
-    def file(self): return '%s' % self.val
+    def file(self, depth=0, parent=None): return '%s' % self.val
 
     ## @name operator
     ## @{
@@ -592,17 +594,14 @@ class Meta(Object):
 ## @ingroup prim
 ## source code
 class S(Meta, String):
-    def __init__(self, start, end=''):
-        String.__init__(self, start)
-        if end:
-            self.end = String(end)
+    def __init__(self, start, end=None, block=True):
+        String.__init__(self, start, block)
+        self.end = end
 
-    def file(self, depth=0, block=False):
-        ret = String.file(self, depth, block)
-        try:
-            ret += String.file(self.end, depth, block)
-        except AttributeError:
-            pass
+    def file(self, depth=0, parent=None):
+        ret = super().file(depth, parent)
+        if self.end != None:
+            ret += self._pad(depth, self.block) + self.end
         return ret
 
 class H(S):
@@ -613,17 +612,14 @@ class H(S):
             super().__init__(f'{V}', f'')
         self.block = block
 
-    def file(self, depth=0, block=False):
-        ret = self._pad(depth, block) + f'<{self.val}'
+    def file(self, depth=0, parent=None):
+        ret = self._pad(depth, parent.block) + f'<{self.val}'
         for i in self.slot:
             ret += f' {i}={self.slot[i]}'
         ret += '>'
         for j in self.nest:
-            ret += j.file(depth + 1, self.block)
-        try:
-            ret += String.file(self.end, depth, self.block)
-        except AttributeError:
-            pass
+            ret += j.file(depth + 1, self)
+        ret += self._pad(depth, parent.block) + self.end
         return ret
 
 ## @ingroup meta
@@ -635,7 +631,7 @@ class Return(S):
 class Arg(Meta, Symbol):
     def __int__(self): return self.val
 
-    def file(self, depth=0, block=False):
+    def file(self, depth=0, parent=None):
         return self._val()
 
     def __format__(self, spec=None):
@@ -647,8 +643,12 @@ class Arg(Meta, Symbol):
 
 ## @ingroup meta
 class Args(Meta, Tuple):
-    def file(self, depth=0, block=False):
-        return '%s' % (', '.join([j.file() for j in self.nest]))
+    def __init__(self, V=''):
+        Tuple.__init__(self, V)
+        self.block = False
+
+    def file(self, depth=0, parent=None):
+        return '%s' % (', '.join([j.file(parent=self) for j in self.nest]))
 
 ## @ingroup meta
 class Class(Meta):
@@ -667,8 +667,8 @@ class Class(Meta):
     # def py(self):
     #     return 'class %s: pass' % self.val
 
-    def file(self, depth=0, block=True):
-        ret = '\n' + self._pad(depth, block) + 'class %s' % self.val
+    def file(self, depth=0, parent=None):
+        ret = '\n' + self._pad(depth, parent.block) + 'class %s' % self.val
         try:
             ret += '(%s)' % (','.join([i.val for i in self.sup.nest]))
         except AttributeError:
@@ -692,8 +692,8 @@ class pyInterface(Meta):
         for i in ext:
             self // i
 
-    def file(self, depth=0, block=True):
-        ret = self._pad(depth, block) + '## @name %s' % self.val
+    def file(self, depth=0, parent=None):
+        ret = self._pad(depth, parent.block) + '## @name %s' % self.val
         if 'url' in self.keys():
             ret += self._pad(depth, block) + '## ' + self['url'].file()
         ret += self._pad(depth, block) + '## @{'
@@ -706,7 +706,7 @@ class pyInterface(Meta):
 
 ## @ingroup meta
 class Module(Meta):
-    def file(self, depth=0): return self.head(test=True)
+    def file(self, depth=0, parent=None): return self.head(test=True)
 
 
 vm['module'] = Class(Module)
@@ -716,17 +716,18 @@ class Section(Meta):
     def __init__(self, V, comment='#'):
         super().__init__(V)
         self.comment = comment
+        self.block = True
 
-    def file(self, depth=0, block=True):
+    def file(self, depth=0, parent=None):
         if not self.nest:
             return ''
-        ret = self._pad(depth, block) if self.comment else ''
+        ret = self._pad(depth, parent.block) if self.comment else ''
         if self.comment:
             ret += '%s \\ %s' % (self.comment, self.head(test=True))
         for i in self.nest:
-            ret += i.file(depth, block)
+            ret += i.file(depth, parent=self)
         if self.comment:
-            ret += self._pad(depth, block)
+            ret += self._pad(depth, parent.block)
             ret += '%s / %s' % (self.comment, self.head(test=True))
         return ret
 
@@ -784,8 +785,9 @@ class File(IO):
         self // self.mid
         self['bot'] = self.bot = Section('bot', comment)
         self // self.bot
+        self.block = True
 
-    def file(self): return '%s%s' % (self.val, self.ext)
+    def file(self, depth=0, parent=None): return '%s%s' % (self.val, self.ext)
 
     def __format__(self, spec): return self.file()
 
@@ -793,7 +795,7 @@ class File(IO):
         if self.fh:
             self.fh.seek(0)
             for j in self.nest:
-                self.fh.write(j.file(block=True))
+                self.fh.write(j.file(parent=self))
             self.fh.truncate()
             self.fh.flush()
         return super().sync()
@@ -822,11 +824,11 @@ class Port(Net):
 
 ## @ingroup net
 class Email(Net):
-    def file(self): return '<%s>' % self.val
+    def file(self, depth=0, parent=None): return '<%s>' % self.val
 
 ## @ingroup net
 class Url(Net):
-    def file(self, depth=0, block=False):
+    def file(self, depth=0, parent=None):
         return self._pad(depth, block) + self.val
 
 ## @ingroup net
@@ -852,7 +854,7 @@ class Pswd(Net):
 
 ## @ingroup doc
 class Doc(Object):
-    def file(self): return '%s' % self.val
+    def file(self, depth=0, parent=None): return '%s' % self.val
 
 ## @ingroup doc
 class Title(Doc):
@@ -922,6 +924,7 @@ class Setting(Meta):
         super().__init__(key)
         self.key = key
         self // val
+        self.block = True
 
     def __floordiv__(self, that):
         self.nest = []
@@ -933,7 +936,7 @@ class multiCommand(Setting):
     def __init__(self, key, val):
         super().__init__(key, val)
 
-    def file(self, depth=0, block=True):
+    def file(self, depth=0, parent=None):
         ret = (S('{"command":"multiCommand.%s",' % self.key) //
                (S('"sequence":[') //
                 '"workbench.action.files.saveAll",' //
@@ -941,7 +944,7 @@ class multiCommand(Setting):
                  ('"args": {"text": "\\u000D%s\\u000D"}}' % f'{self.nest[0]}')) //
                 '],') //
                '},')
-        return ret.file(depth, block)
+        return ret.file(depth, self)
 
 ## @ingroup prj
 ## module with its own directory (root module = project)
@@ -1172,7 +1175,7 @@ class anyModule(dirModule):
         assert isinstance(file, File)
         self.mk.src // ('SRC += %s' % file.val)
 
-    def file(self, depth=0, block=True):
+    def file(self, depth=0, parent=None):
         return f'{self.__class__.__name__}:{self._val()}'
 
 ## @defgroup cc ANSI C'99
@@ -1261,7 +1264,7 @@ class ccInclude(CC, Module):
             V = V.file()
         super().__init__(V)
 
-    def file(self): return '#include <%s>' % self.val
+    def file(self, depth=0, parent=None): return '#include <%s>' % self.val
 
 
 stdint = ccInclude('stdint.h')
@@ -1271,7 +1274,8 @@ stdio = ccInclude('stdio.h')
 ## @ingroup cc
 ## C type
 class ccType(CC):
-    def file(self): return '%s %s' % (self.cc_type(), self.cc_val())
+    def file(self, depth=0, parent=None): return '%s %s' % (
+        self.cc_type(), self.cc_val())
     ## C type (without first `cc` prefix)
     def cc_type(self): return self._type()[2:]
     ## object value
@@ -1301,7 +1305,7 @@ class ccFn(CC, Fn):
         assert isinstance(returns, Object)
         self['ret'] = returns
 
-    def file(self):
+    def file(self, depth=0, parent=None):
         ret = '\n%s %s(%s) {' % (
             self['ret'].cc_type(), self.val, self['args'].cc_arg())
         for j in self.nest:
@@ -1325,12 +1329,12 @@ class PY(Object):
 
 ## @ingroup py
 class pyImport(PY):
-    def file(self, depth=0, block=True):
-        return self._pad(depth, block) + 'import %s' % self.val
+    def file(self, depth=0, parent=None):
+        return self._pad(depth, parent.block) + 'import %s' % self.val
 
 ## @ingroup py
 class pyFn(PY, Fn):
-    def file(self, depth=0, block=True):
+    def file(self, depth=0, parent=None):
         res = self._pad(depth, block)
         res += 'def %s(%s):' % (self.val, self.args.file())
         if not self.nest:
@@ -1381,7 +1385,7 @@ class pyTest(pyFn):
     def __init__(self, V):
         super().__init__('test_%s' % V)
 
-    def file(self, depth=0, block=True):
+    def file(self, depth=0, parent=None):
         ret = ''
         if 'for' in self.keys():
             ret += self._pad(depth, block) + \
@@ -2126,3 +2130,6 @@ if __name__ == '__main__':
     init()
     metaL(' {} @ 123 ')
     REPL()
+
+## @defgroup samples
+## @brief samples on using `metaL` for programming and modeling

@@ -1,0 +1,9 @@
+
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+## @file
+# \ <section:top>
+*~
+*.swp
+*.log
+/tmp/
+# / <section:top>

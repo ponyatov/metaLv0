@@ -2,6 +2,7 @@
 ## @brief Web Book platform demo
 
 ## @defgroup webook webook
+## @ingroup dja
 ## @brief Web Book platform demo
 ## @{
 

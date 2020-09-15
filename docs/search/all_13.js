@@ -3,6 +3,7 @@ var searchData=
   ['system_20init',['system init',['../group__init.html',1,'']]],
   ['sicp_201_2e1_2e1_20expressions',['SICP 1.1.1 Expressions',['../md_doc_SICP_1_1_1_Expressions.html',1,'']]],
   ['s',['S',['../classmetaL_1_1S.html',1,'metaL']]],
+  ['samples',['Samples',['../group__samples.html',1,'']]],
   ['section',['Section',['../classmetaL_1_1Section.html',1,'metaL']]],
   ['set',['set',['../group__distill.html#ga710d2244828810ef66e9bc4671ae5ff1',1,'distill']]],
   ['setting',['Setting',['../classmetaL_1_1Setting.html',1,'metaL']]],

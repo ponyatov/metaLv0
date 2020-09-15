@@ -2,9 +2,10 @@
 ## @brief Django Apps Generator
 
 from metaL import *
-import config, datetime as dt
+import config
 
 ## @defgroup dja Dja
+## @ingroup samples
 ## @brief Django Apps Generator
 ## @{
 
@@ -99,7 +100,7 @@ class djModule(DJ, pyModule):
         self.fixture.user.top // '['
         self.fixture.user.bot // ']'
 
-        now = dt.datetime.now().isoformat()
+        now = '2020-11-11T11:11:11.11'
 
         dponyatov = (S('{', '},') //
                      '"model": "app.customuser",' //

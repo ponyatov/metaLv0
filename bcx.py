@@ -4,6 +4,7 @@
 from metaL import *
 
 ## @defgroup bcx BCX
+## @ingroup samples
 ## @brief Byte Code eXecution engine
 ## https://github.com/ponyatov/bcx
 ## @{

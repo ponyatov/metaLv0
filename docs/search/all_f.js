@@ -6,5 +6,7 @@ var searchData=
   ['objs',['objs',['../group__distill.html#ga8e82e62b7029d835540c38a99dd55aeb',1,'distill']]],
   ['op',['Op',['../classmetaL_1_1Op.html',1,'metaL.Op'],['../group__distill.html#ga448dba9a5f6f6f7094080743425f7fb1',1,'distill.op()']]],
   ['opcode',['opcode',['../classSmalltalk_1_1RET.html#a19c772439c742a6bb6c95748ec9a0283',1,'Smalltalk::RET']]],
-  ['operi',['operi',['../namespacedistill.html#a996e65ed2f91ab558494abe2a564fa74',1,'distill']]]
+  ['operi',['operi',['../namespacedistill.html#a996e65ed2f91ab558494abe2a564fa74',1,'distill']]],
+  ['os',['OS',['../group__os.html',1,'']]],
+  ['osmodule',['osModule',['../classdrtos_1_1osModule.html',1,'drtos']]]
 ];

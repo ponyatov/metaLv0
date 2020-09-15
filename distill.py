@@ -4,6 +4,7 @@
 from metaL import *
 
 ## @defgroup distill distill
+## @ingroup samples
 ## @brief Distilled `metaL` / SICP chapter 4 /
 ## https://www.notion.so/metalang/Distilled-metaL-SICP-chapter-4-237378d385024f899e5a24597da7a19d
 ## @{

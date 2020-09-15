@@ -117,6 +117,7 @@ MERGE += bcx bcx.py
 MERGE += AkkaLA.py
 MERGE += clojure clojure.py
 MERGE += AlexML AlexML.py
+MERGE += DRTK DRTK.py drtos.py
 
 master:
 	rm -rf docs

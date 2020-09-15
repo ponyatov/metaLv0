@@ -4,6 +4,7 @@
 from metaL import *
 
 ## @defgroup st Smalltalk
+## @ingroup samples
 ## @brief model
 ## @{
 

@@ -4,6 +4,7 @@
 from metaL import *
 
 ## @defgroup akka AkkaLA
+## @ingroup samples
 ## @brief Actor programming model: Akka Language Abstraction
 
 ## @defgroup cakka cAkkaLA

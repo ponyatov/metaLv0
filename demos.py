@@ -5,6 +5,7 @@ import config
 from metaL import *
 
 ## @defgroup demos demos
+## @ingroup os
 ## @brief @ref unikernel OS model
 ## @{
 

@@ -4,6 +4,7 @@
 from metaL import *
 
 ## @defgroup clojure
+## @ingroup samples
 ## @brief Clojure project template
 ## @{
 

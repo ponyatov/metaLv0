@@ -1,0 +1,10 @@
+<map id="Samples" name="Samples">
+<area shape="rect" id="node1" href="$group__rdbms.html" title="SQLite&#45;based generic RDBMS model (not API client/interfacing library) " alt="" coords="135,5,194,32"/>
+<area shape="rect" id="node2" href="$group__dja.html" title="Django Apps Generator. " alt="" coords="143,56,186,83"/>
+<area shape="rect" id="node3" href="$group__clojure.html" title="Clojure project template. " alt="" coords="133,107,196,133"/>
+<area shape="rect" id="node4" href="$group__distill.html" title="Distilled metaL / SICP chapter 4 / https://www.notion.so/metalang/Distilled&#45;metaL&#45;SICP&#45;chapter&#45;4&#45;2373..." alt="" coords="139,157,191,184"/>
+<area shape="rect" id="node5" href="$group__bcx.html" title="Byte Code eXecution engine https://github.com/ponyatov/bcx. " alt="" coords="139,208,190,235"/>
+<area shape="rect" id="node6" href="$group__akka.html" title="Actor programming model: Akka Language Abstraction. " alt="" coords="131,259,199,285"/>
+<area shape="rect" id="node8" href="$group__os.html" title="drtos: distributed/embedded [RT]OS patterns " alt="" coords="144,309,185,336"/>
+<area shape="rect" id="node9" href="$group__st.html" title="model " alt="" coords="127,360,203,387"/>
+</map>

@@ -1,3 +1,5 @@
 <map id="Dja" name="Dja">
-<area shape="rect" id="node2" href="$group__mony.html" title="Monitoring system. " alt="" coords="96,5,151,32"/>
+<area shape="rect" id="node2" href="$group__webook.html" title="Web Book platform demo. " alt="" coords="217,5,284,32"/>
+<area shape="rect" id="node3" href="$group__mony.html" title="Monitoring system. " alt="" coords="223,56,278,83"/>
+<area shape="rect" id="node4" href="$group__samples.html" title="samples on using metaL for programming and modeling " alt="" coords="5,31,79,57"/>
 </map>

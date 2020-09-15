@@ -2,6 +2,7 @@
 ## @brief SQLite-based generic RDBMS model (not API client/interfacing library)
 
 ## @defgroup rdbms rdbms
+## @ingroup samples
 ## @brief SQLite-based generic RDBMS model (not API client/interfacing library)
 ## @{
 
