@@ -7,6 +7,34 @@
 // / <section:top>
 // \ <section:mid>
 	"tasks": [
+	{
+		"label": "make: install",
+		"type": "shell",
+		"command": "make install",
+		"problemMatcher": [],
+		"group": "make"
+	},
+	{
+		"label": "make: update",
+		"type": "shell",
+		"command": "make update",
+		"problemMatcher": [],
+		"group": "make"
+	},
+	{
+		"label": "git: master",
+		"type": "shell",
+		"command": "git master",
+		"problemMatcher": [],
+		"group": "git"
+	},
+	{
+		"label": "git: shadow",
+		"type": "shell",
+		"command": "git shadow",
+		"problemMatcher": [],
+		"group": "git"
+	},
 	]
 // / <section:mid>
 // \ <section:bot>

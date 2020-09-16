@@ -1,2 +1,5 @@
 
 git make wget
+binutils tcc
+build-essential binutils gcc flex bison bc
+syslinux qemu-system-i386

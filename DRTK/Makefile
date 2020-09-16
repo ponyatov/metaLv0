@@ -3,7 +3,9 @@
 ## @file
 # \ <section:top>
 # \ <section:vars>
+# \ <section:module>
 MODULE   = $(notdir $(CURDIR))
+# / <section:module>
 OS      ?= $(shell uname -s)
 # / <section:vars>
 # \ <section:version>

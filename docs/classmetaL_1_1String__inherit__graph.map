@@ -1,8 +1,9 @@
 <map id="metaL.String" name="metaL.String">
-<area shape="rect" id="node4" href="$classmetaL_1_1S.html" title="source code " alt="" coords="61,229,131,256"/>
-<area shape="rect" id="node7" href="$classSmalltalk_1_1stString.html" title="String p.542. " alt="" coords="156,229,281,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="101,80,214,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="107,5,207,32"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1S.html" title="source code " alt="" coords="142,229,213,256"/>
+<area shape="rect" id="node8" href="$classSmalltalk_1_1stString.html" title="String p.542. " alt="" coords="237,229,363,256"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="182,80,295,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="189,5,289,32"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1H.html" title="metaL.H" alt="" coords="5,304,77,331"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1Return.html" title="metaL.Return" alt="" coords="101,304,203,331"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1multiCommand.html" title="VSCode multicommand. " alt="" coords="102,304,253,331"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1Return.html" title="metaL.Return" alt="" coords="277,304,379,331"/>
 </map>

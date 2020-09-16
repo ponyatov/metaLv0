@@ -1,11 +1,12 @@
 <map id="metaL.minpyModule" name="metaL.minpyModule">
 <area shape="rect" id="node7" href="$classdistill_1_1meModule.html" title="inherit special Module type for metaLayer&#45;based projects " alt="" coords="5,453,121,480"/>
 <area shape="rect" id="node8" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="145,453,264,480"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="71,304,197,331"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="75,229,193,256"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="82,155,186,181"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="89,80,179,107"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="84,5,184,32"/>
+<area shape="rect" id="node11" href="$classWebRTCos_1_1dsModule.html" title="[D]istributed [S]ystem Module " alt="" coords="288,453,439,480"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="142,304,267,331"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="145,229,264,256"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="153,155,257,181"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="159,80,250,107"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="155,5,255,32"/>
 <area shape="rect" id="node9" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="85,528,180,555"/>
 <area shape="rect" id="node10" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="204,528,347,555"/>
 </map>

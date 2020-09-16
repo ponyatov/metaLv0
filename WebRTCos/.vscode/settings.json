@@ -1,0 +1,64 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// @file
+// \ <section:top>
+{
+	"python.pythonPath":               "./bin/python3",
+	"python.formatting.provider":      "autopep8",
+	"python.formatting.autopep8Path":  "./bin/autopep8",
+	"python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],
+// / <section:top>
+// \ <section:mid>
+// \ <section:multiCommand>
+"multiCommand.commands": [
+	{"command": "multiCommand.f11", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake test\u000D"}
+			}
+		]
+	},
+	{"command": "multiCommand.f12", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake all\u000D"}
+			}
+		]
+	},
+],
+// / <section:multiCommand>
+"files.watcherExclude": {
+	// \ <section:watcher>
+	// \ <section:>
+	"**/bin/**": true, "**/include/**":true,
+	"**/lib*/**":true, "**/share/**"  :true,
+	"**/*.pyc":  true, "**/pyvenv.cfg":true,
+	"**/__pycache__/": true, "**/.pytest_cache/": true,
+	// / <section:>
+	// / <section:watcher>
+},
+"files.exclude": {
+	// \ <section:exclude>
+	
+	// \ <section:>
+	"**/bin/**": true, "**/include/**":true,
+	"**/lib*/**":true, "**/share/**"  :true,
+	"**/*.pyc":  true, "**/pyvenv.cfg":true,
+	"**/__pycache__/": true, "**/.pytest_cache/": true,
+	// / <section:>
+	// / <section:exclude>
+	},
+"files.associations": {
+	// \ <section:assoc>
+	
+	"**/.py": "python",
+	"**/requirements{/**,*}.{txt,in}": "pip-requirements",
+	// / <section:assoc>
+	},
+// / <section:mid>
+// \ <section:bot>
+	"editor.tabSize": 4,
+}
+// / <section:bot>

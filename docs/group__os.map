@@ -1,5 +1,6 @@
 <map id="OS" name="OS">
-<area shape="rect" id="node1" href="$group__demos.html" title="unikernel OS model " alt="" coords="216,5,277,32"/>
-<area shape="rect" id="node2" href="$group__samples.html" title="samples on using metaL for programming and modeling " alt="" coords="5,31,79,57"/>
-<area shape="rect" id="node3" href="$group__drtk.html" title="metaL model of DRTK: experimental distributed real&#45;time operating system kernel " alt="" coords="217,56,276,83"/>
+<area shape="rect" id="node1" href="$group__demos.html" title="unikernel OS model " alt="" coords="235,5,297,32"/>
+<area shape="rect" id="node2" href="$group__samples.html" title="samples on using metaL for programming and modeling " alt="" coords="5,56,79,83"/>
+<area shape="rect" id="node3" href="$group__drtk.html" title="metaL model of DRTK: experimental distributed real&#45;time operating system kernel " alt="" coords="237,56,295,83"/>
+<area shape="rect" id="node5" href="$group__wrtc.html" title="WebRTC&#45;based distributed computing platform (JS hell) " alt="" coords="216,107,316,133"/>
 </map>

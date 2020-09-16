@@ -40,10 +40,10 @@ class Object:
         ## nested AST = vector = stack = queue
         self.nest = []
         ## parent nodes registry
-        self.par = set()
+        self.par = []
         ## global storage id
         ## @ingroup persist
-        self.gid = self.sync().gid
+        self.gid = hash(self)#self.sync().gid
 
     ## @name storage/hot-update
     ## @{
@@ -248,11 +248,19 @@ class Object:
     ## @param[in] sync push object with sync
     ## (hash/storage update, use `False` for massive & IO pushes)
     def __floordiv__(self, that):
-        if isinstance(that, str):
+        if isinstance(that, str): # wrap Python string
             that = String(that)
+        that.pre__floordiv__(self)
         self.nest.append(that)
-        that.par.add(self)
+        that.post__floordiv__(self)
         return self
+
+    ## pre-callback for `__floordiv__`
+    def pre__floordiv__(self, parent): pass
+
+    ## post-callback for `__floordiv__`
+    def post__floordiv__(self, parent):
+        self.par.append(parent)
 
     ## @}
 
@@ -276,6 +284,7 @@ class Object:
         for parent in self.par:
             index = parent.index(self)
             parent.insert(index + 1, that)
+            that.post__floordiv__(parent)
         return self
 
     ## insert `A[index]=B`
@@ -314,12 +323,13 @@ class Object:
     ## default f"format"ting for all nodes
     def __format__(self, spec=None):
         assert not spec
-        return f"{self.val}"
+        return f'{self._type()}:{self._val()}'
 
     ## to generic text file: use `.json` in place of `Error`
     ## @ingroup gen
-    def file(self, depth=0, parent=None, comment=None):
-        return self._pad(depth, parent.block) + self.json()
+
+    def file(self, depth=0):#, parent=None, comment=None):
+        return self._pad(depth, self.par[0].block) + self.json()
 
     ## to Python code: use `.json` in place of `Error`
     ## @ingroup py
@@ -370,6 +380,8 @@ class Symbol(Primitive):
 
 ## @ingroup prim
 class String(Primitive):
+    ## @param[in] V string value
+    ## @param[in] block source code flag: tabbed blocks or inlined code
     def __init__(self, V, block=True):
         super().__init__(V)
         self.block = block
@@ -387,15 +399,27 @@ class String(Primitive):
                 s += c
         return s
 
-    def file(self, depth=0, parent=None):
-        ret = self._pad(depth, parent.block) + self.val
+    def file(self, depth=0):#, parent=None):
+        assert len(self.par) == 1
+        ret = self._pad(depth, self.par[0].block) + self.val
         for i in self.nest:
-            ret += i.file(depth + 1, self)
+            ret += i.file(depth + 1)
         return ret
+
+    def __format__(self, spec=None):
+        assert not spec
+        return f'{self.val}'
+
+    def comment(self):
+        return self.par[0].comment()
 
     def py(self): return self.val
 
     def cc_arg(self): return '"%s"' % self._val()
+
+    def post__floordiv__(self, parent):
+        super().post__floordiv__(parent)
+
 
 ## @ingroup prim
 ## floating point
@@ -403,7 +427,8 @@ class Number(Primitive):
     def __init__(self, V):
         Primitive.__init__(self, float(V))
 
-    def file(self, depth=0, parent=None): return '%s' % self.val
+    def file(self, depth=0):#, parent=None):
+        return '%s' % self.val
 
     ## @name operator
     ## @{
@@ -594,32 +619,37 @@ class Meta(Object):
 ## @ingroup prim
 ## source code
 class S(Meta, String):
-    def __init__(self, start, end=None, block=True):
+    def __init__(self, start, end='', block=True):
         String.__init__(self, start, block)
         self.end = end
 
-    def file(self, depth=0, parent=None):
-        ret = super().file(depth, parent)
-        if self.end != None:
-            ret += self._pad(depth, self.block) + self.end
+    def file(self, depth=0):
+        ret = super().file(depth)
+        ret += self.file_end(depth)
         return ret
 
-class H(S):
-    def __init__(self, V, closing=True, block=True):
-        if closing:
-            super().__init__(f'{V}', f'</{V}>')
-        else:
-            super().__init__(f'{V}', f'')
-        self.block = block
+    def file_end(self, depth):
+        return self._pad(depth, self.block) + self.end if self.end else ''
 
-    def file(self, depth=0, parent=None):
-        ret = self._pad(depth, parent.block) + f'<{self.val}'
-        for i in self.slot:
-            ret += f' {i}={self.slot[i]}'
+class H(S):
+
+    def __init__(self, V, *vargs, **kwargs):
+        closing = '' if 0 in vargs else f'</{V}>'
+        super().__init__(f'{V}', closing)
+        for i in kwargs:
+            self[i] = f'{kwargs[i]}'
+
+    def file(self, depth=0):
+        assert len(self.par) == 1
+        ret = self._pad(depth, self.par[0].block) + f'<{self.val}'
+        for i in sorted(self.slot.keys()):
+            j = 'class' if i == 'clazz' else i
+            ret += f' {j}="{self.slot[i]}"'
         ret += '>'
         for j in self.nest:
-            ret += j.file(depth + 1, self)
-        ret += self._pad(depth, parent.block) + self.end
+            ret += j.file(depth + 1)
+        blocking = self.block if hasattr(self, 'block') else self.par[0].block
+        ret += self.file_end(depth)
         return ret
 
 ## @ingroup meta
@@ -631,7 +661,7 @@ class Return(S):
 class Arg(Meta, Symbol):
     def __int__(self): return self.val
 
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         return self._val()
 
     def __format__(self, spec=None):
@@ -647,7 +677,7 @@ class Args(Meta, Tuple):
         Tuple.__init__(self, V)
         self.block = False
 
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         return '%s' % (', '.join([j.file(parent=self) for j in self.nest]))
 
 ## @ingroup meta
@@ -667,8 +697,9 @@ class Class(Meta):
     # def py(self):
     #     return 'class %s: pass' % self.val
 
-    def file(self, depth=0, parent=None):
-        ret = '\n' + self._pad(depth, parent.block) + 'class %s' % self.val
+    def file(self, depth=0):#, parent=None):
+        ret = '\n' + self._pad(depth, self.parent().block) + \
+            'class %s' % self.val
         try:
             ret += '(%s)' % (','.join([i.val for i in self.sup.nest]))
         except AttributeError:
@@ -692,8 +723,8 @@ class pyInterface(Meta):
         for i in ext:
             self // i
 
-    def file(self, depth=0, parent=None):
-        ret = self._pad(depth, parent.block) + '## @name %s' % self.val
+    def file(self, depth=0):#, parent=None):
+        ret = self._pad(depth, self.parent().block) + '## @name %s' % self.val
         if 'url' in self.keys():
             ret += self._pad(depth, block) + '## ' + self['url'].file()
         ret += self._pad(depth, block) + '## @{'
@@ -706,29 +737,44 @@ class pyInterface(Meta):
 
 ## @ingroup meta
 class Module(Meta):
-    def file(self, depth=0, parent=None): return self.head(test=True)
-
+    def file(self, depth=0):#, parent=None):
+        return self.head(test=True)
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}'
 
 vm['module'] = Class(Module)
 
 ## @ingroup meta
+## text files with any code are devided by sections (can be nested as subsections)
 class Section(Meta):
-    def __init__(self, V, comment='#'):
+    def __init__(self, V):
         super().__init__(V)
-        self.comment = comment
+        ## every section known its parent: file or other outer section
+        assert not self.par
+        ## sections always blocked in files
         self.block = True
 
-    def file(self, depth=0, parent=None):
+    # ## block mutiple parents for all `Section`s
+    # def pre__floordiv__(self, parent):
+    #     assert not self.par
+    #     super().pre__floordiv__(parent)
+
+    def comment(self):
+        return self.par[0].comment()
+
+    def file(self, depth=0):#, parent=None):
+        # assert len(self.par) == 1
         if not self.nest:
             return ''
-        ret = self._pad(depth, parent.block) if self.comment else ''
-        if self.comment:
-            ret += '%s \\ %s' % (self.comment, self.head(test=True))
+        ret = self._pad(depth, self.par[0].block) if self.comment() else ''
+        if self.comment():
+            ret += '%s \\ %s' % (self.comment(), self.head(test=True))
         for i in self.nest:
-            ret += i.file(depth, parent=self)
-        if self.comment:
-            ret += self._pad(depth, parent.block)
-            ret += '%s / %s' % (self.comment, self.head(test=True))
+            ret += i.file(depth)
+        if self.comment():
+            ret += self._pad(depth, self.par[0].block)
+            ret += '%s / %s' % (self.comment(), self.head(test=True))
         return ret
 
     def py(self): return self.file()
@@ -745,49 +791,97 @@ class IO(Object):
 class Dir(IO):
 
     def sync(self):
+        if not self.par:
+            try:
+                os.mkdir(self.val)
+            except FileExistsError:
+                pass
+        return super().sync()
+
+    def pre__floordiv__(self, parent):
+        assert isinstance(parent, Dir)
+        super().pre__floordiv__(parent)
+
+    def post__floordiv__(self, parent):
+        assert isinstance(parent, Dir)
+        super().post__floordiv__(parent)
         try:
-            os.mkdir(self.val)
+            os.mkdir(self.fullpath())
         except FileExistsError:
             pass
-        return IO.sync(self)
 
-    ## append file
-    def __floordiv__(self, that):
-        if isinstance(that, File):
-            that.fh = open('%s/%s%s' % (self.val, that.val, that.ext), 'w')
-            return IO.__floordiv__(self, that)
-        if isinstance(that, Dir):
-            that.val = '%s/%s' % (self.val, that.val)
-            return IO.__floordiv__(self, that)
-        raise Error((self))
+    def fullpath(self):
+        assert len(self.par) <= 1
+        if self.par:
+            assert isinstance(self.par[0], Dir)
+            return self.par[0].fullpath() + '/' + self.val
+        else:
+            return self.val
+
+    # ## append file
+    # def __floordiv__(self, that):
+    #     super().__floordiv__(that)
+    #     # if isinstance(that, File):
+    #     #     that.fh = open('%s/%s%s' % (self.val, that.val, that.ext), 'w')
+    #     #     return IO.__floordiv__(self, that)
+    #     # if isinstance(that, Dir):
+    #     #     that.val = '%s/%s' % (self.val, that.val)
+    #     #     return IO.__floordiv__(self, that)
+    #     # raise Error((self))
 
 
 ## @ingroup io
 class File(IO):
+    ## @param[in] V file name without extension
+    ## @param[in] ext file extension (default none)
+    ## @param[in] comment syntax comment (depends on a file type)
     def __init__(self, V, ext='', comment='#'):
+        ## file handler not assigned on File object creation
         self.fh = None
-        self.comment = comment
+        self.comment = lambda: comment
         super().__init__(V)
         self['ext'] = self.ext = ext
-        if self.comment:
+        if comment:
             powered = f"powered by metaL: {MANIFEST}"
-            if len(self.comment) == len('#'):
-                self // ("%s  %s" % (self.comment, powered))
-                self // ("%s%s @file" % (self.comment, self.comment,))
-            elif len(self.comment) == len('//'):
-                self // ("%s %s" % (self.comment, powered))
-                self // ("%s @file" % self.comment)
+            if len(comment) == len('#'):
+                self // ("%s  %s" % (comment, powered))
+                self // ("%s @file" % (comment * 2))
+            elif len(comment) == len('//'):
+                self // ("%s %s" % (comment, powered))
+                self // ("%s @file" % (comment))
             else:
                 raise Error((self.comment))
-        self['top'] = self.top = Section('top', comment)
+        ## every file has `top` section
+        self.top = Section('top')
+        self['top'] = self.top
         self // self.top
-        self['mid'] = self.mid = Section('mid', comment)
+        ## every file has `mid`ddle section
+        self.mid = Section('mid')
+        self['mid'] = self.mid
         self // self.mid
-        self['bot'] = self.bot = Section('bot', comment)
+        ## every file has `bot`tom section
+        self.bot = Section('bot')
+        self['bot'] = self.bot
         self // self.bot
+        ## all files holds tab-blocked sections/strings
         self.block = True
 
-    def file(self, depth=0, parent=None): return '%s%s' % (self.val, self.ext)
+    def pre__floordiv__(self, parent):
+        assert isinstance(parent, Dir)
+        super().pre__floordiv__(parent)
+
+    def post__floordiv__(self, parent):
+        assert isinstance(parent, Dir)
+        super().post__floordiv__(parent)
+        self.fh = open(self.fullpath(), 'w')
+
+    def fullpath(self):
+        assert len(self.par) == 1
+        assert isinstance(self.par[0], Dir)
+        return self.par[0].fullpath() + '/' + self.val + self.ext
+
+    def file(self, depth=0):#, parent=None):
+        return '%s%s' % (self.val, self.ext)
 
     def __format__(self, spec): return self.file()
 
@@ -795,7 +889,7 @@ class File(IO):
         if self.fh:
             self.fh.seek(0)
             for j in self.nest:
-                self.fh.write(j.file(parent=self))
+                self.fh.write(j.file())#parent=self))
             self.fh.truncate()
             self.fh.flush()
         return super().sync()
@@ -824,12 +918,17 @@ class Port(Net):
 
 ## @ingroup net
 class Email(Net):
-    def file(self, depth=0, parent=None): return '<%s>' % self.val
+    def file(self, depth=0):#, parent=None):
+        return '<%s>' % self.val
 
 ## @ingroup net
 class Url(Net):
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         return self._pad(depth, block) + self.val
+
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}'
 
 ## @ingroup net
 class GitHub(Url):
@@ -854,7 +953,8 @@ class Pswd(Net):
 
 ## @ingroup doc
 class Doc(Object):
-    def file(self, depth=0, parent=None): return '%s' % self.val
+    def file(self, depth=0):#, parent=None):
+        return '%s' % self.val
 
 ## @ingroup doc
 class Title(Doc):
@@ -879,7 +979,7 @@ vm['AUTHOR'] = AUTHOR = Author(AUTHOR) << EMAIL
 vm['YEAR'] = YEAR = Integer(YEAR)
 vm['LICENSE'] = LICENSE = MIT
 vm['GITHUB'] = GITHUB = GitHub(GITHUB, MODULE)
-vm['LOGO'] = LOGO = File(LOGO)
+vm['LOGO'] = LOGO = File(LOGO, comment=None)
 ## @}
 
 
@@ -907,7 +1007,7 @@ class README(File):
         self // ('(c) %s <<%s>> %s %s' % (
             module['AUTHOR'].val, module['EMAIL'].val,
             module['YEAR'].val, module['LICENSE'].val))
-        self.github = Section('github', comment=None)
+        self.github = Section('github')
         self // self.github
         self.github // '' // f"github: {module['GITHUB']}" // ''
 
@@ -932,19 +1032,17 @@ class Setting(Meta):
 
 ## @ingroup prj
 ## VSCode multicommand
-class multiCommand(Setting):
-    def __init__(self, key, val):
-        super().__init__(key, val)
-
-    def file(self, depth=0, parent=None):
-        ret = (S('{"command":"multiCommand.%s",' % self.key) //
-               (S('"sequence":[') //
-                '"workbench.action.files.saveAll",' //
-                (S('{"command": "workbench.action.terminal.sendSequence",') //
-                 ('"args": {"text": "\\u000D%s\\u000D"}}' % f'{self.nest[0]}')) //
-                '],') //
-               '},')
-        return ret.file(depth, self)
+class multiCommand(S):
+    def __init__(self, key, cmd):
+        super().__init__('{"command": "multiCommand.%s", ' % key, '},')
+        self.cmd = String(cmd)
+        self // (S('"sequence":[', ']') //
+                 '"workbench.action.files.saveAll",' //
+                 (S('{"command": "workbench.action.terminal.sendSequence",', '}') //
+                  (S('"args": {', '}', block=False) //
+                   (S('"text": "\\u000D', '\\u000D"', block=False) //
+                    self.cmd
+                    ))))
 
 ## @ingroup prj
 ## module with its own directory (root module = project)
@@ -966,7 +1064,7 @@ class dirModule(Module):
         self['LICENSE'] = vm['LICENSE']
         self['GITHUB'] = self.GITHUB = GitHub(GITHUB, self)
         # diroot: directory with same name as the module
-        self['dir'] = self.diroot = Dir(V)
+        self['dir'] = self.diroot = Dir(V).sync()
         # apt.txt
         self.init_apt()
         # gitignore
@@ -982,7 +1080,7 @@ class dirModule(Module):
         # vars
         self.mk['vars'] = self.mk.vars = Section('vars')
         self.mk.top // self.mk.vars
-        self.mk['module'] = self.mk.module = Section('module', comment='')
+        self.mk['module'] = self.mk.module = Section('module')
         self.mk.module // f'{"MODULE":<8} = $(notdir $(CURDIR))'
         self.mk.vars // self.mk.module
         self.mk.vars // f'{"OS":<7} ?= $(shell uname -s)'
@@ -1099,12 +1197,12 @@ class anyModule(dirModule):
         self.mk.mid // self.mk.rules
         self.mk.sync()
 
-    def init_giti(self):
-        super().init_giti()
-        # self.giti.bot // ('/%s' % self.val)
-        # self.giti.bot // ('/%s.exe\n/%s' % (self.val, self.val))
-        # self.giti.bot // '*.o' // '*.objdump'
-        # self.giti.sync()
+    # def init_giti(self):
+    #     super().init_giti()
+    #     # self.giti.bot // ('/%s' % self.val)
+    #     # self.giti.bot // ('/%s.exe\n/%s' % (self.val, self.val))
+    #     # self.giti.bot // '*.o' // '*.objdump'
+    #     # self.giti.sync()
 
     def init_vscode_settings(self):
         settings = File('settings.json', comment='//')
@@ -1114,38 +1212,57 @@ class anyModule(dirModule):
         settings.bot // '\t"editor.tabSize": 4,'
         settings.bot // '}'
         #
-        settings.multiCommand = Section('multiCommand', comment='//')
-        settings.f11 = multiCommand('f11', 'make test')
-        self.f11 = settings.f11.nest[0]
-        settings.f12 = self.f12 = multiCommand('f12', 'make all')
-        self.f12 = settings.f12.nest[0]
-        settings.multiCommand // (S('"multiCommand.commands": [') //
-                                  settings.f11 //
-                                  settings.f12 //
-                                  '],')
-        settings.mid // settings.multiCommand
+        self.f11 = multiCommand('f11', 'make test')
+        self.f12 = multiCommand('f12', 'make all')
+        settings.mid //\
+            (Section('multiCommand') //
+             (S('"multiCommand.commands": [', '],') //
+              self.f11 // self.f12
+              )
+             )
         #
-        watcher = Section('watcher', comment='//') // ''
+        watcher = Section('watcher')
         self.vscode['watcher'] = self.vscode.watcher = watcher
-        settings.mid // (S('"files.watcherExclude": {') // watcher // '},')
+        settings.mid // (S('"files.watcherExclude": {', '},') // watcher)
         #
-        exclude = Section('exclude', comment='//') // ''
+        exclude = Section('exclude') // ''
         self.vscode['exclude'] = self.vscode.exclude = exclude
         settings.mid // (S('"files.exclude": {') // exclude // '},')
         #
-        assoc = Section('assoc', comment='//') // ''
+        assoc = Section('assoc') // ''
         self.vscode['assoc'] = self.vscode.assoc = assoc
         settings.mid // (S('"files.associations": {') // assoc // '},')
         #
         settings.sync()
 
+    def vs_make(self, target, group='make'):
+        return (S('{', '},') //
+                f'"label": "{group}: {target}",' //
+                '"type": "shell",' //
+                f'"command": "make {target}",' //
+                '"problemMatcher": [],'
+                )
+
+    def vs_git(self, target, group='git'):
+        return (S('{', '},') //
+                f'"label": "{group}: {target}",' //
+                '"type": "shell",' //
+                f'"command": "git {target}",' //
+                '"problemMatcher": [],'
+                )
+
     def init_vscode_tasks(self):
         self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
         self.vscode // self.tasks
         self.tasks.top // '{' // '\t"version": "2.0.0",'
-        self.tasks.it = (S('\t"tasks": ['))
+        self.tasks.it = S('\t"tasks": [')
         self.tasks.mid // self.tasks.it // '\t]'
         self.tasks.bot // '}'
+        self.tasks.it //\
+            self.vs_make('install') //\
+            self.vs_make('update') //\
+            self.vs_git('master') //\
+            self.vs_git('shadow')
         self.tasks.sync()
 
     def init_vscode_ext(self):
@@ -1153,9 +1270,9 @@ class anyModule(dirModule):
             'extensions.json', comment='//')
         self.vscode // self.vscode.ext
         self.vscode.ext.top // '{'
-        self.vscode.ext.ext = Section('ext', comment='') // '"stkb.rewrap",'
-        self.vscode.ext.mid // (
-            S('"recommendations": [') // self.vscode.ext.ext // ']')
+        self.vscode.ext.ext = Section('ext') // '"stkb.rewrap",'
+        self.vscode.ext.mid //\
+            (S('"recommendations": [', ']') // self.vscode.ext.ext)
         self.vscode.ext.bot // '}'
         self.vscode.ext.sync()
 
@@ -1167,7 +1284,7 @@ class anyModule(dirModule):
         json.top // '{'
         json.bot // '}'
         #
-        json['it'] = json.it = Section('', comment='//')
+        json['it'] = json.it = Section('')
         json.mid // (S('"configurations": [') // json.it // ']')
         json.sync()
 
@@ -1175,7 +1292,7 @@ class anyModule(dirModule):
         assert isinstance(file, File)
         self.mk.src // ('SRC += %s' % file.val)
 
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         return f'{self.__class__.__name__}:{self._val()}'
 
 ## @defgroup cc ANSI C'99
@@ -1264,7 +1381,8 @@ class ccInclude(CC, Module):
             V = V.file()
         super().__init__(V)
 
-    def file(self, depth=0, parent=None): return '#include <%s>' % self.val
+    def file(self, depth=0):#, parent=None):
+        return '#include <%s>' % self.val
 
 
 stdint = ccInclude('stdint.h')
@@ -1274,8 +1392,8 @@ stdio = ccInclude('stdio.h')
 ## @ingroup cc
 ## C type
 class ccType(CC):
-    def file(self, depth=0, parent=None): return '%s %s' % (
-        self.cc_type(), self.cc_val())
+    def file(self, depth=0):#, parent=None):
+        return '%s %s' % (self.cc_type(), self.cc_val())
     ## C type (without first `cc` prefix)
     def cc_type(self): return self._type()[2:]
     ## object value
@@ -1305,7 +1423,7 @@ class ccFn(CC, Fn):
         assert isinstance(returns, Object)
         self['ret'] = returns
 
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         ret = '\n%s %s(%s) {' % (
             self['ret'].cc_type(), self.val, self['args'].cc_arg())
         for j in self.nest:
@@ -1329,12 +1447,13 @@ class PY(Object):
 
 ## @ingroup py
 class pyImport(PY):
-    def file(self, depth=0, parent=None):
-        return self._pad(depth, parent.block) + 'import %s' % self.val
+    def file(self, depth=0):#, parent=None):
+        assert len(self.par) == 1
+        return self._pad(depth, self.par[0].block) + 'import %s' % self.val
 
 ## @ingroup py
 class pyFn(PY, Fn):
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         res = self._pad(depth, block)
         res += 'def %s(%s):' % (self.val, self.args.file())
         if not self.nest:
@@ -1385,7 +1504,7 @@ class pyTest(pyFn):
     def __init__(self, V):
         super().__init__('test_%s' % V)
 
-    def file(self, depth=0, parent=None):
+    def file(self, depth=0):#, parent=None):
         ret = ''
         if 'for' in self.keys():
             ret += self._pad(depth, block) + \
@@ -1420,12 +1539,17 @@ class minpyModule(anyModule):
 
     def init_mk(self):
         super().init_mk()
+        #
         self.mk.tools // '' //\
             f'{"PIP":<8} = $(CWD)/bin/pip3' //\
             f'{"PY":<8} = $(CWD)/bin/python3' //\
             f'{"PYT":<8} = $(CWD)/bin/pytest' //\
             f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402' //\
             ''
+        #
+        self.mk.all // 'all: $(PY) $(MODULE).py'
+        self.mk.all // "\t$^"
+        #
         self.mk.install //\
             f'$(MAKE) $(PIP)' //\
             f'$(PIP)  install    -r {self.reqs}'
@@ -1453,10 +1577,10 @@ class minpyModule(anyModule):
         settings.top // '\t"python.formatting.autopep8Path":  "./bin/autopep8",'
         settings.top // '\t"python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
         #
-        self.vscode.settings.f11.val = 'make repl'
-        self.vscode.settings.f12.val = 'exit()'
+        self.f11.cmd.val = 'make repl'
+        self.f12.cmd.val = 'exit()'
         #
-        files = Section('', settings.comment) //\
+        files = Section('') //\
             '"**/bin/**": true, "**/include/**":true,' //\
             '"**/lib*/**":true, "**/share/**"  :true,' //\
             '"**/*.pyc":  true, "**/pyvenv.cfg":true,' //\
@@ -1470,16 +1594,21 @@ class minpyModule(anyModule):
         #
         settings.sync()
 
+    def init_vscode_ext(self):
+        super().init_vscode_ext()
+        self.vscode.ext.ext // '"ms-python.python",'
+        self.vscode.ext.sync()
+
     def init_vscode_launch(self):
         super().init_vscode_launch()
         launch = self.vscode.launch
         # program
-        launch.program = Section('program', comment='//') //\
+        launch.program = Section('program') //\
             ('"program": "%s.py",' % self.val)
         # args
-        launch.args = Section('args', comment='//')
+        launch.args = Section('args')
         # debugOptions
-        launch.opts = Section('opts', comment='//')
+        launch.opts = Section('opts')
 
         #
         launch.it // (S('{') //
@@ -1496,17 +1625,14 @@ class minpyModule(anyModule):
     #     self.launch.mid // '\t\t}'
         launch.sync()
 
-    # def init_py(self):
-    #     pass
+    def init_py(self):
+        self['py'] = self.py = pyFile(self)
+        self['dir'] // self.py
+        self.py.sync()
 
 
 ## @ingroup py
 class pyModule(minpyModule):
-
-    def init_apt(self):
-        super().init_apt()
-        self.apt // 'python3 python3-venv python3-pip'
-        self.apt.sync()
 
     def init_py(self):
         try:
@@ -1524,14 +1650,14 @@ class pyModule(minpyModule):
         self.py.metal // self.py.metaimports
         self.py.metaimports // 'from metaL import *'
         self.py.metal // ('MODULE = %s()' % self.__class__.__name__)
-        self.py.title = self.py['title'] = Section('title', comment=None)
+        self.py.title = self.py['title'] = Section('title')
         self.py.metal // self.py.title
         self.py.title // "TITLE = MODULE['TITLE'] = Title(MODULE)"
-        self.py.about = self.py['about'] = Section('about', comment=None)
+        self.py.about = self.py['about'] = Section('about')
         self.py.metal // self.py.about
         # self.py.github = self.py['github'] = Section('github', comment=None)
         # self.meta // self.py.github
-        self.py.readme = self.py['readme'] = Section('readme', comment=None)
+        self.py.readme = self.py['readme'] = Section('readme')
         self.py.metal // self.py.readme
         self.py.readme // 'README = README(MODULE)'
         self.py.readme // 'MODULE.diroot // README'

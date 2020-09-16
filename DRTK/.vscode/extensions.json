@@ -6,8 +6,10 @@
 // / <section:top>
 // \ <section:mid>
 "recommendations": [
+	// \ <section:ext>
 	"stkb.rewrap",
-	]
+	// / <section:ext>
+]
 // / <section:mid>
 // \ <section:bot>
 }

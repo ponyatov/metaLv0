@@ -69,8 +69,8 @@ class djModule(DJ, pyModule):
         self.init_static()
         # proj
         self.init_proj()
-        # app
-        self.init_app()
+        # # app
+        # self.init_app()
         # fixture
         self.init_fixture()
 
@@ -88,6 +88,121 @@ class djModule(DJ, pyModule):
 #         # self.init_models()
 #         # # forms
 #         # self.init_forms()
+
+    def init_giti(self):
+        super().init_giti()
+        self.giti.bot // '/*.sqlite3'
+        self.giti.bot // ('/%sz/' % self.val)
+        self.giti.sync()
+
+    def init_vscode_ext(self):
+        super().init_vscode_ext()
+        self.vscode.ext.ext // '"batisteo.vscode-django",'
+        self.vscode.ext.sync()
+
+    def init_vscode_settings(self):
+        super().init_vscode_settings()
+        settings = self.vscode.settings
+        #
+        self.f11.cmd.val = 'make runserver'
+        self.f12.cmd.val = 'make check'
+        #
+        self.vscode.assoc //\
+            '"**/*.html": "html",' //\
+            '"**/templates/**/*.html": "django-html",' //\
+            '"**/templates/**/*": "django-txt",'
+        #
+        settings.sync()
+
+    def init_vscode_launch(self):
+        super().init_vscode_launch()
+        self.vscode.launch.program.dropall() //\
+            '"program": "manage.py",' //\
+            '"django": true,'
+        self.vscode.launch.args //\
+            '"runserver", "--no-color", "--noreload", "--nothreading"'
+        self.vscode.launch.opts //\
+            '"WaitOnAbnormalExit", "WaitOnNormalExit",' //\
+            '"RedirectOutput", "DjangoDebugging"'
+        self.vscode.launch.sync()
+
+    def vs_django(self, target, group='django'):
+        return self.vs_make(target, group)
+
+    def init_vscode_tasks(self):
+        pyModule.init_vscode_tasks(self)
+        self.tasks.it //\
+            self.vs_django('migrate') //\
+            self.vs_django('makemigrations')
+        self.tasks.sync()
+
+    def init_mk(self):
+        super().init_mk()
+        # src
+        self.mk.src.dropall()
+        files = {
+            '': ['manage'],
+            'proj/': ['context', 'settings', 'urls'],
+            'app/': ['admin', 'apps', 'forms', 'models', 'views'],
+        }
+        for i in files:
+            for j in files[i]:
+                self.mk.src // f'SRC += {i}{j}.py'
+        # all
+        self.mk.all.dropall() //\
+            '.PHONY: all' //\
+            (S('all: $(PY) manage.py') // '$^')
+        # install
+        self.mk.install //\
+            '$(MAKE) js' //\
+            '$(MAKE) migrate' //\
+            '$(MAKE) createsuperuser' //\
+            '$(PY)   manage.py loaddata user.json'
+        # js
+        js = Section('js/install')
+        self.mk.update.after(js)
+        js //\
+            ".PHONY: js" //\
+            "js: static/jquery.js static/bootstrap.css static/bootstrap.js" //\
+            '' //\
+            "JQUERY_VER = 3.5.0" //\
+            "static/jquery.js:" //\
+            "\t$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js" //\
+            '' //\
+            "BOOTSTRAP_VER = 3.4.1" //\
+            "BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/" //\
+            "static/bootstrap.css:" //\
+            "\t$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css" //\
+            "static/bootstrap.js:" //\
+            "\t$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js"
+        # runserver
+        runserver = Section('runserver')
+        self.mk.mid // runserver
+        runserver // '.PHONY: runserver\nrunserver: $(PY) manage.py\n\t$^ $@ 127.0.0.1:12345'
+        # check
+        check = Section('check')
+        self.mk.mid // check
+        check // '.PHONY: check\ncheck: $(PY) manage.py\n\t$^ $@'
+        # makemigrations
+        makemigrations = Section('makemigrations')
+        self.mk.mid // makemigrations
+        makemigrations // '.PHONY: makemigrations\nmakemigrations: $(PY) manage.py\n\t$^ $@ app'
+        # migrate
+        migrate = Section('migrate')
+        self.mk.mid // migrate
+        migrate //\
+            '.PHONY: migrate\nmigrate: $(PY) manage.py' //\
+            '\t$(MAKE) makemigrations' //\
+            '\t$^ $@'
+        # createsuperuser
+        createsuperuser = Section('createsuperuser')
+        self.mk.mid // createsuperuser
+        createsuperuser //\
+            '.PHONY: createsuperuser\ncreatesuperuser: $(PY) manage.py' //\
+            '\t$^ $@ \\' //\
+            ('\t\t--username %s \\' % self['EMAIL'].val.split('@')[0]) //\
+            ('\t\t--email %s' % self['EMAIL'].val)
+        self.mk.sync()
 
     def init_fixture(self):
         self['fixture'] = self.fixture = Dir('fixture')
@@ -121,139 +236,31 @@ class djModule(DJ, pyModule):
                       '"groups": [],' //
                       '"user_permissions": []'))
         admin = (S('{', '}') //
-                     '"model": "app.customuser",' //
-                     '"pk": 2,' //
-                     (S('"fields": {', '}') //
-                      f'"username": "admin",' //
-                      f'"password": "{config.ADMIN.PASS_HASH}",' //
-                      f'"last_name": "Админов",' //
-                      f'"first_name": "Админ",' //
-                      f'"father_name": "Админович",' //
-                      f'"email": "{config.ADMIN.EMAIL}",' //
-                      f'"phone": "{config.ADMIN.PHONE}",' //
-                      f'"date_joined": "{now}",' //
-                      f'"last_login": "{now}",' //
-                      '"is_superuser": true,' //
-                      '"is_staff": true,' //
-                      '"is_active": true,' //
-                      '"groups": [],' //
-                      '"user_permissions": []'))
+                 '"model": "app.customuser",' //
+                 '"pk": 2,' //
+                 (S('"fields": {', '}') //
+                  f'"username": "admin",' //
+                  f'"password": "{config.ADMIN.PASS_HASH}",' //
+                  f'"last_name": "Админов",' //
+                  f'"first_name": "Админ",' //
+                  f'"father_name": "Админович",' //
+                  f'"email": "{config.ADMIN.EMAIL}",' //
+                  f'"phone": "{config.ADMIN.PHONE}",' //
+                  f'"date_joined": "{now}",' //
+                  f'"last_login": "{now}",' //
+                  '"is_superuser": true,' //
+                  '"is_staff": true,' //
+                  '"is_active": true,' //
+                  '"groups": [],' //
+                  '"user_permissions": []'))
 
         self.fixture.user.mid // dponyatov // admin
         self.fixture.user.sync()
-
-    def init_vscode_settings(self):
-        pyModule.init_vscode_settings(self)
-        self.f11.val = 'make runserver'
-        self.f12.val = 'make check'
-        self.vscode.settings.sync()
-
-    def init_vscode_tasks(self):
-        pyModule.init_vscode_tasks(self)
-        self.tasks.it //\
-            (S('{') //
-                '"label": "Django: migrate",' //
-                '"type": "shell",' //
-                '"command": "make migrate",' //
-                '"problemMatcher": []' //
-                '},')
-        self.tasks.it //\
-            (S('{') //
-                '"label": "Django: makemigrations",' //
-                '"type": "shell",' //
-                '"command": "make makemigrations",' //
-                '"problemMatcher": []' //
-                '},')
-        self.tasks.sync()
-
-    def init_vscode_launch(self):
-        super().init_vscode_launch()
-        self.vscode.launch.program.dropall() //\
-            '"program": "manage.py",' //\
-            '"django": true,'
-        self.vscode.launch.args //\
-            '"runserver", "--no-color", "--noreload", "--nothreading"'
-        self.vscode.launch.opts //\
-            '"WaitOnAbnormalExit", "WaitOnNormalExit",' //\
-            '"RedirectOutput", "DjangoDebugging"'
-        self.vscode.launch.sync()
 
     def init_reqs(self):
         super().init_reqs()
         self.reqs // 'django'
         self.reqs.sync()
-
-    def init_giti(self):
-        super().init_giti()
-        self.giti.bot // '/*.sqlite3'
-        self.giti.bot // ('/%sz/' % self.val)
-        self.giti.sync()
-
-    def init_mk(self):
-        pyModule.init_mk(self)
-        # src
-        self.mk.src.dropall()
-        self.mk.src //\
-            'SRC += manage.py' //\
-            'SRC += app/models.py' //\
-            'SRC += app/apps.py' //\
-            'SRC += app/settings.py' //\
-            'SRC += proj/urls.py' //\
-            ''
-        # all
-        self.mk.all // '.PHONY: all\nall: $(PY) manage.py\n\t$^'
-        # install
-        self.mk.install //\
-            '$(MAKE) js' //\
-            '$(MAKE) migrate' //\
-            '$(MAKE) createsuperuser' //\
-            '$(PY)   manage.py loaddata user.json'
-        # js
-        js = Section('js/install')
-        self.mk.update.after(js)
-        js //\
-            ".PHONY: js" //\
-            "js: static/jquery.js static/bootstrap.css static/bootstrap.js" //\
-            '' //\
-            "JQUERY_VER = 3.5.0" //\
-            "static/jquery.js:" //\
-            "\t$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js" //\
-            '' //\
-            "BOOTSTRAP_VER = 3.4.1" //\
-            "BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/" //\
-            "static/bootstrap.css:" //\
-            "\t$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css" //\
-            "static/bootstrap.js:" //\
-            "\t$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js"
-        js.sync()
-        # runserver
-        runserver = Section('runserver')
-        self.mk.mid // runserver
-        runserver // '.PHONY: runserver\nrunserver: $(PY) manage.py\n\t$^ $@ 127.0.0.1:12345'
-        # check
-        check = Section('check')
-        self.mk.mid // check
-        check // '.PHONY: check\ncheck: $(PY) manage.py\n\t$^ $@'
-        # makemigrations
-        makemigrations = Section('makemigrations')
-        self.mk.mid // makemigrations
-        makemigrations // '.PHONY: makemigrations\nmakemigrations: $(PY) manage.py\n\t$^ $@ app'
-        # migrate
-        migrate = Section('migrate')
-        self.mk.mid // migrate
-        migrate //\
-            '.PHONY: migrate\nmigrate: $(PY) manage.py' //\
-            '\t$(MAKE) makemigrations' //\
-            '\t$^ $@'
-        # createsuperuser
-        createsuperuser = Section('createsuperuser')
-        self.mk.mid // createsuperuser
-        createsuperuser //\
-            '.PHONY: createsuperuser\ncreatesuperuser: $(PY) manage.py' //\
-            '\t$^ $@ \\' //\
-            ('\t\t--username %s \\' % self['EMAIL'].val.split('@')[0]) //\
-            ('\t\t--email %s' % self['EMAIL'].val)
-        self.mk.sync()
 
     def init_py(self):
         pass
@@ -267,62 +274,34 @@ class djModule(DJ, pyModule):
         self.migrations // giti
         giti // '????_*.py'
         giti.sync()
-#         # self.migrations.user = pyFile('0000_initial')
-#         # self.migrations // self.migrations.user
-#         # self.migrations.user.top // "from django.conf import settings"
-#         # self.migrations.user.top // "from django.db import migrations, models"
-#         # self.migrations.user.mid // "class Migration(migrations.Migration):"
-#         # self.migrations.user.mid // "\tdependencies = ["
-#         # self.migrations.user.mid // "\t\tmigrations.swappable_dependency(settings.AUTH_USER_MODEL),"
-#         # self.migrations.user.mid // "\t]"
-#         # self.migrations.user.mid // "\toperations = ["
-#         # self.migrations.user.mid // "\t]"
-#         # self.migrations.user.sync()
-
-#     def init_install(self):
-#         self.diroot['install'] = self.proj.install = pyFile('install')
-#         self.diroot // self.proj.install
-#         self.proj.install.top //\
-#             'import os' //\
-#             'os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")' //\
-#             'import django' //\
-#             'django.setup()' //\
-#             'from django.contrib.auth.models import User'
-#         self.proj.install.mid //\
-#             'su = User.objects.create_superuser(' //\
-#             "\tusername='dponyatov'," //\
-#             "\temail='dponyatov@gmail.com'," //\
-#             "\tpassword='passwd'" //\
-#             ')' //\
-#             'su.save()'
-#         self.proj.install.sync()
-#         # self.mk.install // '\t$(PY) install.py'
-#         self.mk.sync()
 
     def init_proj_context(self):
         self.proj['context'] = self.proj.context = pyFile('context')
         self.proj // self.proj.context
         self.proj.context.mid //\
             "from app.apps import AppConfig" //\
-            "def title(request):" //\
-            "\treturn {'title':AppConfig.verbose_name}" //\
+            (S("def title(request):") //
+             "return {'title':AppConfig.verbose_name}") //\
             ''
         self.proj.context.mid //\
             'from app.models import CustomUser' //\
-            'def user(request):' //\
-            '\ttry:' //\
-            "\t\tuser = CustomUser.objects.get(id=request.user.id)" //\
-            "\t\ttry: f = user.last_name" //\
-            "\t\texcept: f=''" //\
-            "\t\ttry: i = user.first_name[0]" //\
-            "\t\texcept: i=''" //\
-            "\t\ttry: o = user.father_name[0]" //\
-            "\t\texcept: o = ''" //\
-            "\t\tuser.shorten = '%s %s.%s.'%(f,i,o)" //\
-            "\texcept CustomUser.DoesNotExist:" //\
-            "\t\tuser = None" //\
-            "\treturn {'user':user}" //\
-            self.proj.context.sync()
+            (S('def user(request):') //
+                (S('try:') //
+                    "user = CustomUser.objects.get(id=request.user.id)" //
+                    "try: f = user.last_name" //
+                    "except: f=''" //
+                    "try: i = user.first_name[0]" //
+                    "except: i=''" //
+                    "try: o = user.father_name[0]" //
+                    "except: o = ''" //
+                    "user.shorten = '%s %s.%s.'%(f,i,o)"
+                 ) //
+                (S("except CustomUser.DoesNotExist:") //
+                    "user = None"
+                 ) //
+                "return {'user':user}"
+             )
+        self.proj.context.sync()
 
     def init_app_admin(self):
         self.app['admin'] = self.app.admin = pyFile('admin')

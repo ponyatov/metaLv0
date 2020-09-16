@@ -4,14 +4,15 @@
 <area shape="rect" id="node8" href="$classllvm_1_1llModule.html" title="llvm.llModule" alt="" coords="804,107,903,133"/>
 <area shape="rect" id="node9" href="$classmetaL_1_1ccModule.html" title="metaL.ccModule" alt="" coords="794,157,913,184"/>
 <area shape="rect" id="node11" href="$classmetaL_1_1minpyModule.html" title="metaL.minpyModule" alt="" coords="784,208,923,235"/>
-<area shape="rect" id="node16" href="$classtcc_1_1ccModule.html" title="tcc.ccModule" alt="" coords="803,259,903,285"/>
+<area shape="rect" id="node17" href="$classtcc_1_1ccModule.html" title="tcc.ccModule" alt="" coords="803,259,903,285"/>
 <area shape="rect" id="node2" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="444,132,563,159"/>
 <area shape="rect" id="node3" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="292,132,396,159"/>
 <area shape="rect" id="node4" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="153,132,244,159"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,132,105,159"/>
-<area shape="rect" id="node10" href="$classbcx_1_1bcxModule.html" title="bcx.bcxModule" alt="" coords="975,157,1085,184"/>
-<area shape="rect" id="node12" href="$classdistill_1_1meModule.html" title="inherit special Module type for metaLayer&#45;based projects " alt="" coords="972,208,1088,235"/>
-<area shape="rect" id="node13" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="971,259,1089,285"/>
-<area shape="rect" id="node14" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="1161,233,1256,260"/>
-<area shape="rect" id="node15" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="1137,284,1280,311"/>
+<area shape="rect" id="node10" href="$classbcx_1_1bcxModule.html" title="bcx.bcxModule" alt="" coords="991,132,1101,159"/>
+<area shape="rect" id="node12" href="$classdistill_1_1meModule.html" title="inherit special Module type for metaLayer&#45;based projects " alt="" coords="988,183,1104,209"/>
+<area shape="rect" id="node13" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="987,233,1105,260"/>
+<area shape="rect" id="node16" href="$classWebRTCos_1_1dsModule.html" title="[D]istributed [S]ystem Module " alt="" coords="971,284,1121,311"/>
+<area shape="rect" id="node14" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="1193,208,1288,235"/>
+<area shape="rect" id="node15" href="$classmetaL_1_1bountyModule.html" title="metaL.bountyModule" alt="" coords="1169,259,1312,285"/>
 </map>

@@ -1,0 +1,28 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// @file
+// \ <section:top>
+// https://code.visualstudio.com/docs/python/debugging
+{
+// / <section:top>
+// \ <section:mid>
+"configurations": [
+	// \ <section:>
+	{
+		"name": "Python: WebRTCos",
+		"type": "python",
+		"request": "launch",
+		// \ <section:program>
+		"program": "WebRTCos.py",
+		// / <section:program>
+		"args": [
+			],
+		"debugOptions": [
+			],
+		"console": "integratedTerminal"}
+	// / <section:>
+	]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>
