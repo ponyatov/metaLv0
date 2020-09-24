@@ -1,0 +1,10 @@
+<map id="web" name="web">
+<area shape="rect" id="node1" href="$group__dja.html" title="Django Apps Generator. " alt="" coords="191,5,229,32"/>
+<area shape="rect" id="node2" href="$group__repl.html" title="Read&#45;Eval&#45;Print&#45;Loop: interactive command line. " alt="" coords="181,56,239,83"/>
+<area shape="rect" id="node3" href="$group__html.html" title="HTML/CSS " alt="" coords="187,107,233,133"/>
+<area shape="rect" id="node4" href="$group__fl.html" title="Flask templates. " alt="" coords="191,157,229,184"/>
+<area shape="rect" id="node5" href="$group__js.html" title="JavaScript " alt="" coords="191,208,229,235"/>
+<area shape="rect" id="node7" href="$group__lexer.html" title="lexer" alt="" coords="185,259,235,285"/>
+<area shape="rect" id="node8" href="$group__init.html" title="system init" alt="" coords="167,309,253,336"/>
+<area shape="rect" id="node9" href="$group__parser.html" title="optional syntax parser for CLI DML/DDL " alt="" coords="181,360,239,387"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="book.Book" name="book.Book">
+<area shape="rect" id="node2" href="$classmetaL_1_1Doc.html" title="metaL.Doc" alt="" coords="5,155,92,181"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="59,5,159,32"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="114,80,205,107"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="103,229,221,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="117,155,221,181"/>
+</map>
