@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['obj',['obj',['../group__distill.html#ga0382b8f2950b413236658708f94a2da3',1,'distill']]],
+  ['obj',['obj',['../group__st.html#gafc57e39bb10688c2576e9f66b51052cb',1,'Smalltalk.obj()'],['../group__distill.html#ga0382b8f2950b413236658708f94a2da3',1,'distill.obj()']]],
   ['objdump',['objdump',['../group__demos.html#gafd9c464434014164c6345b237d7d23b7',1,'demos']]],
   ['object',['Object',['../classmetaL_1_1Object.html',1,'metaL.Object'],['../group__object.html',1,'(Global Namespace)']]],
   ['objs',['objs',['../group__distill.html#ga8e82e62b7029d835540c38a99dd55aeb',1,'distill']]],

@@ -1,10 +1,11 @@
 <map id="Smalltalk.stBytecode" name="Smalltalk.stBytecode">
-<area shape="rect" id="node4" href="$classSmalltalk_1_1ADD.html" title="+ p.543 " alt="" coords="506,5,615,32"/>
-<area shape="rect" id="node5" href="$classSmalltalk_1_1DIV.html" title="/ first p.543 " alt="" coords="509,56,612,83"/>
-<area shape="rect" id="node6" href="$classSmalltalk_1_1PUSH__1.html" title="PUSH first instance variable p.543 " alt="" coords="495,107,627,133"/>
-<area shape="rect" id="node7" href="$classSmalltalk_1_1PUSH__2.html" title="PUSH second instance variable p.543 " alt="" coords="495,157,627,184"/>
-<area shape="rect" id="node8" href="$classSmalltalk_1_1PUSH__i2.html" title="PUSH SmallInteger(2) p.543. " alt="" coords="493,208,628,235"/>
-<area shape="rect" id="node9" href="$classSmalltalk_1_1RET.html" title="return result p.543 " alt="" coords="507,259,614,285"/>
-<area shape="rect" id="node2" href="$classSmalltalk_1_1ST.html" title="Smalltalk elements. " alt="" coords="153,132,251,159"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,132,105,159"/>
+<area shape="rect" id="node5" href="$classSmalltalk_1_1ADD.html" title="+ p.543 " alt="" coords="645,5,754,32"/>
+<area shape="rect" id="node6" href="$classSmalltalk_1_1DIV.html" title="/ first p.543 " alt="" coords="648,56,751,83"/>
+<area shape="rect" id="node7" href="$classSmalltalk_1_1PUSH__1.html" title="PUSH first instance variable p.543 " alt="" coords="633,107,765,133"/>
+<area shape="rect" id="node8" href="$classSmalltalk_1_1PUSH__2.html" title="PUSH second instance variable p.543 " alt="" coords="633,157,765,184"/>
+<area shape="rect" id="node9" href="$classSmalltalk_1_1PUSH__i2.html" title="PUSH SmallInteger(2) p.543. " alt="" coords="632,208,767,235"/>
+<area shape="rect" id="node10" href="$classSmalltalk_1_1RET.html" title="return result p.543 " alt="" coords="646,259,753,285"/>
+<area shape="rect" id="node2" href="$classSmalltalk_1_1ST.html" title="Smalltalk language/elements. " alt="" coords="292,132,389,159"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="153,132,244,159"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,132,105,159"/>
 </map>

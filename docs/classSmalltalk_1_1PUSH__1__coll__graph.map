@@ -1,5 +1,6 @@
 <map id="Smalltalk.PUSH_1" name="Smalltalk.PUSH_1">
-<area shape="rect" id="node2" href="$classSmalltalk_1_1stBytecode.html" title="Bytecode p.542. " alt="" coords="5,155,152,181"/>
-<area shape="rect" id="node3" href="$classSmalltalk_1_1ST.html" title="Smalltalk elements. " alt="" coords="30,80,127,107"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="29,5,129,32"/>
+<area shape="rect" id="node2" href="$classSmalltalk_1_1stBytecode.html" title="Bytecode p.542. " alt="" coords="5,229,152,256"/>
+<area shape="rect" id="node3" href="$classSmalltalk_1_1ST.html" title="Smalltalk language/elements. " alt="" coords="30,155,127,181"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="33,80,124,107"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="29,5,129,32"/>
 </map>

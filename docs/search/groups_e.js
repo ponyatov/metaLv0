@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tests',['tests',['../group__test.html',1,'']]],
-  ['tutorial',['Tutorial',['../group__tutorial.html',1,'']]]
+  ['rdbms',['rdbms',['../group__rdbms.html',1,'']]],
+  ['repl',['REPL',['../group__repl.html',1,'']]]
 ];

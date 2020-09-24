@@ -1,0 +1,61 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+{
+// / <section:top>
+// \ <section:mid>
+// \ <section:multiCommand>
+"multiCommand.commands": [
+	{"command": "multiCommand.f11", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake test\u000D"}
+			}
+		]
+	},
+	{"command": "multiCommand.f12", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake gmp\u000D"}
+			}
+		]
+	},
+],
+// / <section:multiCommand>
+"files.watcherExclude": {
+	// \ <section:watcher>
+	"**/tmp/gmp-*/*":true,      "**/src/gmp-*/*":true,
+	"**/tmp/mpfr-*/*":true,     "**/src/mpfr-*/*":true,
+	"**/tmp/mpc-*/*":true,      "**/src/mpc-*/*":true,
+	"**/tmp/binutils-*/*":true, "**/src/binutils-*/*":true,
+	"**/tmp/gdb-*/*":true,      "**/src/gdb-*/*":true,
+	"**/tmp/gcc-*/*":true,      "**/src/gcc-*/*":true,
+	"**/i486-elf/**":true,
+	"**/firmware/**":true,
+	// / <section:watcher>
+},
+"files.exclude": {
+	// \ <section:exclude>
+	
+	"**/tmp/gmp-*/*":true,      "**/src/gmp-*/*":true,
+	"**/tmp/mpfr-*/*":true,     "**/src/mpfr-*/*":true,
+	"**/tmp/mpc-*/*":true,      "**/src/mpc-*/*":true,
+	"**/tmp/binutils-*/*":true, "**/src/binutils-*/*":true,
+	"**/tmp/gdb-*/*":true,      "**/src/gdb-*/*":true,
+	"**/tmp/gcc-*/*":true,      "**/src/gcc-*/*":true,
+	// / <section:exclude>
+	},
+
+"files.associations": {
+	// \ <section:assoc>
+	
+	// / <section:assoc>
+	},
+
+// / <section:mid>
+// \ <section:bot>
+	"editor.tabSize": 4,
+}
+// / <section:bot>

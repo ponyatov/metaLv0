@@ -1,7 +1,7 @@
 <map id="metaL.bountyModule" name="metaL.bountyModule">
 <area shape="rect" id="node2" href="$classmetaL_1_1pyModule.html" title="metaL.pyModule" alt="" coords="17,453,136,480"/>
 <area shape="rect" id="node3" href="$classmetaL_1_1minpyModule.html" title="metaL.minpyModule" alt="" coords="7,379,146,405"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1anyModule.html" title="metaL.anyModule" alt="" coords="14,304,139,331"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1anyModule.html" title="extended project template includes some IDE configs and build script extensions " alt="" coords="14,304,139,331"/>
 <area shape="rect" id="node5" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="17,229,136,256"/>
 <area shape="rect" id="node6" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="25,155,129,181"/>
 <area shape="rect" id="node7" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="31,80,122,107"/>

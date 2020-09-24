@@ -320,6 +320,14 @@ class Object:
     ## @name code generation
     ## @{
 
+    ## comment start (for sigle-line and block comments)
+    def comment(self):
+        return self.par[0].comment()
+    ## comment end (for block comments)
+
+    def commend(self):
+        return self.par[0].commend()
+
     ## default f"format"ting for all nodes
     def __format__(self, spec=None):
         assert not spec
@@ -409,9 +417,6 @@ class String(Primitive):
     def __format__(self, spec=None):
         assert not spec
         return f'{self.val}'
-
-    def comment(self):
-        return self.par[0].comment()
 
     def py(self): return self.val
 
@@ -529,7 +534,9 @@ class Stack(Container):
 ## @ingroup cont
 ## associative array
 class Dict(Container):
-    pass
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}'
 
 
 ## @defgroup active Active
@@ -619,7 +626,7 @@ class Meta(Object):
 ## @ingroup prim
 ## source code
 class S(Meta, String):
-    def __init__(self, start, end='', block=True):
+    def __init__(self, start, end=None, block=True):
         String.__init__(self, start, block)
         self.end = end
 
@@ -629,13 +636,14 @@ class S(Meta, String):
         return ret
 
     def file_end(self, depth):
-        return self._pad(depth, self.block) + self.end if self.end else ''
+        blocking = self.block if hasattr(self, 'block') else self.par[0].block
+        ending = self.end if self.end != None else ''
+        return self._pad(depth, blocking) + ending
 
 class H(S):
 
     def __init__(self, V, *vargs, **kwargs):
-        closing = '' if 0 in vargs else f'</{V}>'
-        super().__init__(f'{V}', closing)
+        super().__init__(f'{V}', end='' if 0 in vargs else f'</{V}>')
         for i in kwargs:
             self[i] = f'{kwargs[i]}'
 
@@ -648,7 +656,6 @@ class H(S):
         ret += '>'
         for j in self.nest:
             ret += j.file(depth + 1)
-        blocking = self.block if hasattr(self, 'block') else self.par[0].block
         ret += self.file_end(depth)
         return ret
 
@@ -673,9 +680,10 @@ class Arg(Meta, Symbol):
 
 ## @ingroup meta
 class Args(Meta, Tuple):
-    def __init__(self, V=''):
+    def __init__(self, V='', nest=[]):
         Tuple.__init__(self, V)
         self.block = False
+        self.nest = nest
 
     def file(self, depth=0):#, parent=None):
         return '%s' % (', '.join([j.file(parent=self) for j in self.nest]))
@@ -697,13 +705,14 @@ class Class(Meta):
     # def py(self):
     #     return 'class %s: pass' % self.val
 
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}'
+
     def file(self, depth=0):#, parent=None):
-        ret = '\n' + self._pad(depth, self.parent().block) + \
-            'class %s' % self.val
-        try:
+        ret = self._pad(depth, self.par[0].block) + f'class {self}'
+        if 'sup' in self.keys():
             ret += '(%s)' % (','.join([i.val for i in self.sup.nest]))
-        except AttributeError:
-            pass
         ret += ':'
         if self.nest:
             for j in self.nest:
@@ -739,42 +748,48 @@ class pyInterface(Meta):
 class Module(Meta):
     def file(self, depth=0):#, parent=None):
         return self.head(test=True)
+
     def __format__(self, spec):
         assert not spec
         return f'{self.val}'
+
 
 vm['module'] = Class(Module)
 
 ## @ingroup meta
 ## text files with any code are devided by sections (can be nested as subsections)
 class Section(Meta):
-    def __init__(self, V):
+    def __init__(self, V, comment=True):
         super().__init__(V)
         ## every section known its parent: file or other outer section
         assert not self.par
         ## sections always blocked in files
         self.block = True
+        if not comment:
+            self.comment = lambda: False
 
     # ## block mutiple parents for all `Section`s
     # def pre__floordiv__(self, parent):
     #     assert not self.par
     #     super().pre__floordiv__(parent)
 
-    def comment(self):
-        return self.par[0].comment()
-
     def file(self, depth=0):#, parent=None):
         # assert len(self.par) == 1
         if not self.nest:
             return ''
-        ret = self._pad(depth, self.par[0].block) if self.comment() else ''
-        if self.comment():
-            ret += '%s \\ %s' % (self.comment(), self.head(test=True))
+        #
+        comment = self.comment()
+        head = self.head(test=True)
+        commend = self.commend()
+        #
+        ret = self._pad(depth, self.par[0].block) if comment else ''
+        if comment:
+            ret += f'{comment} \\ {head}{commend}'
         for i in self.nest:
             ret += i.file(depth)
-        if self.comment():
+        if comment:
             ret += self._pad(depth, self.par[0].block)
-            ret += '%s / %s' % (self.comment(), self.head(test=True))
+            ret += f'{comment} / {head}{commend}'
         return ret
 
     def py(self): return self.file()
@@ -838,17 +853,23 @@ class File(IO):
     def __init__(self, V, ext='', comment='#'):
         ## file handler not assigned on File object creation
         self.fh = None
+        ##
         self.comment = lambda: comment
+        commends = {'<!--': '-->'}
+        commend = ' ' + commends[comment] if comment in commends else ''
+        self.commend = lambda: commend
+        ##
         super().__init__(V)
         self['ext'] = self.ext = ext
+        ##
         if comment:
             powered = f"powered by metaL: {MANIFEST}"
             if len(comment) == len('#'):
-                self // ("%s  %s" % (comment, powered))
-                self // ("%s @file" % (comment * 2))
-            elif len(comment) == len('//'):
-                self // ("%s %s" % (comment, powered))
-                self // ("%s @file" % (comment))
+                self // f"{comment}  {powered}{commend}"
+                # self // f"{comment*2} @file{commend}"
+            elif len(comment) >= len('//'):
+                self // f"{comment} {powered}{commend}"
+                # self // f"{comment*2} @file{commend}"
             else:
                 raise Error((self.comment))
         ## every file has `top` section
@@ -900,8 +921,11 @@ class File(IO):
     # def __floordiv__(self, that, sync=False):
     #     return super().__floordiv__(that, sync)
 
-## @defgroup net Networking
+## @defgroup net net
+## @brief Networking
 ## @ingroup io
+
+## @ingroup net
 ## networking object
 class Net(IO):
     pass
@@ -909,7 +933,9 @@ class Net(IO):
 ## @ingroup net
 ## TCP/IP address
 class Ip(Net):
-    pass
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}'
 
 ## @ingroup net
 ## TCP/IP port
@@ -957,6 +983,12 @@ class Doc(Object):
         return '%s' % self.val
 
 ## @ingroup doc
+class Color(Doc):
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}'
+
+## @ingroup doc
 class Title(Doc):
     ## @ingroup py
     def py(self): return '## @brief %s' % self.val
@@ -999,7 +1031,7 @@ class README(File):
         self // ('## %s' % module['TITLE'].val)
         # self // ''
         about = module['ABOUT'].val
-        while about[-1] in '\r\n':
+        while about and about[-1] in '\r\n':
             about = about[:-1]
         about += '\n* powered by `metaL`'
         self // ('%s' % about)
@@ -1044,8 +1076,14 @@ class multiCommand(S):
                     self.cmd
                     ))))
 
+## @defgroup dirmod dirModule
 ## @ingroup prj
 ## module with its own directory (root module = project)
+
+## @ingroup dirmod
+## module with its own directory (root module = project)
+##
+## https://www.notion.so/metalang/The-base-of-all-projects-dirModule-f6f20d6dd12b42738dd2a8aee7cc8a42
 class dirModule(Module):
     ## @param[in] V default name is the current file name
     def __init__(self, V=None):
@@ -1065,12 +1103,25 @@ class dirModule(Module):
         self['GITHUB'] = self.GITHUB = GitHub(GITHUB, self)
         # diroot: directory with same name as the module
         self['dir'] = self.diroot = Dir(V).sync()
+        #
+        self.init_first()
         # apt.txt
         self.init_apt()
         # gitignore
         self.init_giti()
+        # tmp
+        self.init_dirs()
         # Makefile
         self.init_mk()
+
+    def init_first(self): pass
+
+    def init_dirs(self):
+        self['tmp'] = self.tmp = Dir('tmp')
+        self.diroot // self.tmp
+        self.tmp.giti = File('.gitignore')
+        self.tmp // self.tmp.giti
+        self.tmp.giti.sync()
 
     ## create defaut Makefile
     def init_mk(self):
@@ -1080,6 +1131,7 @@ class dirModule(Module):
         # vars
         self.mk['vars'] = self.mk.vars = Section('vars')
         self.mk.top // self.mk.vars
+        # module
         self.mk['module'] = self.mk.module = Section('module')
         self.mk.module // f'{"MODULE":<8} = $(notdir $(CURDIR))'
         self.mk.vars // self.mk.module
@@ -1096,14 +1148,16 @@ class dirModule(Module):
             f'{"CWD":<8} = $(CURDIR)' //\
             f'{"BIN":<8} = $(CWD)/bin' //\
             f'{"TMP":<8} = $(CWD)/tmp' //\
-            f'{"SOURCE":<8} = $(TMP)/src'
+            f'{"SRC":<8} = $(CWD)/src'
         # tools
         self.mk['tools'] = self.mk.tools = Section('tools')
         self.mk.top // self.mk.tools
+        self.mk.xpath = Section('xpath', 0) //\
+            f'{"XPATH":<8} = PATH=$(BIN):$(PATH)'
         self.mk.tools //\
             f'{"WGET":<8} = wget -c --no-check-certificate' //\
             f'{"CORES":<8} = $(shell grep proc /proc/cpuinfo|wc -l)' //\
-            f'{"XPATH":<8} = PATH=$(BIN):$(PATH)' //\
+            self.mk.xpath //\
             f'{"XMAKE":<8} = $(XPATH) $(MAKE) -j$(CORES)'
         # src
         self.mk.src = self['src'] = Section('src')
@@ -1114,6 +1168,9 @@ class dirModule(Module):
         # all
         self.mk.all = self['all'] = Section('all')
         self.mk.mid // self.mk.all
+        # rules
+        self.mk.rules = self['rules'] = Section('rules')
+        self.mk.mid // self.mk.rules
         # install/update
         install = Section('install')
         self.mk.bot // install
@@ -1132,39 +1189,49 @@ class dirModule(Module):
         # merge master/shadow
         self.mk['merge'] = self.mk.merge = Section('merge')
         self.mk.bot // self.mk.merge
-        self.mk.merge // f'MERGE  = {self.mk} {self.apt} {self.giti}'
+        self.mk.merge // f'MERGE  = {self.mk} {self.apt} {self.giti} .vscode'
         self.mk.merge // 'MERGE += README.md'
+        self.mk.bot // S('.PHONY: master shadow release zip')
         # master
-        self.mk.bot // 'master:'
-        self.mk.bot // '\tgit checkout $@'
-        self.mk.bot // '\tgit pull -v'
-        self.mk.bot // '\tgit checkout shadow -- $(MERGE)'
+        self.mk.bot // (S('master:') //
+                        'git checkout $@' //
+                        'git pull -v' //
+                        'git checkout shadow -- $(MERGE)')
         # shadow
-        self.mk.bot // 'shadow:'
-        self.mk.bot // '\tgit checkout $@'
-        self.mk.bot // '\tgit pull -v'
+        self.mk.bot // (S('shadow:') //
+                        'git checkout $@' //
+                        'git pull -v')
         # release
-        self.mk.bot // 'release:'
-        self.mk.bot // '\tgit tag $(NOW)-$(REL)'
-        self.mk.bot // '\tgit push -v && git push -v --tags'
-        self.mk.bot // '\t$(MAKE) shadow'
+        self.mk.bot // (S('release:') //
+                        'git tag $(NOW)-$(REL)' //
+                        'git push -v && git push -v --tags' //
+                        '$(MAKE) shadow')
+        # zip
+        self.mk.bot // (S('zip:') //
+                        (S('git archive --format zip \\') //
+                         '--output ~/tmp/$(MODULE)_src_$(NOW)_$(REL).zip \\' //
+                         'HEAD'))
         #
         self.mk.sync()
 
+    ## create `apt.txt` with packages must be installed on Debian GNU/Linux
     def init_apt(self):
         self['apt'] = self.apt = File('apt.txt', comment='')
         self.diroot // self.apt
         self.apt // 'git make wget'
         self.apt.sync()
 
+    ## `.gitignore` file masks will not included into repository
     def init_giti(self):
         self['gitignore'] = self.giti = File('.gitignore')
         self.diroot // self.giti
-        self.giti.top // '*~' // '*.swp'
-        self.giti.top // '*.log' // '/tmp/'
-        self.giti.sync()
+        self.giti.top // '*~' // '*.swp' // '*.log'
+        return self.giti.sync()
 
 ## @ingroup prj
+## extended project template includes some IDE configs and build script extensions
+##
+## https://www.notion.so/metalang/extending-very-minimal-dirModule-to-more-general-anyModule-5286e00adefe4366925aeba6f7293a1d
 class anyModule(dirModule):
     def __init__(self, V=None):
         super().__init__(V)
@@ -1197,12 +1264,20 @@ class anyModule(dirModule):
         self.mk.mid // self.mk.rules
         self.mk.sync()
 
+    def init_dirs(self):
+        super().init_dirs()
+        #
+        self['src'] = self.src = Dir('src')
+        self.diroot // self.src
+        self.src.giti = File('.gitignore')
+        self.src // self.src.giti
+        self.src.giti.sync()
+
     # def init_giti(self):
-    #     super().init_giti()
     #     # self.giti.bot // ('/%s' % self.val)
     #     # self.giti.bot // ('/%s.exe\n/%s' % (self.val, self.val))
     #     # self.giti.bot // '*.o' // '*.objdump'
-    #     # self.giti.sync()
+    #     # return self.giti.sync()
 
     def init_vscode_settings(self):
         settings = File('settings.json', comment='//')
@@ -1247,7 +1322,7 @@ class anyModule(dirModule):
         return (S('{', '},') //
                 f'"label": "{group}: {target}",' //
                 '"type": "shell",' //
-                f'"command": "git {target}",' //
+                f'"command": "make {target}",' //
                 '"problemMatcher": [],'
                 )
 
@@ -1290,7 +1365,7 @@ class anyModule(dirModule):
 
     def mksrc(self, file):
         assert isinstance(file, File)
-        self.mk.src // ('SRC += %s' % file.val)
+        self.mk.src // f'SRC += {file}'
 
     def file(self, depth=0):#, parent=None):
         return f'{self.__class__.__name__}:{self._val()}'
@@ -1304,6 +1379,9 @@ class CC(Object):
     pass
 
 ## @ingroup cc
+## cross-compiler module / embedded C/C++
+##
+##
 class ccModule(anyModule):
     def init_mk(self):
         super().init_mk()
@@ -1352,12 +1430,12 @@ class ccModule(anyModule):
     def init_apt(self):
         super().init_apt()
         self.apt // 'tcc binutils'
-        self.apt.sync()
+        return self.apt.sync()
 
     def init_giti(self):
         super().init_giti()
         self.giti.mid // '*.exe' // '*.o'
-        self.giti.sync()
+        return self.giti.sync()
 
 ## @ingroup cc
 class cFile(CC, File):
@@ -1519,6 +1597,7 @@ class minpyModule(anyModule):
         super().__init__(V)
         self.init_reqs()
         self.init_py()
+        self.init_config()
 
     def init_apt(self):
         super().init_apt()
@@ -1534,8 +1613,8 @@ class minpyModule(anyModule):
         super().init_giti()
         self.giti.mid // '*.pyc' // '/bin/' // '/include/'
         self.giti.mid // '/lib/' // '/lib64' // '/share/' // '/pyvenv.cfg'
-        self.giti.mid // '/__pycache__/' // '/.pytest_cache/'
-        self.giti.sync()
+        self.giti.mid // '/__pycache__/' // '/.pytest_cache/' // 'config.py'
+        return self.giti.sync()
 
     def init_mk(self):
         super().init_mk()
@@ -1577,8 +1656,8 @@ class minpyModule(anyModule):
         settings.top // '\t"python.formatting.autopep8Path":  "./bin/autopep8",'
         settings.top // '\t"python.formatting.autopep8Args": ["--ignore=E26,E302,E401,E402"],'
         #
-        self.f11.cmd.val = 'make repl'
-        self.f12.cmd.val = 'exit()'
+        # self.f11.cmd.val = 'make repl'
+        # self.f12.cmd.val = 'exit()'
         #
         files = Section('') //\
             '"**/bin/**": true, "**/include/**":true,' //\
@@ -1590,7 +1669,7 @@ class minpyModule(anyModule):
         #
         self.vscode.assoc //\
             '"**/.py": "python",' //\
-            '"**/requirements{/**,*}.{txt,in}": "pip-requirements",'
+            '"**/requirements{/**,*}.{txt,in,pip}": "pip-requirements",'
         #
         settings.sync()
 
@@ -1628,7 +1707,16 @@ class minpyModule(anyModule):
     def init_py(self):
         self['py'] = self.py = pyFile(self)
         self['dir'] // self.py
-        self.py.sync()
+        self.py.top // pyImport('config')
+        return self.py.sync()
+
+    def init_config(self):
+        self['config'] = self.config = pyFile('config')
+        self['dir'] // self.config
+        import uuid
+        uid = xxhash.xxh64(str((uuid.getnode(), self))).hexdigest()
+        self.config // f'SECRET_KEY = "{uid}"'
+        return self.config.sync()
 
 
 ## @ingroup py
@@ -1702,6 +1790,275 @@ class bountyModule(pyModule):
         self.py.about // "ABOUT = MODULE['ABOUT'] = Url('https://bountify.co/' + MODULE.val)"
         # self.py.github // "GITHUB = MODULE['GITHUB'] = Url('https://bitbucket.org/ponyatov/%s/' % MODULE.val)"
         self.py.sync()
+
+
+## @defgroup samples
+## @brief samples on using `metaL` for programming and modeling
+
+## @defgroup web web
+## @brief Web Development
+## @{
+
+from html import *
+
+class watFile(File):
+    def __init__(self, V, ext='.wat', comment=';;'):
+        super().__init__(V, ext, comment)
+
+class webModule(minpyModule):
+
+    def __init__(self, V=None):
+        super().__init__(V)
+        self['back'] = self.back = Color('#222222')
+        self.init_static()
+        self.init_templates()
+        self.init_leaflet()
+        self.init_wasm()
+
+    def init_wasm(self):
+        (self.apt // 'wabt').sync()
+        (self.static.giti // '*.wasm').sync()
+        (self.src.giti // '*.wat.?').sync()
+        self.vscode.ext.ext // '"dtsvet.vscode-wasm",'
+        self.vscode.ext.sync()
+        self.mk.wat = wat = Section('wat')
+        self.mk.src // wat
+        self.mk.wasm = wasm = Section('wasm')
+        self.mk.all // wasm
+        wasm // '.PHONY: wasm\nwasm: $(WAT)'
+        self.mk.install // '#$(MAKE) wasm'
+        self.mk.update // '#$(MAKE) wasm'
+        self.mk.rules // (S('static/%.wasm: src/%.wat') //
+                          'wat2wasm -v $< -o $@' //
+                          'wasm2wat -v $@ -o $<.s'
+                          )
+        #
+        self.src['hello'] = self.src.hello = hello = watFile('hello')
+        self.src // self.src.hello
+        wat // f'SRC += src/{hello}' // f'WAT += static/hello.wasm'
+        hello.top //\
+            ';; https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format' //\
+            ';; https://www.freecodecamp.org/news/get-started-with-webassembly-using-only-14-lines-of-javascript-b37b6aaca1e4/' //\
+            '(module'
+        hello.bot // ')'
+        #
+        fn_hello = S('(func', ')')
+        # fn_hello // '(param i32)'
+        hello.mid // fn_hello
+        #
+        self.src.hello.sync()
+
+    def init_config(self):
+        super().init_config()
+        import crc16
+        self['host'] = self.host = Ip('127.0.0.1')
+
+        def port_scale(port):
+            return int(1024 + ((0xBFFF - 1024) / (0xFFFF)) * port)
+        self['port'] = self.port = port_scale(
+            crc16.crc16xmodem(self.val.encode('utf8')))
+        assert self.port in range(1024, 0xBFFF + 1)
+        self.config //\
+            f"HOST = '{self.host}'" //\
+            f"PORT = {self.port}" //\
+            "assert PORT in range(1024,0xBFFF)"
+        return self.config.sync()
+
+    def init_static(self):
+        self['static'] = self.static = static = Dir('static')
+        self.diroot // static
+        static.sync()
+        static.giti = giti = File('.gitignore', comment=None)
+        static // giti
+        giti // 'jquery.js' // 'bootstrap.*'
+        giti // 'leaflet.*' // 'images/marker-*.png' // 'images/layers*.png'
+        giti.sync()
+        self.init_static_manifest()
+        return static
+
+    ## https://leafletjs.com/examples/quick-start/
+    def init_leaflet(self):
+
+        css_crc = "sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        js_crc = "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        self['leaflet'] = self.leaflet = leaf = Dict('leaflet')
+        leaf['css'] = leaf.css = H('link', 0,
+                                   rel="stylesheet", href=self.static_url("leaflet.css"),
+                                   integrity=css_crc)#, crossorigin="")
+        leaf['js'] = leaf.js = H('script', 1, src=self.static_url("leaflet.js"),
+                                 integrity=js_crc)#, crossorigin="")
+        leaf['id'] = leaf.id = f'{leaf}_{leaf.gid:8x}'
+        leaf['div'] = leaf.div = H('div', id=leaf.id) // f"{leaf.id}"
+        leaf.sync()
+        self.tmp.giti // 'leaflet.*' // 'images/marker-*' // 'images/layers*.png'
+        self.tmp.giti.sync()
+
+    ## intercept `A[key]=B` operations
+    def __setitem__(self, key, that):
+        super().__setitem__(key, that)
+        if isinstance(that, Title):
+            self.init_static_manifest()
+
+    def init_static_manifest(self):
+        self.static.manifest = File('manifest', ext='', comment='')
+        self.static['manifest'] = self.static.manifest
+        self.static // self.static.manifest
+        self.static.manifest // (S('{', '}') //
+                                 f'"short_name": "{self.head(test=True)[1:-1]}",' //
+                                 f'"name": "{self["TITLE"]}",' //
+                                 f'"theme_color": "{self.back}",' //
+                                 f'"background_color": "{self.back}",' //
+                                 '"display": "standalone",' //
+                                 (S('"icons": [', ']') //
+                                  (S('{', '}') //
+                                   '"src": "/static/logo.png",' //
+                                   '"type": "image/png",' //
+                                   '"sizes": "256x256"'
+                                   )
+                                  )
+                                 )
+        self.static.manifest.sync()
+
+    def init_templates(self):
+        self['templates'] = self.templates = Dir('templates')
+        self.diroot // self.templates
+        self.templates.sync()
+        self.init_templates_all()
+        self.init_templates_index()
+
+    def static_url(self, filename):
+        return f'{filename}'
+
+    def init_templates_all(self):
+        self.templates['all'] = self.templates.all = htFile('all')
+        self.templates // self.templates.all
+        #
+        self.templates.all.jinja = jinja = Section('jinja')
+        html = H('html', lang='ru')
+        html.end = ''
+        self.templates.all.top // jinja // html
+        # <head>
+        head = H('head')
+        html // head
+        head //\
+            '<meta charset="utf-8">' //\
+            '<meta http-equiv="X-UA-Compatible" content="IE=edge">' //\
+            '<meta name="viewport" content="width=device-width, initial-scale=1">' //\
+            f'<title>&lt;{self.head(test=True)[1:-1]}&gt;</title>' //\
+            '<link rel="manifest" href="/static/manifest">' //\
+            f'<link href="{self.static_url("bootstrap.css")}" rel="stylesheet">' //\
+            f'<link rel="shortcut icon" href="{self.static_url("logo.png")}" type="image/png">' //\
+            '{% block head %}{% endblock %}'
+        # <style>
+        self.templates.all.style = style = Section('style')
+        hstyle = H('style')
+        hstyle.comment = lambda: ''
+        self.templates.all.top // (hstyle // style)
+        style //\
+            (CSS('*', 0) // f'background:{self.back};') //\
+            (CSS("body", 0) // "padding:4mm;") //\
+            (CSS("@media print", 1) //
+                (CSS("body", 0) // "padding:0;") //
+                (CSS("a[href]:after", 0) // "display: none !important;")
+             )
+        style // '{% block style %}{% endblock %}'
+        #
+        body = H('body')
+        self.templates.all.mid // body
+        body //\
+            (S('{% if user.is_authenticated %}', '{% endif %}') //
+             S('{% block body %}', '{% endblock %}', 0) //
+             (S('{% else %}') // '<a href="/admin/login/?next={{request.path}}">тук-тук! войдите {{user}} @ {{loc}}</a>'))
+        #
+        self.templates.all.bot //\
+            '</html>' //\
+            (Section('script') //
+             f'<script src="{self.static_url("jquery.js")}"></script>' //
+             f'<script src="{self.static_url("bootstrap.js")}"></script>' //
+             (S('{% if user.is_authenticated %}', '{% endif %}') //
+              '{% block script %}{% endblock %}'))
+        #
+        return self.templates.all.sync()
+
+    def init_templates_index(self):
+        self.templates['index'] = self.templates.index = htFile('index')
+        self.templates // self.templates.index
+        self.templates.index //\
+            "{% extends 'all.html' %}"
+        return self.templates.index.sync()
+
+    def init_vscode_settings(self):
+        super().init_vscode_settings()
+        settings = self.vscode.settings
+        self.vscode.assoc //\
+            '"**/*.html": "html",'
+        return settings.sync()
+
+    def init_vscode_ext(self):
+        super().init_vscode_ext()
+        self.vscode.ext.ext //\
+            '"ecmel.vscode-html-css",' //\
+            '"alexcvzz.vscode-sqlite",'
+        return self.vscode.ext.sync()
+
+    def init_mk(self):
+        super().init_mk()
+        # js
+        self.mk.js = Section('js/install')
+        self.mk.update.after(self.mk.js)
+        self.mk.js //\
+            ".PHONY: js" // (S("js: \\") //
+                             "static/jquery.js \\" //
+                             "static/bootstrap.css static/bootstrap.js \\" //
+                             "static/leaflet.js")
+        self.mk.js // (Section('js/jquery') //
+                       "JQUERY_VER = 3.5.0" //
+                       (S("static/jquery.js:") //
+                        "$(WGET) -O $@ https://code.jquery.com/jquery-$(JQUERY_VER).min.js"))
+        self.mk.js // (Section('js/bootstrap') //
+                       "BOOTSTRAP_VER = 3.4.1" //
+                       "BOOTSTRAP_URL = https://stackpath.bootstrapcdn.com/bootstrap/$(BOOTSTRAP_VER)/" //
+                       (S("static/bootstrap.css:") //
+                        "$(WGET) -O $@ https://bootswatch.com/3/darkly/bootstrap.min.css") //
+                       (S("static/bootstrap.js:") //
+                        "$(WGET) -O $@ $(BOOTSTRAP_URL)/js/bootstrap.min.js"))
+        self.mk.js // (Section('js/leaflet') //
+                       "LEAFLET_VER = 1.7.1" //
+                       "LEAFLET_ZIP = http://cdn.leafletjs.com/leaflet/v$(LEAFLET_VER)/leaflet.zip" //
+                       (S("static/leaflet.js: $(TMP)/leaflet.zip") //
+                        "unzip -d static $< leaflet.css leaflet.js* images/* && touch $@") //
+                       (S("$(TMP)/leaflet.zip:") //
+                        "$(WGET) -O $@ $(LEAFLET_ZIP)")
+                       )
+        #
+        self.mk.merge // 'MERGE += static templates'
+        return self.mk.sync()
+
+
+#@ @}
+
+## @defgroup html html
+## @ingroup web
+## @brief `HTML/CSS`
+## @{
+
+class htFile(File):
+    def __init__(self, V):
+        super().__init__(V, ext='.html', comment='<!--')
+        self.top // "<!doctype html>"
+
+## @}
+
+## @defgroup js js
+## @ingroup web
+## @brief `JavaScript`
+## @{
+
+class jsFile(File):
+    def __init__(self, V):
+        super().__init__(V, ext='.js', comment='//')
+
+## @}
 
 
 ## @defgroup lexer lexer
@@ -2256,6 +2613,3 @@ if __name__ == '__main__':
     init()
     metaL(' {} @ 123 ')
     REPL()
-
-## @defgroup samples
-## @brief samples on using `metaL` for programming and modeling

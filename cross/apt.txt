@@ -1,0 +1,3 @@
+
+git make wget
+build-essential bzip2 xz-utils

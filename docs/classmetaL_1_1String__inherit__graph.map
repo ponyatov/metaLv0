@@ -1,9 +1,26 @@
 <map id="metaL.String" name="metaL.String">
-<area shape="rect" id="node4" href="$classmetaL_1_1S.html" title="source code " alt="" coords="142,229,213,256"/>
-<area shape="rect" id="node8" href="$classSmalltalk_1_1stString.html" title="String p.542. " alt="" coords="237,229,363,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="182,80,295,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="189,5,289,32"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1H.html" title="metaL.H" alt="" coords="5,304,77,331"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1multiCommand.html" title="VSCode multicommand. " alt="" coords="102,304,253,331"/>
-<area shape="rect" id="node7" href="$classmetaL_1_1Return.html" title="metaL.Return" alt="" coords="277,304,379,331"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1S.html" title="source code " alt="" coords="271,229,341,256"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="249,80,363,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="256,5,356,32"/>
+<area shape="rect" id="node5" href="$classhtml_1_1CSS.html" title="html.CSS" alt="" coords="5,304,84,331"/>
+<area shape="rect" id="node6" href="$classhtml_1_1PX.html" title="html.PX" alt="" coords="109,304,178,331"/>
+<area shape="rect" id="node7" href="$classhtml_1_1STATIC.html" title="html.STATIC" alt="" coords="202,304,301,331"/>
+<area shape="rect" id="node8" href="$classmetaL_1_1H.html" title="metaL.H" alt="" coords="325,304,397,331"/>
+<area shape="rect" id="node24" href="$classmetaL_1_1multiCommand.html" title="VSCode multicommand. " alt="" coords="421,304,572,331"/>
+<area shape="rect" id="node25" href="$classmetaL_1_1Return.html" title="metaL.Return" alt="" coords="597,304,698,331"/>
+<area shape="rect" id="node9" href="$classhtml_1_1A.html" title="html.A" alt="" coords="125,379,185,405"/>
+<area shape="rect" id="node10" href="$classhtml_1_1EMAIL.html" title="html.EMAIL" alt="" coords="210,379,301,405"/>
+<area shape="rect" id="node11" href="$classhtml_1_1HH.html" title="html.HH" alt="" coords="325,379,396,405"/>
+<area shape="rect" id="node22" href="$classhtml_1_1HR.html" title="html.HR" alt="" coords="420,379,491,405"/>
+<area shape="rect" id="node23" href="$classhtml_1_1IMG.html" title="html.IMG" alt="" coords="515,379,591,405"/>
+<area shape="rect" id="node12" href="$classhtml_1_1CENTER.html" title="html.CENTER" alt="" coords="103,453,210,480"/>
+<area shape="rect" id="node13" href="$classhtml_1_1H1.html" title="html.H1" alt="" coords="235,453,303,480"/>
+<area shape="rect" id="node14" href="$classhtml_1_1H2.html" title="html.H2" alt="" coords="327,453,395,480"/>
+<area shape="rect" id="node15" href="$classhtml_1_1HB.html" title="html.HB" alt="" coords="419,453,489,480"/>
+<area shape="rect" id="node21" href="$classhtml_1_1SPAN.html" title="html.SPAN" alt="" coords="514,453,602,480"/>
+<area shape="rect" id="node16" href="$classhtml_1_1DIV.html" title="html.DIV" alt="" coords="223,528,298,555"/>
+<area shape="rect" id="node17" href="$classhtml_1_1P.html" title="html.P" alt="" coords="323,528,383,555"/>
+<area shape="rect" id="node18" href="$classhtml_1_1TABLE.html" title="html.TABLE" alt="" coords="407,528,501,555"/>
+<area shape="rect" id="node19" href="$classhtml_1_1TD.html" title="html.TD" alt="" coords="525,528,594,555"/>
+<area shape="rect" id="node20" href="$classhtml_1_1TR.html" title="html.TR" alt="" coords="618,528,687,555"/>
 </map>

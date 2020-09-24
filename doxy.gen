@@ -791,11 +791,11 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md metaL.py test_metaL.py config.py license.py \
-                            book.py doc doc/ru hello.py tcc.py mony.py \
-                            metacircular.py dja.py rdbms.py \
+                            book.py doc doc/ru hello.py tcc.py mony.py cross.py \
+                            metacircular.py dja.py fl.py html.py rdbms.py \
                             webook.py Smalltalk.py bully.py AkkaLA.py \
                             llvm.py home.py bcx.py distill.py \
-                            clojure.py \
+                            clojure.py world.py \
                             drtos.py demos.py DRTK.py WebRTCos.py
 
 # This tag can be used to specify the character encoding of the source files

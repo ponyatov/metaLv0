@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['tcc_2emd',['tcc.md',['../tcc_8md.html',1,'']]],
-  ['tcc_2epy',['tcc.py',['../tcc_8py.html',1,'']]],
-  ['test_5fmetal_2epy',['test_metaL.py',['../test__metaL_8py.html',1,'']]],
-  ['tutorial_2emd',['tutorial.md',['../tutorial_8md.html',1,'']]],
-  ['tutru_2emd',['tutru.md',['../tutru_8md.html',1,'']]],
-  ['typemagic_2emd',['TypeMagic.md',['../TypeMagic_8md.html',1,'']]]
+  ['sicp_2emd',['SICP.md',['../SICP_8md.html',1,'(Global Namespace)'],['../ru_2SICP_8md.html',1,'(Global Namespace)']]],
+  ['sicp_5f1_5f1_5f1_5fexpressions_2emd',['SICP_1_1_1_Expressions.md',['../SICP__1__1__1__Expressions_8md.html',1,'']]],
+  ['smalltalk_2emd',['Smalltalk.md',['../Smalltalk_8md.html',1,'']]],
+  ['smalltalk_2epy',['Smalltalk.py',['../Smalltalk_8py.html',1,'']]]
 ];

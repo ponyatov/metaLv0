@@ -1,0 +1,8 @@
+
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+*.iso
+*.elf
+*.bin
+*.hex
+*.kernel
+*.rootfs

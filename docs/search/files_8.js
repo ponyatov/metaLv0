@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quora_2emd',['quora.md',['../quora_8md.html',1,'']]]
+  ['papl_2emd',['PAPL.md',['../PAPL_8md.html',1,'']]]
 ];

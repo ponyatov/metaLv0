@@ -1,0 +1,31 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+// https://code.visualstudio.com/docs/python/debugging
+{
+// / <section:top>
+// \ <section:mid>
+"configurations": [
+	// \ <section:>
+	{
+		"name": "Python: world",
+		"type": "python",
+		"request": "launch",
+		// \ <section:program>
+		"program": "world.py",
+		// / <section:program>
+		"args": [
+			],
+		
+		"debugOptions": [
+			],
+		
+		"console": "integratedTerminal"}
+	
+	// / <section:>
+	]
+
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

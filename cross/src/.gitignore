@@ -1,0 +1,8 @@
+
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+gmp-*/
+mpfr-*/
+mpc-*/
+binutils-*/
+gdb-*/
+gcc-*/

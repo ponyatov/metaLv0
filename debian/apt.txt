@@ -1,0 +1,4 @@
+
+git make wget
+syslinux
+virtualbox-6.1

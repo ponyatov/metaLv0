@@ -31,11 +31,9 @@ test: $(PYT) test_$(MODULE).py $(MODULE).py $(MODULE).ini config.py
 	$(PYT) test_$(MODULE).py
 
 %/repl: %.py $(PY)
-	-$(MAKE) doxy
 	$(MAKE) test
 	$(PY) -i $<
 	$(MAKE) $@
-
 
 
 SRC = $(shell find $(CWD) -maxdepth 1 -type f -regex .+.py$$)
@@ -86,7 +84,7 @@ $(PYT):
 
 .PHONY: requirements.txt
 requirements.txt: $(PIP)
-	$< freeze | egrep "py(lint|test)|autopep8|ply|xxhash" > $@
+	$< freeze | egrep "py(lint|test)|autopep8|ply|xxhash|crc16" > $@
 
 
 .PHONY: Linux_install Linux_update
@@ -105,8 +103,8 @@ MERGE += requirements.txt pyproject.toml .replit doc
 MERGE += $(MODULE) metacircular.py license.py
 MERGE += distill distill.py
 MERGE += tcc tcc.py
-MERGE += Smalltalk.py
-MERGE += dja dja.py
+MERGE += Smalltalk Smalltalk/doc/.gitignore Smalltalk.py
+MERGE += dja dja.py fl.py html.py
 MERGE += demos demos.py
 MERGE += webook webook.py
 MERGE += rdbms rdbms.py
@@ -119,6 +117,9 @@ MERGE += clojure clojure.py
 MERGE += AlexML AlexML.py
 MERGE += DRTK DRTK.py drtos.py
 MERGE += WebRTCos WebRTCos.py
+MERGE += debian debian.py
+MERGE += cross cross/tmp/.gitignore cross/src/.gitignore cross.py
+MERGE += world world.py
 
 master:
 	rm -rf docs
