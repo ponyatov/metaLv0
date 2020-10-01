@@ -4,12 +4,11 @@
 from metaL import *
 
 ## @ingroup doc
-class License(Doc):
-    def file(self): return self.val
+class License(S):
+    pass
 
 ## @ingroup doc
 MIT = ( License('MIT License') // '''
-
 Copyright (c) {YEAR} {AUTHOR} {EMAIL}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of

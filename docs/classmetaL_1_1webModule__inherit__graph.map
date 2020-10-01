@@ -1,10 +1,11 @@
 <map id="metaL.webModule" name="metaL.webModule">
-<area shape="rect" id="node8" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="5,528,100,555"/>
-<area shape="rect" id="node9" href="$classfl_1_1flModule.html" title="fl.flModule" alt="" coords="125,528,207,555"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1minpyModule.html" title="metaL.minpyModule" alt="" coords="39,379,178,405"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1anyModule.html" title="extended project template includes some IDE configs and build script extensions " alt="" coords="46,304,171,331"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="49,229,168,256"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="57,155,161,181"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="63,80,154,107"/>
-<area shape="rect" id="node7" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="59,5,159,32"/>
+<area shape="rect" id="node8" href="$classdja_1_1djModule.html" title="Django minimal project. " alt="" coords="19,528,114,555"/>
+<area shape="rect" id="node10" href="$classfl_1_1flModule.html" title="fl.flModule" alt="" coords="139,528,221,555"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1minpyModule.html" title="metaL.minpyModule" alt="" coords="53,379,192,405"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1anyModule.html" title="extended project template includes some IDE configs and build script extensions " alt="" coords="60,304,185,331"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="63,229,182,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="71,155,175,181"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="77,80,168,107"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="73,5,173,32"/>
+<area shape="rect" id="node9" href="$classlaguna_1_1lagModule.html" title="laguna.lagModule" alt="" coords="5,603,128,629"/>
 </map>

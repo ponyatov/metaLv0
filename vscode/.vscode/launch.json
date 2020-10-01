@@ -1,0 +1,22 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+// https://code.visualstudio.com/docs/python/debugging
+{
+// / <section:top>
+// \ <section:mid>
+"configurations": [
+	// \ <section:>
+	{
+		"name": "Run Extension",
+		"type": "extensionHost",
+		"request": "launch",
+		"runtimeExecutable": "${execPath}",
+		"args": ["--extensionDevelopmentPath=${workspaceFolder}"]
+	}
+	// / <section:>
+]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

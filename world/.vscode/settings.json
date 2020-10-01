@@ -30,34 +30,30 @@
 // / <section:multiCommand>
 "files.watcherExclude": {
 	// \ <section:watcher>
-	// \ <section:>
+	// \ <section:python>
 	"**/bin/**": true, "**/include/**":true,
 	"**/lib*/**":true, "**/share/**"  :true,
 	"**/*.pyc":  true, "**/pyvenv.cfg":true,
 	"**/__pycache__/": true, "**/.pytest_cache/": true,
-	// / <section:>
+	// / <section:python>
 	// / <section:watcher>
 },
 "files.exclude": {
 	// \ <section:exclude>
-	
-	// \ <section:>
+	// \ <section:python>
 	"**/bin/**": true, "**/include/**":true,
 	"**/lib*/**":true, "**/share/**"  :true,
 	"**/*.pyc":  true, "**/pyvenv.cfg":true,
 	"**/__pycache__/": true, "**/.pytest_cache/": true,
-	// / <section:>
+	// / <section:python>
 	// / <section:exclude>
-	},
-
+},
 "files.associations": {
 	// \ <section:assoc>
-	
 	"**/.py": "python",
-	"**/requirements{/**,*}.{txt,in}": "pip-requirements",
+	"**/requirements{/**,*}.{txt,in,pip}": "pip-requirements",
 	// / <section:assoc>
-	},
-
+},
 // / <section:mid>
 // \ <section:bot>
 	"editor.tabSize": 4,

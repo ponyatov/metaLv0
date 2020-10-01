@@ -1,6 +1,5 @@
 
-// powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
-// @file
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
 // \ <section:top>
 {
 	"python.pythonPath":               "./bin/python3",
@@ -11,51 +10,50 @@
 // \ <section:mid>
 // \ <section:multiCommand>
 "multiCommand.commands": [
-	{"command":"multiCommand.f11",
+	{"command": "multiCommand.f11", 
 		"sequence":[
 			"workbench.action.files.saveAll",
 			{"command": "workbench.action.terminal.sendSequence",
-				"args": {"text": "\u000Dmake repl\u000D"}}
-			],
-		},
-	{"command":"multiCommand.f12",
+				"args": {"text": "\u000Dmake distill/repl\u000D"}
+			}
+		]
+	},
+	{"command": "multiCommand.f12", 
 		"sequence":[
 			"workbench.action.files.saveAll",
 			{"command": "workbench.action.terminal.sendSequence",
-				"args": {"text": "\u000Dexit()\u000D"}}
-			],
-		},
-	],
+				"args": {"text": "\u000Dexit()\u000D"}
+			}
+		]
+	},
+],
 // / <section:multiCommand>
 "files.watcherExclude": {
 	// \ <section:watcher>
-	
-	// \ <section:>
+	// \ <section:python>
 	"**/bin/**": true, "**/include/**":true,
 	"**/lib*/**":true, "**/share/**"  :true,
 	"**/*.pyc":  true, "**/pyvenv.cfg":true,
 	"**/__pycache__/": true, "**/.pytest_cache/": true,
-	// / <section:>
+	// / <section:python>
 	// / <section:watcher>
-	},
+},
 "files.exclude": {
 	// \ <section:exclude>
-	
-	// \ <section:>
+	// \ <section:python>
 	"**/bin/**": true, "**/include/**":true,
 	"**/lib*/**":true, "**/share/**"  :true,
 	"**/*.pyc":  true, "**/pyvenv.cfg":true,
 	"**/__pycache__/": true, "**/.pytest_cache/": true,
-	// / <section:>
+	// / <section:python>
 	// / <section:exclude>
-	},
+},
 "files.associations": {
 	// \ <section:assoc>
-	
 	"**/.py": "python",
-	"**/requirements{/**,*}.{txt,in}": "pip-requirements",
+	"**/requirements{/**,*}.{txt,in,pip}": "pip-requirements",
 	// / <section:assoc>
-	},
+},
 // / <section:mid>
 // \ <section:bot>
 	"editor.tabSize": 4,

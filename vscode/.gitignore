@@ -1,0 +1,12 @@
+
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+# \ <section:top>
+*~
+*.swp
+*.log
+# / <section:top>
+# \ <section:mid>
+/vscode-extension-samples
+/hello
+/lsp-sample
+# / <section:mid>

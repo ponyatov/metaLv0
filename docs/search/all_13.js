@@ -6,6 +6,7 @@ var searchData=
   ['samples',['Samples',['../group__samples.html',1,'']]],
   ['section',['Section',['../classmetaL_1_1Section.html',1,'metaL']]],
   ['set',['set',['../group__distill.html#ga710d2244828810ef66e9bc4671ae5ff1',1,'distill']]],
+  ['setitem',['setitem',['../namespacedistill.html#a55f38d370c174519ad969635d741a3b7',1,'distill']]],
   ['setting',['Setting',['../classmetaL_1_1Setting.html',1,'metaL']]],
   ['sicp',['SICP',['../sicp.html',1,'']]],
   ['sicp_2emd',['SICP.md',['../SICP_8md.html',1,'(Global Namespace)'],['../ru_2SICP_8md.html',1,'(Global Namespace)']]],
@@ -34,7 +35,6 @@ var searchData=
   ['sub',['sub',['../group__web.html#gae569af68d6803694f2d0a174d1577059',1,'metaL::Number']]],
   ['sup',['sup',['../group__web.html#gae016898e4422f57caff54b01d81aaf3a',1,'metaL::Class']]],
   ['sym',['sym',['../group__distill.html#gac78cd38013af7de530e3651fa3fb783d',1,'distill']]],
-  ['symbol',['Symbol',['../classmetaL_1_1Symbol.html',1,'metaL']]],
   ['sync',['sync',['../group__persist.html#ga436db7cb43830723e880b2ac862b3a99',1,'metaL.Object.sync()'],['../group__web.html#gac7d4df4ad5598955057d52e2a0c7b20c',1,'metaL.Dir.sync()'],['../group__web.html#gabd921769ece61135ecdd838201f194d4',1,'metaL.File.sync()']]],
   ['syntax_5fheader',['syntax_header',['../group__bcx.html#ga26e95cdfd9d3491a42a6e33fbc3be477',1,'bcx']]]
 ];

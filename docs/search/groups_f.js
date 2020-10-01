@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['system_20init',['system init',['../group__init.html',1,'']]],
-  ['samples',['Samples',['../group__samples.html',1,'']]],
-  ['smalltalk',['Smalltalk',['../group__st.html',1,'']]]
+  ['rdbms',['rdbms',['../group__rdbms.html',1,'']]],
+  ['repl',['REPL',['../group__repl.html',1,'']]]
 ];

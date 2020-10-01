@@ -11,7 +11,7 @@ from metaL import *
 class A(H):
     def __init__(self, href, *vargs, **kwargs):
         super().__init__('A', *vargs, **kwargs)
-        self['href'] = Url(href)
+        self['href'] = self.href = Url(href)
         self.block = False
 
 class EMAIL(H):
@@ -21,8 +21,9 @@ class EMAIL(H):
         self // f'{email}'
         self.block = False
 
-    def file(self, depth=0):
-        ret = super().file(depth)
+    def file(self, depth=0, tab=None):
+        assert tab
+        ret = super().file(depth, tab)
         return f'&LT;{ret}&GT;'
 
 class IMG(H):
@@ -45,13 +46,15 @@ class HB(HH):
 
 
 class CSS(S):
-    def __init__(self, start, block):
-        start = '%s {' % f'{start:<22}'
+    def __init__(self, start, block=1):
+        start = f'{start:<29} {{'
         end = '}'
+        self.block = block
         if not block:
             start += ' '
             end = ' ' + end
         super().__init__(start, end, block)
+
 
 ## @name table
 ## @{
@@ -82,8 +85,8 @@ class PX(S, Integer):
 
 
 class HR(H):
-    def __init__(self):
-        super().__init__('HR', 0)
+    def __init__(self, **kwargs):
+        super().__init__('HR', 0, **kwargs)
 
 class CENTER(HH):
     pass
@@ -91,8 +94,8 @@ class SPAN(HH):
     pass
 class DIV(HB):
     pass
-    # def __init__(self, *vargs, **kwargs):
-   #     super().__init__('DIV', *vargs, **kwargs)
+class PRE(HB):
+    pass
 
 class P(HB):
     def __init__(self, V=None, *vargs, **kwargs):
@@ -103,9 +106,7 @@ class H1(HH):
     pass
 class H2(HH):
     pass
-   # def __init__(self, V, *vargs, **kwargs):
-  #     super().__init__('H1', *vargs, **kwargs)
-  #     self.block = False
-  #     self // V
+class H3(HH):
+    pass
 
 ## @}

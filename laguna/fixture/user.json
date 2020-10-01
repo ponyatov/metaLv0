@@ -1,0 +1,45 @@
+[
+{
+	"model": "app.customuser",
+	"pk": 1,
+	"fields": {
+		"username": "dponyatov",
+		"password": "pbkdf2_sha256$216000$TiMSh2duNj4U$zMWbzwk9/GQ42Zv1jDkvK6x+3oOWCqYe+7L6f8vPPak=",
+		"last_name": "Понятов",
+		"first_name": "Дмитрий",
+		"father_name": "Андреевич",
+		"email": "dponyatov@gmail.com",
+		"phone": "+7 917 10 10 818",
+		"loc": 3,
+		"date_joined": "2020-11-11T11:11:11.11",
+		"last_login": "2020-11-11T11:11:11.11",
+		"is_superuser": true,
+		"is_staff": true,
+		"is_active": true,
+		"groups": [],
+		"user_permissions": []
+	}
+},
+{
+	"model": "app.customuser",
+	"pk": 2,
+	"fields": {
+		"username": "admin",
+		"password": "pbkdf2_sha256$216000$TiMSh2duNj4U$zMWbzwk9/GQ42Zv1jDkvK6x+3oOWCqYe+7L6f8vPPak=",
+		"last_name": "Админов",
+		"first_name": "Админ",
+		"father_name": "Админович",
+		"email": "dponyatov@gmail.com",
+		"phone": "+7 917 10 10 818",
+		"loc": 3,
+		"date_joined": "2020-11-11T11:11:11.11",
+		"last_login": "2020-11-11T11:11:11.11",
+		"is_superuser": true,
+		"is_staff": true,
+		"is_active": true,
+		"groups": [],
+		"user_permissions": []
+	}
+}
+
+]

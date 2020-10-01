@@ -1,26 +1,31 @@
 <map id="metaL.String" name="metaL.String">
-<area shape="rect" id="node4" href="$classmetaL_1_1S.html" title="source code " alt="" coords="271,229,341,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="249,80,363,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="256,5,356,32"/>
-<area shape="rect" id="node5" href="$classhtml_1_1CSS.html" title="html.CSS" alt="" coords="5,304,84,331"/>
-<area shape="rect" id="node6" href="$classhtml_1_1PX.html" title="html.PX" alt="" coords="109,304,178,331"/>
-<area shape="rect" id="node7" href="$classhtml_1_1STATIC.html" title="html.STATIC" alt="" coords="202,304,301,331"/>
-<area shape="rect" id="node8" href="$classmetaL_1_1H.html" title="metaL.H" alt="" coords="325,304,397,331"/>
-<area shape="rect" id="node24" href="$classmetaL_1_1multiCommand.html" title="VSCode multicommand. " alt="" coords="421,304,572,331"/>
-<area shape="rect" id="node25" href="$classmetaL_1_1Return.html" title="metaL.Return" alt="" coords="597,304,698,331"/>
-<area shape="rect" id="node9" href="$classhtml_1_1A.html" title="html.A" alt="" coords="125,379,185,405"/>
-<area shape="rect" id="node10" href="$classhtml_1_1EMAIL.html" title="html.EMAIL" alt="" coords="210,379,301,405"/>
-<area shape="rect" id="node11" href="$classhtml_1_1HH.html" title="html.HH" alt="" coords="325,379,396,405"/>
-<area shape="rect" id="node22" href="$classhtml_1_1HR.html" title="html.HR" alt="" coords="420,379,491,405"/>
-<area shape="rect" id="node23" href="$classhtml_1_1IMG.html" title="html.IMG" alt="" coords="515,379,591,405"/>
-<area shape="rect" id="node12" href="$classhtml_1_1CENTER.html" title="html.CENTER" alt="" coords="103,453,210,480"/>
-<area shape="rect" id="node13" href="$classhtml_1_1H1.html" title="html.H1" alt="" coords="235,453,303,480"/>
-<area shape="rect" id="node14" href="$classhtml_1_1H2.html" title="html.H2" alt="" coords="327,453,395,480"/>
-<area shape="rect" id="node15" href="$classhtml_1_1HB.html" title="html.HB" alt="" coords="419,453,489,480"/>
-<area shape="rect" id="node21" href="$classhtml_1_1SPAN.html" title="html.SPAN" alt="" coords="514,453,602,480"/>
-<area shape="rect" id="node16" href="$classhtml_1_1DIV.html" title="html.DIV" alt="" coords="223,528,298,555"/>
-<area shape="rect" id="node17" href="$classhtml_1_1P.html" title="html.P" alt="" coords="323,528,383,555"/>
-<area shape="rect" id="node18" href="$classhtml_1_1TABLE.html" title="html.TABLE" alt="" coords="407,528,501,555"/>
-<area shape="rect" id="node19" href="$classhtml_1_1TD.html" title="html.TD" alt="" coords="525,528,594,555"/>
-<area shape="rect" id="node20" href="$classhtml_1_1TR.html" title="html.TR" alt="" coords="618,528,687,555"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1S.html" title="source code " alt="" coords="459,208,529,235"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Primitive.html" title="metaL.Primitive" alt="" coords="153,208,267,235"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="5,208,105,235"/>
+<area shape="rect" id="node5" href="$classhtml_1_1CSS.html" title="html.CSS" alt="" coords="613,5,692,32"/>
+<area shape="rect" id="node6" href="$classhtml_1_1PX.html" title="html.PX" alt="" coords="618,56,687,83"/>
+<area shape="rect" id="node7" href="$classhtml_1_1STATIC.html" title="html.STATIC" alt="" coords="603,107,702,133"/>
+<area shape="rect" id="node8" href="$classlicense_1_1License.html" title="license.License" alt="" coords="597,157,709,184"/>
+<area shape="rect" id="node9" href="$classmetaL_1_1CR.html" title="metaL.CR" alt="" coords="611,208,694,235"/>
+<area shape="rect" id="node10" href="$classmetaL_1_1D.html" title="commented code block " alt="" coords="617,259,689,285"/>
+<area shape="rect" id="node11" href="$classmetaL_1_1H.html" title="metaL.H" alt="" coords="617,309,689,336"/>
+<area shape="rect" id="node29" href="$classmetaL_1_1multiCommand.html" title="VSCode multicommand. " alt="" coords="577,360,728,387"/>
+<area shape="rect" id="node30" href="$classmetaL_1_1Return.html" title="metaL.Return" alt="" coords="602,411,703,437"/>
+<area shape="rect" id="node12" href="$classhtml_1_1A.html" title="html.A" alt="" coords="791,208,851,235"/>
+<area shape="rect" id="node13" href="$classhtml_1_1EMAIL.html" title="html.EMAIL" alt="" coords="776,259,867,285"/>
+<area shape="rect" id="node14" href="$classhtml_1_1HH.html" title="html.HH" alt="" coords="786,309,857,336"/>
+<area shape="rect" id="node27" href="$classhtml_1_1HR.html" title="html.HR" alt="" coords="786,360,857,387"/>
+<area shape="rect" id="node28" href="$classhtml_1_1IMG.html" title="html.IMG" alt="" coords="783,411,859,437"/>
+<area shape="rect" id="node15" href="$classhtml_1_1CENTER.html" title="html.CENTER" alt="" coords="915,183,1021,209"/>
+<area shape="rect" id="node16" href="$classhtml_1_1H1.html" title="html.H1" alt="" coords="934,233,1002,260"/>
+<area shape="rect" id="node17" href="$classhtml_1_1H2.html" title="html.H2" alt="" coords="934,284,1002,311"/>
+<area shape="rect" id="node18" href="$classhtml_1_1H3.html" title="html.H3" alt="" coords="934,335,1002,361"/>
+<area shape="rect" id="node19" href="$classhtml_1_1HB.html" title="html.HB" alt="" coords="933,385,1003,412"/>
+<area shape="rect" id="node26" href="$classhtml_1_1SPAN.html" title="html.SPAN" alt="" coords="924,436,1012,463"/>
+<area shape="rect" id="node20" href="$classhtml_1_1DIV.html" title="html.DIV" alt="" coords="1079,259,1153,285"/>
+<area shape="rect" id="node21" href="$classhtml_1_1P.html" title="html.P" alt="" coords="1086,309,1146,336"/>
+<area shape="rect" id="node22" href="$classhtml_1_1PRE.html" title="html.PRE" alt="" coords="1077,360,1155,387"/>
+<area shape="rect" id="node23" href="$classhtml_1_1TABLE.html" title="html.TABLE" alt="" coords="1069,411,1163,437"/>
+<area shape="rect" id="node24" href="$classhtml_1_1TD.html" title="html.TD" alt="" coords="1081,461,1151,488"/>
+<area shape="rect" id="node25" href="$classhtml_1_1TR.html" title="html.TR" alt="" coords="1081,512,1151,539"/>
 </map>

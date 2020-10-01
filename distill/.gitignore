@@ -1,11 +1,9 @@
 
-#  powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
-## @file
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
 # \ <section:top>
 *~
 *.swp
 *.log
-/tmp/
 # / <section:top>
 # \ <section:mid>
 *.pyc
@@ -17,4 +15,5 @@
 /pyvenv.cfg
 /__pycache__/
 /.pytest_cache/
+config.py
 # / <section:mid>

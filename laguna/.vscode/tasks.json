@@ -1,0 +1,55 @@
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "make: install",
+			"type": "shell",
+			"command": "make install",
+			"problemMatcher": [],
+		},
+		{
+			"label": "make: update",
+			"type": "shell",
+			"command": "make update",
+			"problemMatcher": [],
+		},
+		{
+			"label": "git: master",
+			"type": "shell",
+			"command": "make master",
+			"problemMatcher": [],
+		},
+		{
+			"label": "git: shadow",
+			"type": "shell",
+			"command": "make shadow",
+			"problemMatcher": [],
+		},
+		{
+			"label": "django: migrate",
+			"type": "shell",
+			"command": "make migrate",
+			"problemMatcher": [],
+		},
+		{
+			"label": "django: makemigrations",
+			"type": "shell",
+			"command": "make makemigrations",
+			"problemMatcher": [],
+		},
+		{
+			"label": "django: dumpdata",
+			"type": "shell",
+			"command": "make dumpdata",
+			"problemMatcher": [],
+		},
+		{
+			"label": "django: loaddata",
+			"type": "shell",
+			"command": "make loaddata",
+			"problemMatcher": [],
+		},
+		
+	]
+}

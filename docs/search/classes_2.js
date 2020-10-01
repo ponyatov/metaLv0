@@ -16,5 +16,6 @@ var searchData=
   ['color',['Color',['../classmetaL_1_1Color.html',1,'metaL']]],
   ['container',['Container',['../classmetaL_1_1Container.html',1,'metaL']]],
   ['cpu',['CPU',['../classcross_1_1CPU.html',1,'cross']]],
+  ['cr',['CR',['../classmetaL_1_1CR.html',1,'metaL']]],
   ['css',['CSS',['../classhtml_1_1CSS.html',1,'html']]]
 ];

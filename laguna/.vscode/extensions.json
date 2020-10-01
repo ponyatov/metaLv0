@@ -1,0 +1,19 @@
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+{
+// / <section:top>
+// \ <section:mid>
+"recommendations": [
+	// \ <section:ext>
+	"stkb.rewrap",
+	"ms-python.python",
+	"ecmel.vscode-html-css",
+	"alexcvzz.vscode-sqlite",
+	"batisteo.vscode-django",
+	"randomfractalsinc.geo-data-viewer",
+	// / <section:ext>
+]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

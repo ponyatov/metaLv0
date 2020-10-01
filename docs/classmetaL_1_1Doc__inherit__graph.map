@@ -1,7 +1,6 @@
 <map id="metaL.Doc" name="metaL.Doc">
-<area shape="rect" id="node3" href="$classlicense_1_1License.html" title="license.License" alt="" coords="5,155,117,181"/>
-<area shape="rect" id="node4" href="$classmetaL_1_1Author.html" title="metaL.Author" alt="" coords="141,155,241,181"/>
-<area shape="rect" id="node5" href="$classmetaL_1_1Color.html" title="metaL.Color" alt="" coords="265,155,359,181"/>
-<area shape="rect" id="node6" href="$classmetaL_1_1Title.html" title="metaL.Title" alt="" coords="383,155,470,181"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="201,5,301,32"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Author.html" title="metaL.Author" alt="" coords="5,155,105,181"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1Color.html" title="metaL.Color" alt="" coords="130,155,223,181"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Title.html" title="metaL.Title" alt="" coords="248,155,335,181"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="127,5,227,32"/>
 </map>

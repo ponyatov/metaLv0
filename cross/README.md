@@ -7,4 +7,4 @@ build custom GCC toolchain
 
 (c) Dmitry Ponyatov <<dponyatov@gmail.com>> 2020 MIT License
 
-github: https://github.com/ponyatov/metaL/cross
+github: https://github.com/ponyatov/metaL/tree/master/cross

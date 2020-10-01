@@ -63,12 +63,10 @@ CFG_BINUTILS = \
 	--with-sysroot=$(ROOT) --with-native-system-header-dir=/include \
 	--enable-lto --disable-multilib \
 	--disable-nls
-
 CFG_GDB      = $(CFG_BINUTILS)
 CFG_GCC      = $(CFG_BINUTILS) \
 	--enable-languages="c" \
 	--with-gmp=$(PFX) --with-mpfr=$(PFX) --with-mpc=$(PFX)
-
 CFG_GCC0     = $(CFG_GCC) --without-headers --with-newlib
 
 # / <section:cfg>
@@ -90,7 +88,6 @@ $(LIB)/libgmp.a:
 	$(XMAKE) &&\
 	$(MAKE) install &&\
 	touch $@ && rm -rf $(SRC)/$(GMP) $(TMP)/$(GMP)
-
 .PHONY: mpfr
 mpfr: $(LIB)/libmpfr.a
 $(LIB)/libmpfr.a:
@@ -101,7 +98,6 @@ $(LIB)/libmpfr.a:
 	$(XMAKE) &&\
 	$(MAKE) install &&\
 	touch $@ && rm -rf $(SRC)/$(MPFR) $(TMP)/$(MPFR)
-
 .PHONY: mpc
 mpc: $(LIB)/libmpc.a
 $(LIB)/libmpc.a:
@@ -112,7 +108,6 @@ $(LIB)/libmpc.a:
 	$(XMAKE) &&\
 	$(MAKE) install &&\
 	touch $@ && rm -rf $(SRC)/$(MPC) $(TMP)/$(MPC)
-
 # / <section:cclibs>
 # \ <section:gnu>
 .PHONY: gnu
@@ -128,7 +123,6 @@ $(BIN)/$(TARGET)-ld:
 	$(XMAKE) &&\
 	$(MAKE) install &&\
 	touch $@ && rm -rf $(SRC)/$(BINUTILS) $(TMP)/$(BINUTILS)
-
 .PHONY: gdb
 gdb: $(BIN)/$(TARGET)-gdb
 $(BIN)/$(TARGET)-gdb:
@@ -139,7 +133,6 @@ $(BIN)/$(TARGET)-gdb:
 	$(XMAKE) &&\
 	$(MAKE) install &&\
 	touch $@ && rm -rf $(SRC)/$(GDB) $(TMP)/$(GDB)
-
 .PHONY: gcc0
 gcc0: $(BIN)/$(TARGET)-gcc
 $(BIN)/$(TARGET)-gcc:
@@ -150,7 +143,6 @@ $(BIN)/$(TARGET)-gcc:
 	$(XMAKE) all-gcc && $(MAKE) install-gcc &&\
 	$(XMAKE) all-target-libgcc && $(MAKE) install-target-libgcc &&\
 	touch $@ && sync $(SRC)/$(GCC) $(TMP)/$(GCC)
-
 # / <section:gnu>
 # \ <section:gz>
 GMP_GZ      =      $(GMP).tar.xz
@@ -162,6 +154,7 @@ GCC_GZ      =      $(GCC).tar.xz
 
 .PHONY: gz
 gz: $(GZ)/$(GMP_GZ) $(GZ)/$(MPFR_GZ) $(GZ)/$(MPC_GZ) $(GZ)/$(BINUTILS_GZ) $(GZ)/$(GDB_GZ) $(GZ)/$(GCC_GZ)
+
 
 $(GZ)/$(GMP_GZ):
 	$(WGET) -O $@ https://mirror.yandex.ru/mirrors/gnu/gmp/$(GMP_GZ)
@@ -195,13 +188,11 @@ $(SRC)/%/README: $(GZ)/%.tar.xz
 .PHONY: install
 install:
 	$(MAKE) $(OS)_install
-
 # / <section:install>
 # \ <section:update>
 .PHONY: update
 update:
 	$(MAKE) $(OS)_update
-
 # / <section:update>
 # \ <section:linux/install>
 .PHONY: Linux_install Linux_update
@@ -213,15 +204,24 @@ Linux_install Linux_update:
 MERGE  = Makefile apt.txt .gitignore .vscode
 MERGE += README.md
 # / <section:merge>
+.PHONY: master shadow release zip
+
 master:
 	git checkout $@
 	git pull -v
 	git checkout shadow -- $(MERGE)
+
 shadow:
 	git checkout $@
 	git pull -v
+
 release:
 	git tag $(NOW)-$(REL)
 	git push -v && git push -v --tags
 	$(MAKE) shadow
+
+zip:
+	git archive --format zip \
+	--output ~/tmp/$(MODULE)_src_$(NOW)_$(REL).zip \
+	HEAD
 # / <section:bot>

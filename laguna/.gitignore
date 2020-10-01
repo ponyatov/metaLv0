@@ -1,0 +1,22 @@
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+# \ <section:top>
+*~
+*.swp
+*.log
+# / <section:top>
+# \ <section:mid>
+*.pyc
+/bin/
+/include/
+/lib/
+/lib64
+/share/
+/pyvenv.cfg
+/__pycache__/
+/.pytest_cache/
+config.py
+# / <section:mid>
+# \ <section:bot>
+/*.sqlite3
+/dumpdata
+# / <section:bot>

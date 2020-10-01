@@ -38,7 +38,6 @@
 },
 "files.exclude": {
 	// \ <section:exclude>
-	
 	"**/tmp/gmp-*/*":true,      "**/src/gmp-*/*":true,
 	"**/tmp/mpfr-*/*":true,     "**/src/mpfr-*/*":true,
 	"**/tmp/mpc-*/*":true,      "**/src/mpc-*/*":true,
@@ -46,14 +45,9 @@
 	"**/tmp/gdb-*/*":true,      "**/src/gdb-*/*":true,
 	"**/tmp/gcc-*/*":true,      "**/src/gcc-*/*":true,
 	// / <section:exclude>
-	},
-
+},
 "files.associations": {
-	// \ <section:assoc>
-	
-	// / <section:assoc>
-	},
-
+},
 // / <section:mid>
 // \ <section:bot>
 	"editor.tabSize": 4,

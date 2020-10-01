@@ -21,7 +21,8 @@ class ARCH(HW):
 i386 = ARCH('i386')
 
 class TARGET(HW):
-    pass
+    def file(self, depth=0):#, parent=None
+        return f'{self}'
 
 class CPU(HW):
     def __init__(self, V):
@@ -238,6 +239,11 @@ class tcModule(anyModule):
         super().init_apt()
         self.apt // 'build-essential bzip2 xz-utils'
         self.apt.sync()
+
+    def init_giti(self):
+        super().init_giti()
+        self.giti.mid // f'/{self.target}/'
+        self.giti.sync()
 
 
 MODULE = tcModule()

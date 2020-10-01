@@ -1,0 +1,45 @@
+<!-- powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest -->
+<!-- \ <section:top> -->
+<!doctype html>
+<!-- \ <section:jinja> -->
+{% load static %}
+<!-- / <section:jinja> -->
+<html lang="ru">
+	<head>
+		<!-- \ <section:templates_all_head> -->
+		{% load static %}
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{% block title %}&lt;lagmodule:laguna&gt;{% endblock %}</title>
+		<link rel="manifest" href="/static/manifest">
+		<link href="{% static "bootstrap.css" %}" rel="stylesheet">
+		<link rel="shortcut icon" href="{% static "logo.png" %}" type="image/png">
+		<link href="{% static "css.css" %}" rel="stylesheet">
+		<!-- / <section:templates_all_head> -->
+		{% block head %}{% endblock %}
+	</head>
+
+<style>
+	{% block style %}{% endblock %}
+</style>
+<!-- / <section:top> -->
+<!-- \ <section:mid> -->
+<body>
+	{% if user.is_authenticated %}
+		{% block body %}{% endblock %}
+		{% else %}
+			<a href="/admin/login/?next={{request.path}}">тук-тук! войдите {{user}} @ {{loc}}</a>
+	{% endif %}
+</body>
+<!-- / <section:mid> -->
+<!-- \ <section:bot> -->
+</html>
+<!-- \ <section:script> -->
+<script src="{% static "jquery.js" %}"></script>
+<script src="{% static "bootstrap.js" %}"></script>
+{% if user.is_authenticated %}
+	{% block script %}{% endblock %}
+{% endif %}
+<!-- / <section:script> -->
+<!-- / <section:bot> -->

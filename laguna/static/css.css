@@ -1,0 +1,22 @@
+/* powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest */
+*                             { background:#222 !important; color:#DDD; }
+pre                           { color:#DDD; }
+body                          { padding:4mm; }
+.center                       { text-align: center; }
+.required                     { color:orange !important; }
+a:hover                       { color:lightblue; }
+label                         { color: white !important; }
+input,select,option,button    {
+	background-color: lightyellow !important; 
+	color: black !important;
+}
+@media print {
+	@page                         { margin:5mm; margin-left:30mm; }
+	body                          { padding:0; }
+	a[href]:after                 { display: none !important; }
+}
+.leaflet *                    { background: transparent !important; }
+.olMap *                      { background: transparent !important; }
+.olControlAttribution         { visibility: hidden; }
+.olControlScale               { visibility: hidden; }
+.olControlMousePosition       { color:black !important; }

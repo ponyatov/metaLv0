@@ -1,6 +1,5 @@
 
-// powered by metaL: https://repl.it/@metaLmasters/metaL#README.md
-// @file
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
 // \ <section:top>
 // https://code.visualstudio.com/docs/python/debugging
 {
@@ -12,16 +11,13 @@
 		"name": "Python: distill",
 		"type": "python",
 		"request": "launch",
-		// \ <section:program>
-		"program": "metaL.py",
-		// / <section:program>
-		"args": [
-			],
-		"debugOptions": [
-			],
-		"console": "integratedTerminal"}
+		"program": "distill.py",
+		"args": [],
+		"console": "integratedTerminal",
+		"django": false,
+	}
 	// / <section:>
-	]
+]
 // / <section:mid>
 // \ <section:bot>
 }

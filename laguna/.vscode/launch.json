@@ -1,0 +1,23 @@
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+// https://code.visualstudio.com/docs/python/debugging
+{
+// / <section:top>
+// \ <section:mid>
+"configurations": [
+	// \ <section:>
+	{
+		"name": "Python: laguna",
+		"type": "python",
+		"request": "launch",
+		"program": "manage.py",
+		"args": ["runserver","--no-color", "--noreload", "--nothreading"],
+		"console": "integratedTerminal",
+		"django": true,
+	}
+	// / <section:>
+]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

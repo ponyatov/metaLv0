@@ -213,9 +213,9 @@ lexeme</h2></td></tr>
 <tr class="memitem:gad9cca7be900e3bc86156a7bff71af5a8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#gad9cca7be900e3bc86156a7bff71af5a8">metaL.t_integer</a> (t)</td></tr>
 <tr class="memdesc:gad9cca7be900e3bc86156a7bff71af5a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">r<code>[0-9]+</code>  <a href="group__lexer.html#gad9cca7be900e3bc86156a7bff71af5a8">More...</a><br /></td></tr>
 <tr class="separator:gad9cca7be900e3bc86156a7bff71af5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf73bfc3ae105937421391fedb3762239"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#gaf73bfc3ae105937421391fedb3762239">metaL.t_symbol</a> (t)</td></tr>
-<tr class="memdesc:gaf73bfc3ae105937421391fedb3762239"><td class="mdescLeft">&#160;</td><td class="mdescRight">r<code>[^ \t\r\n\#\+\-\*\/\^]+</code>  <a href="group__lexer.html#gaf73bfc3ae105937421391fedb3762239">More...</a><br /></td></tr>
-<tr class="separator:gaf73bfc3ae105937421391fedb3762239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacbdd49ed5eca5770d27b09475db46fec"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__lexer.html#gacbdd49ed5eca5770d27b09475db46fec">metaL.t_name</a> (t)</td></tr>
+<tr class="memdesc:gacbdd49ed5eca5770d27b09475db46fec"><td class="mdescLeft">&#160;</td><td class="mdescRight">r<code>[^ \t\r\n\#\+\-\*\/\^]+</code>  <a href="group__lexer.html#gacbdd49ed5eca5770d27b09475db46fec">More...</a><br /></td></tr>
+<tr class="separator:gacbdd49ed5eca5770d27b09475db46fec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
@@ -558,6 +558,26 @@ lexeme</h2></td></tr>
 
 </div>
 </div>
+<a id="gacbdd49ed5eca5770d27b09475db46fec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacbdd49ed5eca5770d27b09475db46fec">&#9670;&nbsp;</a></span>t_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def metaL.t_name </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>r<code>[^ \t\r\n\#\+\-\*\/\^]+</code> </p>
+
+</div>
+</div>
 <a id="gaff91c8f9aa332b67c409e78cd7335fef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaff91c8f9aa332b67c409e78cd7335fef">&#9670;&nbsp;</a></span>t_nl()</h2>
 
@@ -859,26 +879,6 @@ lexeme</h2></td></tr>
 
 </div>
 </div>
-<a id="gaf73bfc3ae105937421391fedb3762239"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf73bfc3ae105937421391fedb3762239">&#9670;&nbsp;</a></span>t_symbol()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def metaL.t_symbol </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>r<code>[^ \t\r\n\#\+\-\*\/\^]+</code> </p>
-
-</div>
-</div>
 <a id="gad6f7b84cf544e966ca8767f6633e0a50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gad6f7b84cf544e966ca8767f6633e0a50">&#9670;&nbsp;</a></span>t_tick()</h2>
 
@@ -989,7 +989,7 @@ lexeme</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  [<span class="stringliteral">&#39;symbol&#39;</span>, <span class="stringliteral">&#39;string&#39;</span>,</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;          <span class="stringliteral">&#39;number&#39;</span>, <span class="stringliteral">&#39;integer&#39;</span>, <span class="stringliteral">&#39;hex&#39;</span>, <span class="stringliteral">&#39;bin&#39;</span>,</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;          <span class="stringliteral">&#39;lp&#39;</span>, <span class="stringliteral">&#39;rp&#39;</span>, <span class="stringliteral">&#39;lq&#39;</span>, <span class="stringliteral">&#39;rq&#39;</span>, <span class="stringliteral">&#39;lc&#39;</span>, <span class="stringliteral">&#39;rc&#39;</span>,</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;          <span class="stringliteral">&#39;add&#39;</span>, <span class="stringliteral">&#39;sub&#39;</span>, <span class="stringliteral">&#39;mul&#39;</span>, <span class="stringliteral">&#39;div&#39;</span>, <span class="stringliteral">&#39;pow&#39;</span>,</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;          <span class="stringliteral">&#39;comma&#39;</span>, <span class="stringliteral">&#39;tick&#39;</span>, <span class="stringliteral">&#39;eq&#39;</span>, <span class="stringliteral">&#39;dot&#39;</span>, <span class="stringliteral">&#39;colon&#39;</span>, <span class="stringliteral">&#39;bar&#39;</span>, <span class="stringliteral">&#39;at&#39;</span>,</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;          <span class="stringliteral">&#39;nl&#39;</span>, <span class="stringliteral">&#39;exit&#39;</span>]</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  [<span class="stringliteral">&#39;name&#39;</span>, <span class="stringliteral">&#39;string&#39;</span>,</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;          <span class="stringliteral">&#39;number&#39;</span>, <span class="stringliteral">&#39;integer&#39;</span>, <span class="stringliteral">&#39;hex&#39;</span>, <span class="stringliteral">&#39;bin&#39;</span>,</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;          <span class="stringliteral">&#39;lp&#39;</span>, <span class="stringliteral">&#39;rp&#39;</span>, <span class="stringliteral">&#39;lq&#39;</span>, <span class="stringliteral">&#39;rq&#39;</span>, <span class="stringliteral">&#39;lc&#39;</span>, <span class="stringliteral">&#39;rc&#39;</span>,</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;          <span class="stringliteral">&#39;add&#39;</span>, <span class="stringliteral">&#39;sub&#39;</span>, <span class="stringliteral">&#39;mul&#39;</span>, <span class="stringliteral">&#39;div&#39;</span>, <span class="stringliteral">&#39;pow&#39;</span>,</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;          <span class="stringliteral">&#39;comma&#39;</span>, <span class="stringliteral">&#39;tick&#39;</span>, <span class="stringliteral">&#39;eq&#39;</span>, <span class="stringliteral">&#39;dot&#39;</span>, <span class="stringliteral">&#39;colon&#39;</span>, <span class="stringliteral">&#39;bar&#39;</span>, <span class="stringliteral">&#39;at&#39;</span>,</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;          <span class="stringliteral">&#39;nl&#39;</span>, <span class="stringliteral">&#39;exit&#39;</span>]</div></div><!-- fragment -->
 <p>token types </p>
 
 </div>

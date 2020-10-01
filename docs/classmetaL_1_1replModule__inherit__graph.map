@@ -1,0 +1,10 @@
+<map id="metaL.replModule" name="metaL.replModule">
+<area shape="rect" id="node8" href="$classdistill_1_1disModule.html" title="inherit special Module type for metaLayer&#45;based projects " alt="" coords="5,528,120,555"/>
+<area shape="rect" id="node9" href="$classSmalltalk_1_1stModule.html" title="Smalltalk.stModule" alt="" coords="144,528,277,555"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1minpyModule.html" title="metaL.minpyModule" alt="" coords="67,379,205,405"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1anyModule.html" title="extended project template includes some IDE configs and build script extensions " alt="" coords="73,304,199,331"/>
+<area shape="rect" id="node4" href="$classmetaL_1_1dirModule.html" title="module with its own directory (root module = project) " alt="" coords="77,229,195,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1Module.html" title="metaL.Module" alt="" coords="84,155,188,181"/>
+<area shape="rect" id="node6" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="91,80,181,107"/>
+<area shape="rect" id="node7" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="86,5,186,32"/>
+</map>

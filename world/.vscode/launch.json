@@ -11,20 +11,13 @@
 		"name": "Python: world",
 		"type": "python",
 		"request": "launch",
-		// \ <section:program>
 		"program": "world.py",
-		// / <section:program>
-		"args": [
-			],
-		
-		"debugOptions": [
-			],
-		
-		"console": "integratedTerminal"}
-	
+		"args": [],
+		"console": "integratedTerminal",
+		"django": false,
+	}
 	// / <section:>
-	]
-
+]
 // / <section:mid>
 // \ <section:bot>
 }

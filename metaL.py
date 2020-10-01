@@ -33,7 +33,7 @@ class Object:
     def __init__(self, V):
         if isinstance(V, Object):
             V = V.val
-        ## symbol name / scalar value (string, number,..)
+        ## object name / scalar value (string, number,..)
         self.val = V
         ## slots = attributes = dict = env
         self.slot = {}
@@ -107,28 +107,28 @@ class Object:
     ## @param[in] test test dump option @ref test
     def dump(self, cycle=None, depth=0, prefix='', test=False):
         # header
-        tree = self._pad(depth) + self.head(prefix, test)
+        tree = self.pad(depth) + self.head(prefix, test)
         # cycles
         if not depth:
             cycle = []
         if self in cycle:
             return tree + ' _/'
-        else:
-            cycle.append(self)
         # slot{}s
-        for k in sorted(self.slot.keys()):
-            tree += self.slot[k].dump(cycle, depth + 1, '%s = ' % k, test)
+        for i in sorted(self.slot.keys()):
+            tree += self.slot[i].dump(cycle + [self],
+                                      depth + 1, f'{i} = ', test)
         # nest[]ed
-        for i, j in enumerate(self.nest):
-            tree += j.dump(cycle, depth + 1, '%s: ' % i, test)
+        for j, k in enumerate(self.nest):
+            tree += k.dump(cycle + [self],
+                           depth + 1, f'{j}: ', test)
         # subtree
         return tree
 
     ## paddig for @ref dump
-    def _pad(self, depth, block=True):
+    def pad(self, depth, block=True, tab='\t'):
         if block:
             ret = '\n'
-            ret += '\t' * depth
+            ret += tab * depth
         else:
             ret = ''
         return ret
@@ -330,18 +330,21 @@ class Object:
 
     ## default f"format"ting for all nodes
     def __format__(self, spec=None):
-        assert not spec
-        return f'{self._type()}:{self._val()}'
+        ret = f'{self.val}'
+        if 't' in spec:
+            ret = ret.title()
+        if 'u' in spec:
+            ret = ret.upper()
+        if 'l' in spec:
+            ret = ret.lower()
+        return ret
 
     ## to generic text file: use `.json` in place of `Error`
     ## @ingroup gen
 
-    def file(self, depth=0):#, parent=None, comment=None):
-        return self._pad(depth, self.par[0].block) + self.json()
-
-    ## to Python code: use `.json` in place of `Error`
-    ## @ingroup py
-    def py(self): return self.json()
+    def file(self, depth=0, tab=None):
+        assert tab
+        return self.pad(depth, self.par[0].block, tab) + self.json()
 
     ## @}
 
@@ -376,9 +379,9 @@ class Nil(Primitive):
     def __init__(self): Primitive.__init__(self, '')
 
 ## @ingroup prim
-class Symbol(Primitive):
+class Name(Primitive):
 
-    ## symbol evaluates via context lookup
+    ## names evaluate via context lookup
     def eval(self, ctx): return ctx[self.val]
 
     ## assignment
@@ -390,9 +393,11 @@ class Symbol(Primitive):
 class String(Primitive):
     ## @param[in] V string value
     ## @param[in] block source code flag: tabbed blocks or inlined code
-    def __init__(self, V, block=True):
+    def __init__(self, V, block=True, tab=1):
         super().__init__(V)
         self.block = block
+        self.tab = tab
+        self.rem = None
 
     def _val(self):
         s = ''
@@ -407,16 +412,14 @@ class String(Primitive):
                 s += c
         return s
 
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         assert len(self.par) == 1
-        ret = self._pad(depth, self.par[0].block) + self.val
+        ret = self.pad(depth, self.par[0].block, tab) + f'{self.val}'
+        ret += f' {self.rem}' if self.rem else ''
         for i in self.nest:
-            ret += i.file(depth + 1)
+            ret += i.file(depth + 1, tab)
         return ret
-
-    def __format__(self, spec=None):
-        assert not spec
-        return f'{self.val}'
 
     def py(self): return self.val
 
@@ -432,7 +435,8 @@ class Number(Primitive):
     def __init__(self, V):
         Primitive.__init__(self, float(V))
 
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         return '%s' % self.val
 
     ## @name operator
@@ -534,10 +538,7 @@ class Stack(Container):
 ## @ingroup cont
 ## associative array
 class Dict(Container):
-    def __format__(self, spec):
-        assert not spec
-        return f'{self.val}'
-
+    pass
 
 ## @defgroup active Active
 ## @ingroup object
@@ -551,10 +552,11 @@ class Active(Object):
 ## function
 class Fn(Active):
 
-    def __init__(self, V):
+    def __init__(self, V, args=[]):
         super().__init__(V)
-        self['args'] = self.args = Args()
+        self['args'] = self.args = Args(nest=args)
         self['ret'] = self.ret = Nil()
+        self.block = True
 
     def eval(self, ctx): return self
 
@@ -566,6 +568,17 @@ class Fn(Active):
         return self['ret']
 
     def at(self, that, ctx): return self.apply(that, ctx)
+
+    def file(self, depth=0, tab=None):
+        pfx = ''
+        assert tab
+        res = self.pad(depth, self.par[0].block, tab)
+        res += 'def %s%s(%s):' % (pfx, self.val, self.args.file(tab=tab))
+        if not self.nest:
+            res += ' pass'
+        for i in self.nest:
+            res += i.file(depth + 1, tab)
+        return res
 
 ## @ingroup active
 ## operator
@@ -623,40 +636,69 @@ vm << vm
 class Meta(Object):
     pass
 
-## @ingroup prim
+## @ingroup meta
 ## source code
 class S(Meta, String):
-    def __init__(self, start, end=None, block=True):
-        String.__init__(self, start, block)
+    def __init__(self, start='', end=None, block=True, **kwargs):
+        if 'doc' in kwargs:
+            String.__init__(self, kwargs['doc'], block, tab=0)
+        else:
+            String.__init__(self, start, block)
+        self.rem = kwargs['rem'] if 'rem' in kwargs else None
         self.end = end
 
-    def file(self, depth=0):
-        ret = super().file(depth)
-        ret += self.file_end(depth)
+    def file(self, depth=0, tab=None):
+        assert tab
+        ret = super().file(depth, tab)
+        ret += self.file_end(depth, tab)
         return ret
 
-    def file_end(self, depth):
+    def file_end(self, depth, tab):
+        assert tab
         blocking = self.block if hasattr(self, 'block') else self.par[0].block
-        ending = self.end if self.end != None else ''
-        return self._pad(depth, blocking) + ending
+        if self.end is None:
+            return ''
+        elif self.end == '':
+            return '\n'
+        else:
+            return self.pad(depth, blocking, tab) + self.end
+
+class CR(S):
+    def __init__(self):
+        super().__init__('', block=False)
+
+    def file(self, depth=0, tab=None):
+        assert tab
+        return '\n'
+
+## @ingroup meta
+## commented code block
+class D(S):
+    def __init__(self, V='', end=None):
+        super().__init__(end=end, doc=V)
+
+    def file(self, depth=0, tab=None):
+        assert tab
+        return super().file(depth - 1, tab)
 
 class H(S):
 
     def __init__(self, V, *vargs, **kwargs):
-        super().__init__(f'{V}', end='' if 0 in vargs else f'</{V}>')
+        super().__init__(f'{V}', end=None if 0 in vargs else f'</{V}>')
         for i in kwargs:
             self[i] = f'{kwargs[i]}'
 
-    def file(self, depth=0):
+    def file(self, depth=0, tab=None):
+        assert tab
         assert len(self.par) == 1
-        ret = self._pad(depth, self.par[0].block) + f'<{self.val}'
+        ret = self.pad(depth, self.par[0].block, tab) + f'<{self.val}'
         for i in sorted(self.slot.keys()):
             j = 'class' if i == 'clazz' else i
             ret += f' {j}="{self.slot[i]}"'
         ret += '>'
         for j in self.nest:
-            ret += j.file(depth + 1)
-        ret += self.file_end(depth)
+            ret += j.file(depth + 1, tab)
+        ret += self.file_end(depth, tab)
         return ret
 
 ## @ingroup meta
@@ -665,28 +707,27 @@ class Return(S):
         super().__init__('return %s' % V)
 
 ## @ingroup meta
-class Arg(Meta, Symbol):
+class Arg(Meta, Name):
     def __int__(self): return self.val
 
-    def file(self, depth=0):#, parent=None):
-        return self._val()
-
-    def __format__(self, spec=None):
-        if not spec:
-            return f'{self.val}'
-        if spec == 'd':
-            return self.dump()
-        raise TypeError(spec)
+    def file(self, depth=0, tab=None):
+        assert tab
+        return f'{self}'
 
 ## @ingroup meta
 class Args(Meta, Tuple):
     def __init__(self, V='', nest=[]):
         Tuple.__init__(self, V)
         self.block = False
-        self.nest = nest
+        for i in nest:
+            self // i
 
-    def file(self, depth=0):#, parent=None):
-        return '%s' % (', '.join([j.file(parent=self) for j in self.nest]))
+    def file(self, depth=0, tab=None):
+        assert tab
+        return f'{self}'
+
+    def __format__(self, spec):
+        return ', '.join(f'{i.__format__(spec)}' for i in self.nest)
 
 ## @ingroup meta
 class Class(Meta):
@@ -698,25 +739,20 @@ class Class(Meta):
             super().__init__(C)
         if sup:
             self['sup'] = self.sup = Args('super', nest=sup)
+        self.block = True
 
     def colon(self, that, ctx):
         return self.C(that)
 
-    # def py(self):
-    #     return 'class %s: pass' % self.val
-
-    def __format__(self, spec):
-        assert not spec
-        return f'{self.val}'
-
-    def file(self, depth=0):#, parent=None):
-        ret = self._pad(depth, self.par[0].block) + f'class {self}'
+    def file(self, depth=0, tab=None):
+        assert tab
+        ret = self.pad(depth, self.par[0].block, tab) + f'class {self}'
         if 'sup' in self.keys():
-            ret += '(%s)' % (','.join([i.val for i in self.sup.nest]))
+            ret += f'({self.sup})'
         ret += ':'
         if self.nest:
             for j in self.nest:
-                ret += j.file(depth + 1)
+                ret += j.file(depth + 1, tab)
         else:
             ret += ' pass'
         return ret
@@ -729,29 +765,32 @@ class Method(Meta, Fn):
 class pyInterface(Meta):
     def __init__(self, V, ext=[]):
         super().__init__(V)
+        self.block = True
         for i in ext:
             self // i
 
-    def file(self, depth=0):#, parent=None):
-        ret = self._pad(depth, self.parent().block) + '## @name %s' % self.val
+    def file(self, depth=0, tab=None):
+        assert tab
+        ret = '\n' + \
+            self.pad(depth, self.par[0].block, tab) + f'## @name {self}'
         if 'url' in self.keys():
-            ret += self._pad(depth, block) + '## ' + self['url'].file()
-        ret += self._pad(depth, block) + '## @{'
-        z = ''
+            ret += self.pad(depth, self.par[0].block,
+                            tab=tab) + f"## {self['url']}"
+        ret += self.pad(depth, self.par[0].block, tab) + '## @{'
+        ret += '\n'
+        # z = ''
         for i in self.nest:
-            ret += i.file(depth + 1, block)
-        ret = re.sub(r'[ \t\r\n]+$', '', ret, re.S)
-        ret += self._pad(depth, block) + '## @}'
+            ret += i.file(depth + 0)
+        #
+        ret += '\n'
+        ret += self.pad(depth, self.par[0].block, tab) + '## @}'
         return ret
 
 ## @ingroup meta
 class Module(Meta):
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         return self.head(test=True)
-
-    def __format__(self, spec):
-        assert not spec
-        return f'{self.val}'
 
 
 vm['module'] = Class(Module)
@@ -773,7 +812,8 @@ class Section(Meta):
     #     assert not self.par
     #     super().pre__floordiv__(parent)
 
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         # assert len(self.par) == 1
         if not self.nest:
             return ''
@@ -782,17 +822,17 @@ class Section(Meta):
         head = self.head(test=True)
         commend = self.commend()
         #
-        ret = self._pad(depth, self.par[0].block) if comment else ''
+        ret = self.pad(depth, self.par[0].block, tab) if comment else ''
         if comment:
             ret += f'{comment} \\ {head}{commend}'
         for i in self.nest:
-            ret += i.file(depth)
+            ret += i.file(depth, tab)
         if comment:
-            ret += self._pad(depth, self.par[0].block)
+            ret += self.pad(depth, self.par[0].block, tab)
             ret += f'{comment} / {head}{commend}'
         return ret
 
-    def py(self): return self.file()
+    # def py(self): return self.file()
 
 ## @defgroup io IO
 ## @ingroup object
@@ -850,17 +890,18 @@ class File(IO):
     ## @param[in] V file name without extension
     ## @param[in] ext file extension (default none)
     ## @param[in] comment syntax comment (depends on a file type)
-    def __init__(self, V, ext='', comment='#'):
+    def __init__(self, V, ext='', comment='#', tab='\t'):
         ## file handler not assigned on File object creation
         self.fh = None
         ##
         self.comment = lambda: comment
-        commends = {'<!--': '-->'}
+        commends = {'<!--': '-->', '/*': '*/'}
         commend = ' ' + commends[comment] if comment in commends else ''
         self.commend = lambda: commend
         ##
         super().__init__(V)
         self['ext'] = self.ext = ext
+        self.tab = tab
         ##
         if comment:
             powered = f"powered by metaL: {MANIFEST}"
@@ -901,16 +942,24 @@ class File(IO):
         assert isinstance(self.par[0], Dir)
         return self.par[0].fullpath() + '/' + self.val + self.ext
 
-    def file(self, depth=0):#, parent=None):
-        return '%s%s' % (self.val, self.ext)
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}{self.ext}'
 
-    def __format__(self, spec): return self.file()
+    def file(self, depth=0, tab=None):
+        assert tab
+        ret = ''
+        for j in self.nest:
+            ret += j.file(depth, tab)
+        if ret:
+            assert ret[0] == '\n'
+            ret = ret[1:] + '\n'
+        return ret
 
     def sync(self):
         if self.fh:
             self.fh.seek(0)
-            for j in self.nest:
-                self.fh.write(j.file())#parent=self))
+            self.fh.write(self.file(tab=self.tab))
             self.fh.truncate()
             self.fh.flush()
         return super().sync()
@@ -944,13 +993,19 @@ class Port(Net):
 
 ## @ingroup net
 class Email(Net):
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         return '<%s>' % self.val
+
+    def __format__(self, spec):
+        assert not spec
+        return f'<{self.val}>'
 
 ## @ingroup net
 class Url(Net):
-    def file(self, depth=0):#, parent=None):
-        return self._pad(depth, block) + self.val
+    def file(self, depth=0, tab=None):
+        assert tab
+        return self.pad(depth, self.par[0].block, tab) + self.val
 
     def __format__(self, spec):
         assert not spec
@@ -958,9 +1013,14 @@ class Url(Net):
 
 ## @ingroup net
 class GitHub(Url):
-    def __init__(self, html=GITHUB, V=MODULE, branch=''):
-        super().__init__(f'{html}/{V}')
-        self['branch'] = branch
+    def __init__(self, V, module=None, branch='master'):
+        super().__init__(V)
+        self['module'] = self.module = module
+        self['branch'] = self.branch = branch
+
+    def __format__(self, spec):
+        assert not spec
+        return f'{self.val}/metaL/tree/{self.branch}/{self.module}'
 
 ## @ingroup net
 class User(Net):
@@ -979,20 +1039,18 @@ class Pswd(Net):
 
 ## @ingroup doc
 class Doc(Object):
-    def file(self, depth=0):#, parent=None):
-        return '%s' % self.val
+    def file(self, depth=0, tab=None):
+        assert tab
+        return f'{self}'
 
 ## @ingroup doc
 class Color(Doc):
-    def __format__(self, spec):
-        assert not spec
-        return f'{self.val}'
+    pass
 
 ## @ingroup doc
 class Title(Doc):
     ## @ingroup py
     def py(self): return '## @brief %s' % self.val
-    def __format__(self, spec): return self.val
 
 ## @ingroup doc
 class Author(Doc):
@@ -1001,17 +1059,36 @@ class Author(Doc):
 
 from license import License, MIT
 
+## @defgroup gui GUI
+## @brief Generic GUI
+
+## @ingroup gui
+class GUI(Object):
+    pass
+
+## @ingroup gui
+class Window(GUI):
+    def htdump(self):
+        ret = self.dump()
+        ret = re.sub(r'\<', r'&lt', ret)
+        ret = re.sub(r'\>', r'&gt', ret)
+        return ret
+
+    def html(
+        self): return f'<div class="window"><pre>{self.htdump()}</pre></div>'
+
+
 ## @ingroup info
 ## @{
-vm['MODULE'] = MODULE = Module(MODULE)
-vm['TITLE'] = TITLE = Title(TITLE)
-vm['ABOUT'] = ABOUT = String(ABOUT)
-vm['EMAIL'] = EMAIL = Email(EMAIL)
-vm['AUTHOR'] = AUTHOR = Author(AUTHOR) << EMAIL
-vm['YEAR'] = YEAR = Integer(YEAR)
-vm['LICENSE'] = LICENSE = MIT
-vm['GITHUB'] = GITHUB = GitHub(GITHUB, MODULE)
-vm['LOGO'] = LOGO = File(LOGO, comment=None)
+vm['MODULE'] = vm.MODULE = Module(MODULE)
+vm['TITLE'] = vm.TITLE = Title(TITLE)
+vm['ABOUT'] = vm.ABOUT = String(ABOUT)
+vm['EMAIL'] = vm.EMAIL = Email(EMAIL)
+vm['AUTHOR'] = vm.AUTHOR = Author(AUTHOR) << EMAIL
+vm['YEAR'] = vm.YEAR = Integer(YEAR)
+vm['LICENSE'] = vm.LICENSE = MIT
+vm['GITHUB'] = vm.GITHUB = GitHub(GITHUB, MODULE)
+vm['LOGO'] = vm.LOGO = File(LOGO, comment=None)
 ## @}
 
 
@@ -1028,7 +1105,7 @@ class README(File):
         File.__init__(self, 'README.md', comment=None)
         self.module = module
         self // ('#  `%s`' % module.val)
-        self // ('## %s' % module['TITLE'].val)
+        self // (f'## {module["TITLE"]}')
         # self // ''
         about = module['ABOUT'].val
         while about and about[-1] in '\r\n':
@@ -1042,12 +1119,17 @@ class README(File):
         self.github = Section('github')
         self // self.github
         self.github // '' // f"github: {module['GITHUB']}" // ''
-
+        self // '### Install' // f'''
+```
+~$ git clone --depth 1 -o gh {self.module.GITHUB} ~/metaL
+~$ cd ~/metaL/{self.module}
+~/metaL$ make install
+```'''
 
 ## @ingroup prj
 class Makefile(File):
     def __init__(self, V='Makefile'):
-        super().__init__(V, comment='#')
+        super().__init__(V, comment='#', tab='\t')
 
 ## @ingroup prj
 ## system setting
@@ -1094,12 +1176,12 @@ class dirModule(Module):
             V = V.split('.')[0]
         super().__init__(V)
         # fill metainformation from VM (metaL author/info)
-        self['TITLE'] = self
-        self['ABOUT'] = self
+        self['TITLE'] = self.TITLE = Title(self)
+        self['ABOUT'] = self.ABOUT = String('\n')
         self['AUTHOR'] = self.AUTHOR = vm['AUTHOR']
         self['EMAIL'] = self.EMAIL = vm['EMAIL']
         self['YEAR'] = self.YEAR = vm['YEAR']
-        self['LICENSE'] = vm['LICENSE']
+        self['LICENSE'] = self.LICENSE = vm['LICENSE']
         self['GITHUB'] = self.GITHUB = GitHub(GITHUB, self)
         # diroot: directory with same name as the module
         self['dir'] = self.diroot = Dir(V).sync()
@@ -1171,11 +1253,17 @@ class dirModule(Module):
         # rules
         self.mk.rules = self['rules'] = Section('rules')
         self.mk.mid // self.mk.rules
-        # install/update
+        # doc
+        self.mk.doc = Section('doc')
+        self.mk.doc.doc = S('.PHONY: doc\ndoc:')
+        self.mk.mid // (self.mk.doc // self.mk.doc.doc)
+        # install
         install = Section('install')
         self.mk.bot // install
         self.mk.install = S('install:') // '$(MAKE) $(OS)_install'
         install // '.PHONY: install' // self.mk.install
+        self.mk.install // '$(MAKE) doc'
+        # update
         update = Section('update')
         self.mk.bot // update
         self.mk.update = S('update:') // '$(MAKE) $(OS)_update'
@@ -1183,34 +1271,34 @@ class dirModule(Module):
         self.mk['linux'] = self.mk.linux = Section('linux/install')
         self.mk.bot // self.mk.linux
         self.mk.linux // '.PHONY: Linux_install Linux_update'
-        self.mk.linux // 'Linux_install Linux_update:'
-        self.mk.linux // '\tsudo apt update'
-        self.mk.linux // '\tsudo apt install -u `cat apt.txt`'
+        self.mk.linux // (S('Linux_install Linux_update:') //
+                          '-sudo apt update' //
+                          '-sudo apt install -u `cat apt.txt`')
         # merge master/shadow
         self.mk['merge'] = self.mk.merge = Section('merge')
         self.mk.bot // self.mk.merge
         self.mk.merge // f'MERGE  = {self.mk} {self.apt} {self.giti} .vscode'
-        self.mk.merge // 'MERGE += README.md'
-        self.mk.bot // S('.PHONY: master shadow release zip')
+        self.mk.merge // 'MERGE += doc src tmp README.md'
+        self.mk.bot // S('.PHONY: master shadow release zip', '')
         # master
-        self.mk.bot // (S('master:') //
+        self.mk.bot // (S('master:', '') //
                         'git checkout $@' //
                         'git pull -v' //
                         'git checkout shadow -- $(MERGE)')
         # shadow
-        self.mk.bot // (S('shadow:') //
+        self.mk.bot // (S('shadow:', '') //
                         'git checkout $@' //
                         'git pull -v')
         # release
-        self.mk.bot // (S('release:') //
+        self.mk.bot // (S('release:', '') //
                         'git tag $(NOW)-$(REL)' //
                         'git push -v && git push -v --tags' //
                         '$(MAKE) shadow')
         # zip
         self.mk.bot // (S('zip:') //
-                        (S('git archive --format zip \\') //
-                         '--output ~/tmp/$(MODULE)_src_$(NOW)_$(REL).zip \\' //
-                         'HEAD'))
+                        'git archive --format zip \\' //
+                        '--output ~/tmp/$(MODULE)_src_$(NOW)_$(REL).zip \\' //
+                        'HEAD')
         #
         self.mk.sync()
 
@@ -1237,15 +1325,26 @@ class anyModule(dirModule):
         super().__init__(V)
         self.init_lic()
         self.init_vscode()
+        self.init_doc()
+
+    def init_doc(self):
+        self['doc'] = self.doc = Dir('doc')
+        self.diroot // self.doc
+        self.doc.giti = File('.gitignore')
+        self.doc // self.doc.giti
+        self.doc.giti // '*.pdf'
+        self.doc.giti.sync()
 
     def init_lic(self):
         self.lic = File('LICENSE', comment=None)
         self.diroot // self.lic
+        L = vm['LICENSE']
         self.lic //\
-            self['LICENSE'].val //\
-            self['LICENSE'].nest[0].val.format(
-                YEAR=self.YEAR.val,
-                AUTHOR=self.AUTHOR.val, EMAIL=self.EMAIL.file()
+            f'{L}' //\
+            L[0].val.format(
+                YEAR=f'{self.YEAR}',
+                AUTHOR=f'{self.AUTHOR}',
+                EMAIL=f'{self.EMAIL}'
             )
         self.lic.sync()
 
@@ -1287,12 +1386,13 @@ class anyModule(dirModule):
         settings.bot // '\t"editor.tabSize": 4,'
         settings.bot // '}'
         #
-        self.f11 = multiCommand('f11', 'make test')
-        self.f12 = multiCommand('f12', 'make all')
+        self.f9 = multiCommand('f9', 'make all')
+        self.f11 = multiCommand('f11', 'make repl')
+        self.f12 = multiCommand('f12', 'exit()')
         settings.mid //\
             (Section('multiCommand') //
              (S('"multiCommand.commands": [', '],') //
-              self.f11 // self.f12
+              self.f9 // self.f11 // self.f12
               )
              )
         #
@@ -1300,13 +1400,13 @@ class anyModule(dirModule):
         self.vscode['watcher'] = self.vscode.watcher = watcher
         settings.mid // (S('"files.watcherExclude": {', '},') // watcher)
         #
-        exclude = Section('exclude') // ''
+        exclude = Section('exclude')
         self.vscode['exclude'] = self.vscode.exclude = exclude
-        settings.mid // (S('"files.exclude": {') // exclude // '},')
+        settings.mid // (S('"files.exclude": {', '},') // exclude)
         #
-        assoc = Section('assoc') // ''
+        assoc = Section('assoc')
         self.vscode['assoc'] = self.vscode.assoc = assoc
-        settings.mid // (S('"files.associations": {') // assoc // '},')
+        settings.mid // (S('"files.associations": {', '},') // assoc)
         #
         settings.sync()
 
@@ -1329,10 +1429,8 @@ class anyModule(dirModule):
     def init_vscode_tasks(self):
         self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
         self.vscode // self.tasks
-        self.tasks.top // '{' // '\t"version": "2.0.0",'
-        self.tasks.it = S('\t"tasks": [')
-        self.tasks.mid // self.tasks.it // '\t]'
-        self.tasks.bot // '}'
+        self.tasks.it = S('"tasks": [', ']')
+        self.tasks // (S('{', '}') // '"version": "2.0.0",' // self.tasks.it)
         self.tasks.it //\
             self.vs_make('install') //\
             self.vs_make('update') //\
@@ -1352,22 +1450,23 @@ class anyModule(dirModule):
         self.vscode.ext.sync()
 
     def init_vscode_launch(self):
-        json = File('launch.json', comment='//')
-        self.vscode['launch'] = self.vscode.launch = json
-        self.vscode // json
-        json.top // '// https://code.visualstudio.com/docs/python/debugging'
-        json.top // '{'
-        json.bot // '}'
+        launch = File('launch.json', comment='//')
+        self.vscode['launch'] = self.vscode.launch = launch
+        self.vscode // launch
+        launch.top // '// https://code.visualstudio.com/docs/python/debugging'
+        launch.top // '{'
+        launch.bot // '}'
         #
-        json['it'] = json.it = Section('')
-        json.mid // (S('"configurations": [') // json.it // ']')
-        json.sync()
+        launch['it'] = launch.it = Section('')
+        launch.mid // (S('"configurations": [', ']') // launch.it)
+        launch.sync()
 
     def mksrc(self, file):
         assert isinstance(file, File)
         self.mk.src // f'SRC += {file}'
 
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         return f'{self.__class__.__name__}:{self._val()}'
 
 ## @defgroup cc ANSI C'99
@@ -1459,7 +1558,8 @@ class ccInclude(CC, Module):
             V = V.file()
         super().__init__(V)
 
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         return '#include <%s>' % self.val
 
 
@@ -1470,7 +1570,8 @@ stdio = ccInclude('stdio.h')
 ## @ingroup cc
 ## C type
 class ccType(CC):
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         return '%s %s' % (self.cc_type(), self.cc_val())
     ## C type (without first `cc` prefix)
     def cc_type(self): return self._type()[2:]
@@ -1501,7 +1602,8 @@ class ccFn(CC, Fn):
         assert isinstance(returns, Object)
         self['ret'] = returns
 
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         ret = '\n%s %s(%s) {' % (
             self['ret'].cc_type(), self.val, self['args'].cc_arg())
         for j in self.nest:
@@ -1525,22 +1627,14 @@ class PY(Object):
 
 ## @ingroup py
 class pyImport(PY):
-    def file(self, depth=0):#, parent=None):
+    def file(self, depth=0, tab=None):
+        assert tab
         assert len(self.par) == 1
-        return self._pad(depth, self.par[0].block) + 'import %s' % self.val
+        return self.pad(depth, self.par[0].block, tab) + 'import %s' % self.val
 
 ## @ingroup py
 class pyFn(PY, Fn):
-    def file(self, depth=0):#, parent=None):
-        res = self._pad(depth, block)
-        res += 'def %s(%s):' % (self.val, self.args.file())
-        if not self.nest:
-            res += ' pass'
-        for i in self.nest:
-            res += i.file(depth + 1, block)
-        return res
     ## self-copy
-
     def cp(self):
         assert not self.nest
         ret = self.__class__(self.val)
@@ -1551,10 +1645,10 @@ class pyFn(PY, Fn):
 
 ## @ingroup py
 class pyFile(PY, File):
-    def __init__(self, V, ext='.py', comment='#'):
-        super().__init__(V, ext, comment)
+    def __init__(self, V, ext='.py', comment='#', tab=' ' * 4):
+        super().__init__(V, ext, comment, tab)
 
-    def __format__(self, spec): return self.val
+    # def __format__(self, spec): return f'{self.val}.{self.ext}
 
 ## @ingroup py
 class pyClass(Class):
@@ -1564,9 +1658,8 @@ class pyClass(Class):
 class pyMethod(pyFn):
     def __init__(self, V, args=[]):
         super().__init__(V)
-        self['args'] = self.args = (Args() // 'self')
-        for arg in args:
-            self.args // Arg(arg)
+        self.block = True
+        self['args'] = self.args = Args(nest=[arg for arg in ['self'] + args])
 
 ## @ingroup py
 class pytestFile(pyFile):
@@ -1575,20 +1668,12 @@ class pytestFile(pyFile):
         self.top // pyImport('pytest')
         self['none'] = self.none = pyTest('none')
         self.top // self.none
-        self.sync()
+        # self.sync()
 
 ## @ingroup py
 class pyTest(pyFn):
     def __init__(self, V):
-        super().__init__('test_%s' % V)
-
-    def file(self, depth=0):#, parent=None):
-        ret = ''
-        if 'for' in self.keys():
-            ret += self._pad(depth, block) + \
-                '## for %s' % self['for'].head(test=True)
-        ret += super().file(depth, block)
-        return ret
+        super().__init__(f'test_{V}')
 
 ## @ingroup py
 class minpyModule(anyModule):
@@ -1623,11 +1708,12 @@ class minpyModule(anyModule):
             f'{"PIP":<8} = $(CWD)/bin/pip3' //\
             f'{"PY":<8} = $(CWD)/bin/python3' //\
             f'{"PYT":<8} = $(CWD)/bin/pytest' //\
-            f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402' //\
-            ''
+            f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
         #
-        self.mk.all // 'all: $(PY) $(MODULE).py'
-        self.mk.all // "\t$^"
+        self.mk.all //\
+            (S('.PHONY: all\nall: $(PY) $(MODULE).py', '') // "$^")
+        self.mk.all //\
+            (S('.PHONY: test\ntest: $(PYT) test_$(MODULE).py', '') // '$^')
         #
         self.mk.install //\
             f'$(MAKE) $(PIP)' //\
@@ -1644,7 +1730,7 @@ class minpyModule(anyModule):
             '$(PYT):' //\
             '\t$(PIP) install -U pytest'
         self.mk.src // 'SRC += $(MODULE).py'
-        self.mk.merge // f'MERGE += {self.reqs} $(MODULE).py'
+        self.mk.merge // f'MERGE += {self.reqs} $(MODULE).py test_$(MODULE).py'
         self.mk.sync()
 
     def init_vscode_settings(self):
@@ -1659,7 +1745,7 @@ class minpyModule(anyModule):
         # self.f11.cmd.val = 'make repl'
         # self.f12.cmd.val = 'exit()'
         #
-        files = Section('') //\
+        files = Section('python') //\
             '"**/bin/**": true, "**/include/**":true,' //\
             '"**/lib*/**":true, "**/share/**"  :true,' //\
             '"**/*.pyc":  true, "**/pyvenv.cfg":true,' //\
@@ -1682,22 +1768,19 @@ class minpyModule(anyModule):
         super().init_vscode_launch()
         launch = self.vscode.launch
         # program
-        launch.program = Section('program') //\
-            ('"program": "%s.py",' % self.val)
-        # args
-        launch.args = Section('args')
-        # debugOptions
-        launch.opts = Section('opts')
-
+        launch.program = String(self)
+        launch.django = String('false')
+        launch.args = S('"args": [', '],', 0)
+        launch.opts = S('//"debugOptions": [', '],', 0)
         #
-        launch.it // (S('{') //
+        launch.it // (S('{', '}') //
                       ('"name": "Python: %s",' % self.val) //
                       '"type": "python",' //
                       '"request": "launch",' //
-                      launch.program //
-                      (S('"args": [') // launch.args // '],') //
-                      (S('"debugOptions": [') // launch.opts // '],') //
-                      '"console": "integratedTerminal"}'
+                      (S('"program": "', '",', 0) // launch.program) //
+                      (launch.args) //
+                      '"console": "integratedTerminal",' //
+                      (S('"django": ', ',', 0) // launch.django)
                       )
     #     # console
     #     self.launch.mid //
@@ -1706,6 +1789,8 @@ class minpyModule(anyModule):
 
     def init_py(self):
         self['py'] = self.py = pyFile(self)
+        self.vscode.launch.program.val = f'{self.py}'
+        self.vscode.launch.sync()
         self['dir'] // self.py
         self.py.top // pyImport('config')
         return self.py.sync()
@@ -1782,14 +1867,32 @@ class pyModule(minpyModule):
         return ret
 
 ## @ingroup py
-class bountyModule(pyModule):
+class replModule(minpyModule):
+
+    def init_py(self):
+        super().init_py()
+        self['test'] = self.test = pytestFile(self.py)
+        self.diroot // self.test
+        self.test.sync()
+
+    def init_mk(self):
+        super().init_mk()
+        self.mk.all //\
+            (S(f'.PHONY: repl\nrepl: $(PY) $(MODULE).py') //
+             '$(MAKE) test' //
+             '$(PY) -i $(MODULE).py' //
+             '$(MAKE) $@')
+        self.mk.sync()
+
+## @ingroup py
+class bountyModule(minpyModule):
     def __init__(self, V=None):
         pyModule.__init__(self, V)
-        self.github = self['GITHUB'] = Url('https://bitbucket.org/ponyatov/')
+        self.github = self['GITHUB'] = Url(
+            f'https://bitbucket.org/ponyatov/{self}')
         self.github['branch'] = '/src/master/'
-        self.py.about // "ABOUT = MODULE['ABOUT'] = Url('https://bountify.co/' + MODULE.val)"
-        # self.py.github // "GITHUB = MODULE['GITHUB'] = Url('https://bitbucket.org/ponyatov/%s/' % MODULE.val)"
-        self.py.sync()
+        self['ABOUT'] = self.ABOUT = S(
+            '') // Url(f'https://bountify.co/{self}')
 
 
 ## @defgroup samples
@@ -1809,11 +1912,12 @@ class webModule(minpyModule):
 
     def __init__(self, V=None):
         super().__init__(V)
-        self['back'] = self.back = Color('#222222')
+        self['back'] = self.back = Color('#222')
+        self['fore'] = self.fore = Color('#DDD')
         self.init_static()
         self.init_templates()
         self.init_leaflet()
-        self.init_wasm()
+        # self.init_wasm()
 
     def init_wasm(self):
         (self.apt // 'wabt').sync()
@@ -1874,7 +1978,7 @@ class webModule(minpyModule):
         giti // 'leaflet.*' // 'images/marker-*.png' // 'images/layers*.png'
         giti.sync()
         self.init_static_manifest()
-        return static
+        # return static
 
     ## https://leafletjs.com/examples/quick-start/
     def init_leaflet(self):
@@ -1888,16 +1992,26 @@ class webModule(minpyModule):
         leaf['js'] = leaf.js = H('script', 1, src=self.static_url("leaflet.js"),
                                  integrity=js_crc)#, crossorigin="")
         leaf['id'] = leaf.id = f'{leaf}_{leaf.gid:8x}'
-        leaf['div'] = leaf.div = H('div', id=leaf.id) // f"{leaf.id}"
+        leaf['div'] = leaf.div = \
+            H('div', clazz='leaflet', id=leaf.id) // f"{leaf.id}"
         leaf.sync()
         self.tmp.giti // 'leaflet.*' // 'images/marker-*' // 'images/layers*.png'
         self.tmp.giti.sync()
+        self.static.css //\
+            (CSS('.leaflet *', 0) //
+             'background: transparent !important;')
+        self.static.css //\
+            (CSS('.olMap *', 0) // 'background: transparent !important;') //\
+            (CSS('.olControlAttribution', 0) // 'visibility: hidden;') //\
+            (CSS('.olControlScale', 0) // 'visibility: hidden;') //\
+            (CSS('.olControlMousePosition', 0) // 'color:black !important;')
+        self.static.css.sync()
 
-    ## intercept `A[key]=B` operations
-    def __setitem__(self, key, that):
-        super().__setitem__(key, that)
-        if isinstance(that, Title):
-            self.init_static_manifest()
+    # ## intercept `A[key]=B` operations
+    # def __setitem__(self, key, that):
+    #     super().__setitem__(key, that)
+    #     if isinstance(that, Title):
+    #         self.init_static()
 
     def init_static_manifest(self):
         self.static.manifest = File('manifest', ext='', comment='')
@@ -1923,15 +2037,56 @@ class webModule(minpyModule):
         self['templates'] = self.templates = Dir('templates')
         self.diroot // self.templates
         self.templates.sync()
+        self.init_templates_css()
         self.init_templates_all()
         self.init_templates_index()
 
     def static_url(self, filename):
         return f'{filename}'
 
+    def init_templates_css(self):
+        self.static['css'] = self.static.css = self.css = File('css.css', comment='/*')
+        self.static // self.static.css
+        self.static.css.print = (S('@media print {', '}') //
+                                 (CSS("@page", 0) //
+                                  'margin:5mm; ' // 'margin-left:30mm;') //
+                                 (CSS("body", 0) //
+                                  "padding:0;") //
+                                 (CSS("a[href]:after", 0) //
+                                  "display: none !important;")
+                                 )
+        self.static.css //\
+            (CSS('*', 0) // f'background:{self.back} !important; color:{self.fore};') //\
+            (CSS('pre',0)// f'color:{self.fore};') //\
+            (CSS("body", 0) // "padding:4mm;") //\
+            (CSS('.center', 0) // 'text-align: center;') //\
+            (CSS('.required', 0) // 'color:orange !important;') //\
+            (CSS('a:hover', 0) // 'color:lightblue;') //\
+            (CSS('label', 0) // 'color: white !important;') //\
+            (CSS('input,select,option,button') //
+             'background-color: lightyellow !important; ' //
+             'color: black !important;'
+             ) //\
+            (Section('print', 0) // self.static.css.print)
+        # (CSS('.login', 0) // f'background:{self.back};') //\
+        self.static.css.sync()
+
+    def templates_all_head(self):
+        return (Section('templates_all_head') //
+                '{% load static %}' //
+                '<meta charset="utf-8">' //
+                '<meta http-equiv="X-UA-Compatible" content="IE=edge">' //
+                '<meta name="viewport" content="width=device-width, initial-scale=1">' //
+                f'<title>{{% block title %}}&lt;{self.head(test=True)[1:-1]}&gt;{{% endblock %}}</title>' //
+                '<link rel="manifest" href="/static/manifest">' //
+                f'<link href="{self.static_url("bootstrap.css")}" rel="stylesheet">' //
+                f'<link rel="shortcut icon" href="{self.static_url("logo.png")}" type="image/png">' //
+                f'<link href="{self.static_url("css.css")}" rel="stylesheet">')
+
     def init_templates_all(self):
         self.templates['all'] = self.templates.all = htFile('all')
         self.templates // self.templates.all
+        self.templates.all.top // '<!doctype html>'
         #
         self.templates.all.jinja = jinja = Section('jinja')
         html = H('html', lang='ru')
@@ -1940,27 +2095,12 @@ class webModule(minpyModule):
         # <head>
         head = H('head')
         html // head
-        head //\
-            '<meta charset="utf-8">' //\
-            '<meta http-equiv="X-UA-Compatible" content="IE=edge">' //\
-            '<meta name="viewport" content="width=device-width, initial-scale=1">' //\
-            f'<title>&lt;{self.head(test=True)[1:-1]}&gt;</title>' //\
-            '<link rel="manifest" href="/static/manifest">' //\
-            f'<link href="{self.static_url("bootstrap.css")}" rel="stylesheet">' //\
-            f'<link rel="shortcut icon" href="{self.static_url("logo.png")}" type="image/png">' //\
-            '{% block head %}{% endblock %}'
+        head // self.templates_all_head() // '{% block head %}{% endblock %}'
         # <style>
         self.templates.all.style = style = Section('style')
         hstyle = H('style')
         hstyle.comment = lambda: ''
         self.templates.all.top // (hstyle // style)
-        style //\
-            (CSS('*', 0) // f'background:{self.back};') //\
-            (CSS("body", 0) // "padding:4mm;") //\
-            (CSS("@media print", 1) //
-                (CSS("body", 0) // "padding:0;") //
-                (CSS("a[href]:after", 0) // "display: none !important;")
-             )
         style // '{% block style %}{% endblock %}'
         #
         body = H('body')
@@ -1983,7 +2123,7 @@ class webModule(minpyModule):
     def init_templates_index(self):
         self.templates['index'] = self.templates.index = htFile('index')
         self.templates // self.templates.index
-        self.templates.index //\
+        self.templates.index.top //\
             "{% extends 'all.html' %}"
         return self.templates.index.sync()
 
@@ -2035,6 +2175,10 @@ class webModule(minpyModule):
         return self.mk.sync()
 
 
+rexPHONE = [r"\+7 \d{3} \d{2} \d{2} \d{3}", '+7 ??? ?? ?? ???']
+rexOKATO = [r"(36|53)\d{9}", 'ОКАТО: 11 цифр']
+rexKLADR = [r"(63|56)\d{11,15}", 'КЛАДР: 13..17 цифр']
+
 #@ @}
 
 ## @defgroup html html
@@ -2045,7 +2189,6 @@ class webModule(minpyModule):
 class htFile(File):
     def __init__(self, V):
         super().__init__(V, ext='.html', comment='<!--')
-        self.top // "<!doctype html>"
 
 ## @}
 
@@ -2058,6 +2201,10 @@ class jsFile(File):
     def __init__(self, V):
         super().__init__(V, ext='.js', comment='//')
 
+class jsonFile(File):
+    def __init__(self, V):
+        super().__init__(V, ext='.json', comment=None)
+
 ## @}
 
 
@@ -2069,7 +2216,7 @@ import ply.lex as lex
 
 ## @ingroup lexer
 ## token types
-tokens = ['symbol', 'string',
+tokens = ['name', 'string',
           'number', 'integer', 'hex', 'bin',
           'lp', 'rp', 'lq', 'rq', 'lc', 'rc',
           'add', 'sub', 'mul', 'div', 'pow',
@@ -2314,9 +2461,9 @@ def t_integer(t):
 
 ## @ingroup lexer
 ##    r`[^ \t\r\n\#\+\-\*\/\^]+`
-def t_symbol(t):
+def t_name(t):
     r'[^ \t\r\n\#\+\-\*\/\^\\(\)\[\]\{\}\:\=\.\@]+'
-    t.value = Symbol(t.value)
+    t.value = Name(t.value)
     return t
 
 ## @}
@@ -2480,9 +2627,9 @@ def p_fn_empty(p):
     p[0] = Fn('')
 
 ## @ingroup parser
-##    ' fn : fn symbol bar '
+##    ' fn : fn name bar '
 def p_fn_bar(p):
-    ' fn : fn symbol bar '
+    ' fn : fn name bar '
     p[0] = p[1]
     p[0]['args'] = Vector('')
     p[0]['args'] // p[2]
@@ -2553,9 +2700,9 @@ def p_ex_string(p):
     ' ex : string '
     p[0] = p[1]
 ## @ingroup parser
-##    ' ex : symbol '
-def p_ex_symbol(p):
-    ' ex : symbol '
+##    ' ex : name '
+def p_ex_name(p):
+    ' ex : name '
     p[0] = p[1]
 
 ## @ingroup parser

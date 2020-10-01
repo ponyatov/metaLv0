@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['b',['b',['../group__world.html#ga4130634e3b6dddeb0b683e32f4eb8068',1,'world']]],
+  ['b',['b',['../group__world.html#ga3b085eb53606728bbf92505097d66c18',1,'world']]],
+  ['b1',['b1',['../group__world.html#ga7ba50a084b70ab4f8f0afeb481084d27',1,'world']]],
   ['back',['back',['../group__web.html#ga098b980312377a634a357495cdbc1d64',1,'metaL::webModule']]],
   ['bcx',['bcx',['../namespacebcx.html',1,'bcx'],['../group__bcx.html#ga17066b9b06f33e1c882fed0e07782eb1',1,'bcx.bcx()'],['../group__bcx.html',1,'(Global Namespace)']]],
   ['bcx_2epy',['bcx.py',['../bcx_8py.html',1,'']]],
@@ -8,11 +9,13 @@ var searchData=
   ['bcxh',['bcxh',['../group__bcx.html#gad8b1c0110ca7fe20a95cab8b0fc2a0ca',1,'bcx']]],
   ['bcxmodule',['bcxModule',['../classbcx_1_1bcxModule.html',1,'bcx']]],
   ['bin',['Bin',['../classmetaL_1_1Bin.html',1,'metaL']]],
-  ['block',['block',['../group__web.html#ga2e8cf2ceea57cbf8c17a3f876a05c525',1,'metaL.String.block()'],['../group__web.html#ga1193a229dd4536dc3caab81f96f7e15d',1,'metaL.Args.block()'],['../group__web.html#ga7afad49ad984710066c9c3dfdd98757a',1,'metaL.Section.block()'],['../group__web.html#ga0bee12745fbb87a180262d0218e48fa4',1,'metaL.File.block()'],['../group__web.html#ga921f5d063db6107c397e0f5ebc6454a0',1,'metaL.Setting.block()'],['../classhtml_1_1A.html#a72801e8d220c13adaaa024b62d5004b8',1,'html.A.block()'],['../classhtml_1_1EMAIL.html#a349549451070216761599883b7facc81',1,'html.EMAIL.block()'],['../classhtml_1_1IMG.html#a94362b6ef8fbb8d5faa24c541cdbe4cb',1,'html.IMG.block()'],['../classhtml_1_1HH.html#aa607092f8165cfabcc66a36603eebfa5',1,'html.HH.block()'],['../classhtml_1_1HB.html#a13b032088a7877889af170ef2a744d16',1,'html.HB.block()'],['../classhtml_1_1P.html#aa1680e7cc2ebdb163eb3f13dc3ecf0cb',1,'html.P.block()']]],
+  ['block',['block',['../group__web.html#ga2e8cf2ceea57cbf8c17a3f876a05c525',1,'metaL.String.block()'],['../group__web.html#gaed50386a2189825d945519915ea515d7',1,'metaL.Fn.block()'],['../group__web.html#ga1193a229dd4536dc3caab81f96f7e15d',1,'metaL.Args.block()'],['../group__web.html#ga8ee458bb122003663eae4fa59322b24c',1,'metaL.Class.block()'],['../group__web.html#gabaeba8163bbdfa671f4b758f00516173',1,'metaL.pyInterface.block()'],['../group__web.html#ga7afad49ad984710066c9c3dfdd98757a',1,'metaL.Section.block()'],['../group__web.html#ga0bee12745fbb87a180262d0218e48fa4',1,'metaL.File.block()'],['../group__web.html#ga921f5d063db6107c397e0f5ebc6454a0',1,'metaL.Setting.block()'],['../group__web.html#ga251c9134e9eda88ceaed620e8ee6f52d',1,'metaL.pyMethod.block()'],['../classhtml_1_1A.html#a72801e8d220c13adaaa024b62d5004b8',1,'html.A.block()'],['../classhtml_1_1EMAIL.html#a349549451070216761599883b7facc81',1,'html.EMAIL.block()'],['../classhtml_1_1IMG.html#a94362b6ef8fbb8d5faa24c541cdbe4cb',1,'html.IMG.block()'],['../classhtml_1_1HH.html#aa607092f8165cfabcc66a36603eebfa5',1,'html.HH.block()'],['../classhtml_1_1HB.html#a13b032088a7877889af170ef2a744d16',1,'html.HB.block()'],['../classhtml_1_1CSS.html#a35e0a88d271aeb5ebb03e6447b821315',1,'html.CSS.block()'],['../classhtml_1_1P.html#aa1680e7cc2ebdb163eb3f13dc3ecf0cb',1,'html.P.block()']]],
   ['bluebook_5fpdf',['Bluebook_pdf',['../group__st.html#ga1024cd1638ce3f5535b5e30218b26e05',1,'Smalltalk']]],
   ['bootc',['bootc',['../group__demos.html#ga648d048e198e83e64f88f7fd3adbef0d',1,'demos']]],
   ['booth',['booth',['../group__demos.html#ga29da29d12a88ab7babb652383bcf407e',1,'demos']]],
   ['bootheader',['bootheader',['../group__demos.html#gac234e4eaf9ffa8b1a2ccd18f180bd353',1,'demos']]],
   ['bot',['bot',['../group__web.html#gaae905101a1422867b2425730c0bcff3d',1,'metaL::File']]],
-  ['bountymodule',['bountyModule',['../classmetaL_1_1bountyModule.html',1,'metaL']]]
+  ['bountymodule',['bountyModule',['../classmetaL_1_1bountyModule.html',1,'metaL']]],
+  ['branch',['branch',['../group__web.html#gac12f93e96fd34beeb9511ae6fb43a5df',1,'metaL::GitHub']]],
+  ['browser',['browser',['../group__laguna.html#ga52313a9b94947a9464c101c91a9ca2fb',1,'laguna']]]
 ];

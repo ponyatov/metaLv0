@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['c',['C',['../group__web.html#ga119bc473487382482c6a317e64ccffe9',1,'metaL.Class.C()'],['../group__web.html#gae8f7af97006f10d7f10ec68e68e06d91',1,'metaL.ccModule.c()'],['../classtcc_1_1ccModule.html#aab54b8e27226f4ec02668b83c4524738',1,'tcc.ccModule.c()']]],
+  ['c',['c',['../group__web.html#gae8f7af97006f10d7f10ec68e68e06d91',1,'metaL.ccModule.c()'],['../classtcc_1_1ccModule.html#aab54b8e27226f4ec02668b83c4524738',1,'tcc.ccModule.c()'],['../group__web.html#ga119bc473487382482c6a317e64ccffe9',1,'metaL.Class.C()']]],
   ['cakkala',['cAkkaLA',['../group__cakka.html',1,'']]],
   ['cc',['CC',['../classmetaL_1_1CC.html',1,'metaL']]],
   ['cc_5farg',['cc_arg',['../group__web.html#ga574ec710b4fc09a15b950099b329957c',1,'metaL.String.cc_arg()'],['../group__web.html#gab65c0cf9fe8383b8419c3426b00afee1',1,'metaL.Vector.cc_arg()'],['../group__web.html#gad98c20670974e176e62b4634b0145586',1,'metaL.ccVoid.cc_arg()'],['../group__web.html#ga1f8f7cb690d0a1be6589abf3dca30c3e',1,'metaL.ccFn.cc_arg()'],['../classllvm_1_1llFn.html#ade670ecc007a72590a6919def5df454e',1,'llvm.llFn.cc_arg()']]],
@@ -19,6 +19,7 @@ var searchData=
   ['center',['CENTER',['../classhtml_1_1CENTER.html',1,'html']]],
   ['cfile',['cFile',['../classmetaL_1_1cFile.html',1,'metaL']]],
   ['cinclude',['cInclude',['../classtcc_1_1cInclude.html',1,'tcc']]],
+  ['cities',['cities',['../group__world.html#ga67b0b3b2deacc5510ab68264336faa16',1,'world']]],
   ['class',['Class',['../classmetaL_1_1Class.html',1,'metaL']]],
   ['clazz',['clazz',['../group__distill.html#ga3c6850e3ee9ff69fd899cea921aae847',1,'distill']]],
   ['clj',['clj',['../classclojure_1_1cljModule.html#a06b8ea263f6f3121bebe9116e28a70ae',1,'clojure::cljModule']]],
@@ -39,9 +40,10 @@ var searchData=
   ['conts',['conts',['../group__distill.html#gaed93e3dd44f406b981b0ab4e4a94096e',1,'distill']]],
   ['cp',['cp',['../group__web.html#gadee6ff79efd21e899c2c3248947383d7',1,'metaL::pyFn']]],
   ['cpu',['CPU',['../classcross_1_1CPU.html',1,'cross.CPU'],['../classcross_1_1QEMU.html#a7b052a7a97d12cbf237f454d120f7c3e',1,'cross.QEMU.cpu()'],['../classcross_1_1tcModule.html#aa3259ddec30e3853490c2a254a3636a3',1,'cross.tcModule.cpu()']]],
+  ['cr',['CR',['../classmetaL_1_1CR.html',1,'metaL']]],
   ['cross',['cross',['../namespacecross.html',1,'cross'],['../group__cross.html',1,'(Global Namespace)']]],
   ['cross_2epy',['cross.py',['../cross_8py.html',1,'']]],
-  ['css',['CSS',['../classhtml_1_1CSS.html',1,'html']]],
+  ['css',['CSS',['../classhtml_1_1CSS.html',1,'html.CSS'],['../group__web.html#ga4446c211be14fb86f35375bbb65607ad',1,'metaL.webModule.css()']]],
   ['ctx',['ctx',['../group__distill.html#gac41e176599ce22ccc55fe82031e98631',1,'distill']]],
   ['ctxi',['ctxi',['../group__distill.html#ga37a72ba7250ec051607ff3d2eca8989b',1,'distill']]],
   ['codegen',['CodeGen',['../group__gen.html',1,'']]]

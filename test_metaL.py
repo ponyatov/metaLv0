@@ -79,11 +79,11 @@ class TestLexer:
         lexer.input(' \t\r\n')
         assert lexer.token() != None # nl
 
-    def test_symbol(self):
-        lexer.input('symbol')
+    def test_name(self):
+        lexer.input('name')
         token = lexer.token()
         assert token and token.value.test() ==\
-            '\n<symbol:symbol>'
+            '\n<name:name>'
 
 
 ## @ref parser
@@ -94,10 +94,10 @@ class TestParser:
         assert parser.parse('').test() ==\
             '\n<ast:>'
 
-    def test_symbol(self):
+    def test_name(self):
         ast = parser.parse('MODULE')
         assert ast.test() ==\
-            '\n<ast:>\n\t0: <symbol:MODULE>'
+            '\n<ast:>\n\t0: <name:MODULE>'
         assert ast.eval(vm).test() ==\
             '\n<ast:>\n\t0: <module:metaL>'
 
@@ -113,7 +113,7 @@ class TestParser:
         assert single.test() ==\
             '\n<ast:>' +\
             '\n\t0: <vector:>' +\
-            '\n\t\t0: <symbol:MODULE>'
+            '\n\t\t0: <name:MODULE>'
         assert single.eval(vm).test() ==\
             '\n<ast:>' +\
             '\n\t0: <vector:>' +\
@@ -125,7 +125,7 @@ class TestParser:
             '\n<ast:>\n\t0: <vector:>' +\
             '\n\t\t0: <integer:1>' +\
             '\n\t\t1: <number:2.3>' +\
-            '\n\t\t2: <symbol:MODULE>'
+            '\n\t\t2: <name:MODULE>'
         assert multy.eval(vm).test() ==\
             '\n<ast:>\n\t0: <vector:>' +\
             '\n\t\t0: <integer:1>' +\

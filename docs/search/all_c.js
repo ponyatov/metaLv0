@@ -1,12 +1,15 @@
 var searchData=
 [
+  ['lagmodule',['lagModule',['../classlaguna_1_1lagModule.html',1,'laguna']]],
+  ['laguna',['laguna',['../namespacelaguna.html',1,'laguna'],['../group__laguna.html',1,'(Global Namespace)']]],
+  ['laguna_2epy',['laguna.py',['../laguna_8py.html',1,'']]],
   ['ldfile',['ldfile',['../group__demos.html#ga464e6a507d61756865bc822f7c80d83d',1,'demos']]],
   ['leaflet',['leaflet',['../group__web.html#ga967504531fea9a9ce199c56f6679416e',1,'metaL::webModule']]],
   ['lex',['lex',['../group__bcx.html#ga8fe38b2bd4952f566c0a86620594810e',1,'bcx']]],
   ['lexer',['lexer',['../group__lexer.html#ga101babfc77a2eedfd55778d01fde6dfe',1,'metaL.lexer()'],['../group__lexer.html',1,'(Global Namespace)']]],
   ['lexerc',['lexerc',['../group__bcx.html#gacc2295b978302b7727f1a3bc2c7facd0',1,'bcx']]],
   ['lic',['lic',['../group__web.html#ga6866be0269e1f2c4069d93417f27a3f6',1,'metaL::anyModule']]],
-  ['license',['License',['../classlicense_1_1License.html',1,'license.License'],['../namespacelicense.html',1,'license'],['../group__info.html#ga36d3a1c3b0418fdd07e3108114d234a2',1,'metaL.LICENSE()']]],
+  ['license',['License',['../classlicense_1_1License.html',1,'license.License'],['../namespacelicense.html',1,'license'],['../group__web.html#gaf04b7b02a8546e575a7b82d4ec8c06eb',1,'metaL.dirModule.LICENSE()'],['../group__info.html#ga36d3a1c3b0418fdd07e3108114d234a2',1,'metaL.LICENSE()']]],
   ['license_2epy',['license.py',['../license_8py.html',1,'']]],
   ['linq_2emd',['LINQ.md',['../LINQ_8md.html',1,'']]],
   ['ll',['LL',['../classllvm_1_1LL.html',1,'llvm.LL'],['../group__ll.html#gacc8ac3b59f2c9bad22632cc64a135f14',1,'llvm.ll()'],['../group__ll.html',1,'(Global Namespace)']]],

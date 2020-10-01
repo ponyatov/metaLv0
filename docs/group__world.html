@@ -103,8 +103,12 @@ Variables</h2></td></tr>
 <tr class="separator:ga3a80ba962a333ff55a57966757ad6f44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga056ce8f201dba1ef0cf4ce9a19dd1ce7"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__world.html#ga056ce8f201dba1ef0cf4ce9a19dd1ce7">world.a</a> = f'{r}.shp'</td></tr>
 <tr class="separator:ga056ce8f201dba1ef0cf4ce9a19dd1ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4130634e3b6dddeb0b683e32f4eb8068"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__world.html#ga4130634e3b6dddeb0b683e32f4eb8068">world.b</a> = f'&quot;{REGIONS[r]}&quot;'</td></tr>
-<tr class="separator:ga4130634e3b6dddeb0b683e32f4eb8068"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3b085eb53606728bbf92505097d66c18"><td class="memItemLeft" align="right" valign="top">dictionary&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__world.html#ga3b085eb53606728bbf92505097d66c18">world.b</a> = <a class="el" href="group__world.html#ga46f2a88b60a9d56182f57e9421846aeb">REGIONS</a>[r]</td></tr>
+<tr class="separator:ga3b085eb53606728bbf92505097d66c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ba50a084b70ab4f8f0afeb481084d27"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__world.html#ga7ba50a084b70ab4f8f0afeb481084d27">world.b1</a> = f'&quot;{b[1]}&quot;'</td></tr>
+<tr class="separator:ga7ba50a084b70ab4f8f0afeb481084d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67b0b3b2deacc5510ab68264336faa16"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__world.html#ga67b0b3b2deacc5510ab68264336faa16">world.cities</a></td></tr>
+<tr class="separator:ga67b0b3b2deacc5510ab68264336faa16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab09507d0c77815e1edc2c2852a5cbdea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__world.html#gab09507d0c77815e1edc2c2852a5cbdea">world.py</a> = MODULE.py</td></tr>
 <tr class="separator:gab09507d0c77815e1edc2c2852a5cbdea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -125,14 +129,42 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ga4130634e3b6dddeb0b683e32f4eb8068"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4130634e3b6dddeb0b683e32f4eb8068">&#9670;&nbsp;</a></span>b</h2>
+<a id="ga3b085eb53606728bbf92505097d66c18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3b085eb53606728bbf92505097d66c18">&#9670;&nbsp;</a></span>b</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string world.b = f'&quot;{REGIONS[r]}&quot;'</td>
+          <td class="memname">dictionary world.b = <a class="el" href="group__world.html#ga46f2a88b60a9d56182f57e9421846aeb">REGIONS</a>[r]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ga7ba50a084b70ab4f8f0afeb481084d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7ba50a084b70ab4f8f0afeb481084d27">&#9670;&nbsp;</a></span>b1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string world.b1 = f'&quot;{b[1]}&quot;'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ga67b0b3b2deacc5510ab68264336faa16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga67b0b3b2deacc5510ab68264336faa16">&#9670;&nbsp;</a></span>cities</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string world.cities</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -248,7 +280,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  {</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;    <span class="stringliteral">&#39;Orenburg&#39;</span>: <span class="stringliteral">&#39;Оренбургская область&#39;</span>,</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;    <span class="stringliteral">&#39;Penza&#39;</span>: <span class="stringliteral">&#39;Пензенская область&#39;</span>,</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;    <span class="stringliteral">&#39;Samara&#39;</span>: <span class="stringliteral">&#39;Самарская область&#39;</span>,</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;    <span class="stringliteral">&#39;Saratov&#39;</span>: <span class="stringliteral">&#39;Саратовская область&#39;</span>,</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    <span class="stringliteral">&#39;Ulianovsk&#39;</span>: <span class="stringliteral">&#39;Ульяновская область&#39;</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;}</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  {</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;    <span class="stringliteral">&#39;Orenburg&#39;</span>: [1,<span class="stringliteral">&#39;Оренбургская область&#39;</span>,<span class="stringliteral">&#39;53000000000&#39;</span>,<span class="stringliteral">&#39;5600000000000&#39;</span>],</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;    <span class="stringliteral">&#39;Penza&#39;</span>: [2,<span class="stringliteral">&#39;Пензенская область&#39;</span>,<span class="stringliteral">&#39;&#39;</span>,<span class="stringliteral">&#39;&#39;</span>],</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;    <span class="stringliteral">&#39;Samara&#39;</span>: [3,<span class="stringliteral">&#39;Самарская область&#39;</span>,<span class="stringliteral">&#39;36000000000&#39;</span>,<span class="stringliteral">&#39;6300000000000&#39;</span>],</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;    <span class="stringliteral">&#39;Saratov&#39;</span>: [4,<span class="stringliteral">&#39;Саратовская область&#39;</span>,<span class="stringliteral">&#39;&#39;</span>,<span class="stringliteral">&#39;&#39;</span>],</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    <span class="stringliteral">&#39;Ulianovsk&#39;</span>: [5,<span class="stringliteral">&#39;Ульяновская область&#39;</span>,<span class="stringliteral">&#39;&#39;</span>,<span class="stringliteral">&#39;&#39;</span>]</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;}</div></div><!-- fragment -->
 </div>
 </div>
 <a id="gadf04f02a5cc64acaa09a93ed84e4b388"></a>

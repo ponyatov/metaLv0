@@ -1,0 +1,42 @@
+
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+{
+// / <section:top>
+// \ <section:mid>
+// \ <section:multiCommand>
+"multiCommand.commands": [
+	{"command": "multiCommand.f11", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake test\u000D"}
+			}
+		]
+	},
+	{"command": "multiCommand.f12", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake all\u000D"}
+			}
+		]
+	},
+],
+// / <section:multiCommand>
+"files.watcherExclude": {
+	// \ <section:watcher>
+	"**/vscode-extension-samples/**":true,
+	"**/hello/**":true,
+	"**/lsp-sample/**":true,
+	// / <section:watcher>
+},
+"files.exclude": {
+},
+"files.associations": {
+},
+// / <section:mid>
+// \ <section:bot>
+	"editor.tabSize": 4,
+}
+// / <section:bot>

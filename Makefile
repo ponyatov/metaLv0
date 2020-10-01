@@ -72,7 +72,6 @@ update: $(PIP)
 	-$(MAKE) $(OS)_update
 	$(PIP)   install -U    pip
 	$(PIP)   install -U -r requirements.txt
-	$(MAKE)  requirements.txt
 
 $(PIP) $(PY):
 	python3 -m venv .
@@ -120,6 +119,11 @@ MERGE += WebRTCos WebRTCos.py
 MERGE += debian debian.py
 MERGE += cross cross/tmp/.gitignore cross/src/.gitignore cross.py
 MERGE += world world.py
+MERGE += vscode vscode.py
+MERGE += laguna laguna.py
+MERGE += melixir melixir.py
+MERGE += erlang.py elixir.py phoenix.py
+MERGE += lv lv.py
 
 master:
 	rm -rf docs

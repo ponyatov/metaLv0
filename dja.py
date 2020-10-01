@@ -20,14 +20,20 @@ class djRoute(DJ):
 
     ## codegen for `views.py`
     def py_view(self):
-        return (S(f'def {self.val}(request): # {self}') //
-                f"template = loader.get_template('{self.val}.html')" //
-                "context = {}" //
-                Return(f"HttpResponse(template.render(context, request))"))
+        return \
+            (S(f'def {self.val}(request):', rem=f'# {self}') //
+             f"template = loader.get_template('{self.val}.html')" //
+             "context = {}" //
+             (S("if request.user.is_authenticated:") //
+              "return HttpResponse(template.render(context, request))") //
+             (S("else:") //
+              "return HttpResponseRedirect(f'/admin/login/?next={request.path}')")
+             )
 
     ## codegen for `urls.py`
     ## @param[in] route path in browser
     ## @param[in] request processing function
+
     def py_url(self, route=None, request=None):
         if route == None:
             route = '%s/' % self.val
@@ -51,11 +57,11 @@ class djRoute(DJ):
 ## @ingroup dja
 class djModule(webModule):
 
-    ## intercept `A[key]=B` operations
-    def __setitem__(self, key, that):
-        super().__setitem__(key, that)
-        if isinstance(that, Title):
-            self.init_app()
+    # ## intercept `A[key]=B` operations
+    # def __setitem__(self, key, that):
+    #     super().__setitem__(key, that)
+    #     if isinstance(that, Title):
+    #         self.init_app()
 
     def __init__(self, V=None):
         super().__init__(V)
@@ -68,6 +74,8 @@ class djModule(webModule):
         self.init_app()
         # fixture
         self.init_fixture()
+        # manage.py
+        self.init_manage()
 
     def init_apt(self):
         super().init_apt()
@@ -83,7 +91,6 @@ class djModule(webModule):
         super().init_giti()
         self.giti.bot //\
             '/*.sqlite3' //\
-            f'/{self.val}z/' //\
             '/dumpdata'
         return self.giti.sync()
 
@@ -97,7 +104,7 @@ class djModule(webModule):
         settings = self.vscode.settings
         #
         self.f11.cmd.val = 'make runserver'
-        self.f12.cmd.val = 'make wasm'
+        self.f12.cmd.val = 'make loaddata'
         #
         self.vscode.assoc //\
             '"**/templates/**/*.html": "django-html",' //\
@@ -107,13 +114,13 @@ class djModule(webModule):
 
     def init_vscode_launch(self):
         super().init_vscode_launch()
-        self.vscode.launch.program.dropall() //\
-            '"program": "manage.py",' //\
-            '"django": true,'
+        self.vscode.launch.program.val = 'manage.py'
+        self.vscode.launch.django.val = 'true'
         self.vscode.launch.args //\
-            '"runserver", "--no-color", "--noreload", "--nothreading"'
+            '"runserver",' //\
+            '"--no-color", "--noreload", "--nothreading"'
         self.vscode.launch.opts //\
-            '"WaitOnAbnormalExit", "WaitOnNormalExit",' //\
+            '"WaitOnAbnormalExit", "WaitOnNormalExit", ' //\
             '"RedirectOutput", "DjangoDebugging"'
         return self.vscode.launch.sync()
 
@@ -307,8 +314,8 @@ class djModule(webModule):
                                    ))
         self.proj.context.mid // (Section('loc') //
                                   (S('def loc(request):') //
-                                  'try: loc = request.user.loc'//
-                                  'except AttributeError: loc = "???"'//
+                                   'try: loc = request.user.loc' //
+                                   'except AttributeError: loc = "???"' //
                                    'return {"loc":loc} '))
         return self.proj.context.sync()
 
@@ -321,12 +328,12 @@ class djModule(webModule):
         #
         self.app.admin.mid //\
             "from django.contrib.auth.admin import UserAdmin" //\
-            "from .forms import CustomUserCreationForm, CustomUserChangeForm" //\
+            S("from .forms import CustomUserCreationForm, CustomUserChangeForm", '') //\
             (S("class CustomUserAdmin(UserAdmin):") //
                 "add_form = CustomUserCreationForm" //
                 "form = CustomUserChangeForm" //
-                "model = CustomUser" //
-                (S("list_display = (") //
+                S("model = CustomUser", '') //
+                (S("list_display = (", '') //
                     "'username'," //
                     "'loc'," //
                     "'last_name','first_name','father_name'," //
@@ -345,38 +352,69 @@ class djModule(webModule):
             'admin.site.register(CustomUser,CustomUserAdmin)'
         # (S( + (") //\
         #     "(None, {'fields': [fldz]})," //\
-        return self.app.admin.sync()
+        self.app.admin.sync()
+        self.init_templates_admin()
 
     def init_app_models(self):
         self.app['models'] = self.app.models = pyFile('models')
         self.app // self.app.models
+        #
         self.app.models.top //\
             '# https://tproger.ru/translations/extending-django-user-model/#var2' //\
             "from django.db import models" //\
             '# Django GIS' //\
             'from django.contrib.gis.db import models as gismodels'
+        # validators
+        self.validators = Section('validators')
+        self.app.models.mid // self.validators
+
+        def val(name, rex):
+            return (S(f'val{name} = validators.RegexValidator(r"^{rex[0]}$", message="{rex[1]}")'))
+        self.validators //\
+            'from django.core import validators' //\
+            val('Phone', rexPHONE) //\
+            val('OKATO', rexOKATO) //\
+            val('KLADR', rexKLADR) //\
+            ''
+        #
+        self.init_app_models_customuser()
+        self.init_app_models_location()
+        #
+        self.app.models.sync()
+        self.app.admin.sync()
+
+    def init_app_models_customuser(self):
         # https://webdevblog.ru/sovremennyj-sposob-sozdanie-polzovatelskoj-modeli-user-v-django/
         # https://habr.com/ru/post/313764/
         # https://testdriven.io/blog/django-custom-user-model/
-        #
         manager = Section('manager')
         self.app.models.mid // manager
+        #
+        user_args = ['self', 'username', 'email=None',
+                     'password=None', '**extra_fields']
+        #
+        create_user = Fn("create_user", user_args) //\
+            "user = self.model(username=username, email=email, **extra_fields)" //\
+            "user.set_password(password)" //\
+            "user.save()" //\
+            Return("user")
+        #
+        create_superuser = Fn("create_superuser", user_args)
+        for i in ['staff', 'superuser', 'active']:
+            create_superuser // f"extra_fields.setdefault('is_{i}', True)"
+        for j in ['staff', 'superuser']:
+            create_superuser // f"assert extra_fields.get('is_{j}')"
+        create_superuser //\
+            Return(
+                f"self.{create_user.val}(username=username, email=email, password=password, **extra_fields)")
+        #
         manager //\
-            "from django.contrib.auth.base_user import BaseUserManager" //\
-            "class CustomUserManager(BaseUserManager):" //\
-            "\tdef create_user(self, username, email=None, password=None, **extra_fields):" //\
-            "\t\tuser = self.model(username=username, email=email, **extra_fields)" //\
-            "\t\tuser.set_password(password)" //\
-            "\t\tuser.save()" //\
-            "\t\treturn user" //\
-            "\tdef create_superuser(self, username, email=None, password=None, **extra_fields):" //\
-            "\t\textra_fields.setdefault('is_staff', True)" //\
-            "\t\textra_fields.setdefault('is_superuser', True)" //\
-            "\t\textra_fields.setdefault('is_active', True)" //\
-            "\t\tassert extra_fields.get('is_staff')" //\
-            "\t\tassert extra_fields.get('is_superuser')" //\
-            "\t\treturn self.create_user(username=username, email=email, password=password, **extra_fields)" //\
-            ''
+            S("from django.contrib.auth.base_user import BaseUserManager", '') //\
+            (D('## extended user model') //
+             (Class("CustomUserManager", [Class("BaseUserManager")]) //
+              create_user //
+              create_superuser
+              ))
 #         #     "\t\tuser = CustomUser.objects.create_user(" //\
 #         #     "\t\t\tusername, email, password," //\
 #         #     "\t\t\tfirst_name = 'Dmitry', last_name = 'Ponyatov'" //\
@@ -387,42 +425,58 @@ class djModule(webModule):
             "from django.contrib.auth.models import AbstractUser" //\
             (S("class CustomUser(AbstractUser): # AbstractBaseUser") //
                 "father_name = models.CharField('отчество', max_length=0x22, null=True, blank=True)" //
-                "phone = models.CharField('телефон',max_length=0x11, null=True, blank=True)" //
-                "loc = models.ForeignKey('Location', on_delete=models.DO_NOTHING, null=True, blank=True)"
+                "phone = models.CharField('телефон', max_length=0x11, null=True, blank=True, validators=[valPhone])" //
+                (S("loc = models.ForeignKey('Location',verbose_name='регион',") //
+                 "on_delete=models.DO_NOTHING, null=True, blank=True," //
+                 "limit_choices_to={'userbind':True})")
              )
 #         # "\tUSERNAME_FIELD = 'username'" //\
 #         # "\tREQUIRED_FIELDS = ['email']" //\
 #         # "\tobjects = CustomUserManager()" //\
 #         # "\tdef __str__(self): return '%s %s' % (self.username, self.email)" //\
-        #
+
+    def init_app_models_location(self):
         location = Section('location')
         self.app.models.mid // location
-        location // (S('class Location(gismodels.Model):') //
-                     "name = models.CharField('название', max_length=0x22, blank=False)" //
+        # ФИАС/КЛАДР
+        self.gismodel = Class('gismodels.Model')
+        location // (Class('Location', [self.gismodel]) //
+                     "name = models.CharField('название', max_length=0x22, blank=False, unique=True)" //
+                     "okato = models.CharField('ОКАТО', max_length=11, null=True, blank=True, validators=[valOKATO])" //
+                     "kladr = models.CharField('КЛАДР', max_length=17, null=True, blank=True, validators=[valKLADR])" //
                      "shape = gismodels.PolygonField('границы', null=True, blank=True)" //
-                     (S("class Meta:") //
+                     "userbind = models.BooleanField('привязка пользователей', default=False)" //
+                     (Class("Meta") //
                       "verbose_name = 'регион'" //
                       "verbose_name_plural = 'регионы'" //
-                      "ordering = ['name']") //
-                     (S("def __str__(self):") //
-                      "return '%s'%self.name")
+                      "ordering = ['-userbind','name']") //
+                     (pyFn("__str__", ['self']) //
+                      "return f'{self.name}'")
                      )
-        self.app.admin.bot // 'admin.site.register(Location)'
-#         # profile = Section('profile')
-#         # self.models.mid // profile
-#         # self.proj.admin.bot // 'admin.site.register(Profile)'
-#         # profile // "class Profile(models.Model):" //\
-#         # "from django.contrib.auth.models import User"//\
-#         #     "\tuser = models.OneToOneField(User, verbose_name='пользователь', on_delete=models.CASCADE)" //\
-#         #     "\tloc = models.ForeignKey(Location, verbose_name='регион', on_delete=models.DO_NOTHING)" //\
-#         #     "\tphone = models.CharField('телефон',max_length=0x11,blank=True)" //\
-#         #     "\tclass Meta:" //\
-#         #     "\t\tverbose_name = 'профиль пользователя'" //\
-#         #     "\t\tverbose_name_plural = 'профили пользователей'" //\
-#         #     "\tdef __str__(self):" //\
-#         #     "\t\treturn '%s @ %s | %s'%(self.user,self.loc,self.phone)"
-        self.app.models.sync()
-        return self.app.admin.sync()
+        self.app.admin.bot //\
+            S("from django.contrib.gis.admin.options import OSMGeoAdmin", '') //\
+            (Class('CustomGeoAdmin', [Class('OSMGeoAdmin')]) //
+             'default_lon = 5592262; default_lat = 7028511' //
+             'default_zoom = 6' //
+             "list_display = ['name', 'okato', 'kladr', 'pk', 'userbind']"
+             ) //\
+            (D() // "admin.site.register(Location, CustomGeoAdmin)")
+
+#     def init_app_modelz(self):
+#         #  'admin.site.register(Location)'
+# #         # profile = Section('profile')
+# #         # self.models.mid // profile
+# #         # self.proj.admin.bot // 'admin.site.register(Profile)'
+# #         # profile // "class Profile(models.Model):" //\
+# #         # "from django.contrib.auth.models import User"//\
+# #         #     "\tuser = models.OneToOneField(User, verbose_name='пользователь', on_delete=models.CASCADE)" //\
+# #         #     "\tloc = models.ForeignKey(Location, verbose_name='регион', on_delete=models.DO_NOTHING)" //\
+# #         #     "\tphone = models.CharField('телефон',max_length=0x11,blank=True)" //\
+# #         #     "\tclass Meta:" //\
+# #         #     "\t\tverbose_name = 'профиль пользователя'" //\
+# #         #     "\t\tverbose_name_plural = 'профили пользователей'" //\
+# #         #     "\tdef __str__(self):" //\
+# #         #     "\t\treturn '%s @ %s | %s'%(self.user,self.loc,self.phone)"
 
     def init_app_forms(self):
         self.app['forms'] = self.app.forms = pyFile('forms')
@@ -447,25 +501,18 @@ class djModule(webModule):
     #     # self.templates // File('.gitignore')
     #     # self.init_templates_all()
     #     # self.init_templates_index()
-    #     # self.init_templates_admin()
+    #     #
 
     def init_templates_admin(self):
         admin = Dir('admin')
         self.templates // admin
         admin.sync()
-        base_site = File('base_site.html', comment=None)
+        base_site = htFile('base_site')
         admin // base_site
         base_site //\
             '{% extends "admin/base_site.html" %}' //\
-            '{% load static %}' //\
             '{% block extrahead %}' //\
-            '<link rel="shortcut icon" href="{% static "logo.png" %}" type="image/png">' //\
-            '<style>' //\
-            '* { background:#111 !important; color: #aaa; }' //\
-            'input,select { background-color: lightyellow !important; color:black !important; }' //\
-            'a:hover { color:lightblue; }' //\
-            '.required { color:yellow !important; }' //\
-            '</style>' //\
+            self.templates_all_head() //\
             '{% endblock %}'
         return base_site.sync()
 
@@ -480,11 +527,7 @@ class djModule(webModule):
 
     def init_templates_index(self):
         super().init_templates_index()
-        self.templates['index'] = self.templates.index = File(
-            'index.html', comment='<!--')
-        self.templates // self.templates.index
-        self.templates.index.top // "{% extends 'all.html' %}"
-        self.templates.index.top // "{% load static %}" // ''
+        self.templates.index.top // "{% load static %}"
         return self.templates.index.sync()
 
     def init_proj(self):
@@ -625,7 +668,7 @@ class djModule(webModule):
         self.app['views'] = self.app.views = pyFile('views')
         self.app // self.app.views
         self.app.views.top //\
-            "from django.http import HttpResponse" //\
+            "from django.http import HttpResponse, HttpResponseRedirect" //\
             "from django.template import loader" //\
             "from .models import *"
         self.app.views.mid //\
@@ -662,21 +705,20 @@ class djModule(webModule):
 #         self.gitignore.bot // ('/%sz/' % self.val)
 #         self.gitignore.sync()
 
-#     def init_manage(self):
-#         self.manage = self['manage'] = pyFile('manage')
-#         self.mksrc(self.manage)
-#         self.diroot // self.manage
-#         self.manage.top // ('## @file %s' % self.file())
-#         self.manage.top // pyImport('os') // pyImport('sys')
-#         self.manage.main = pyFn('main')
-#         self.manage.main // (
-#             "os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'proj.settings')")
-#         self.manage.main // "from django.core.management import execute_from_command_line"
-#         self.manage.main // "execute_from_command_line(sys.argv)"
-#         self.manage.mid // self.manage.main
-#         self.manage.bot // "if __name__ == '__main__':"
-#         self.manage.bot // '\tmain()'
-#         self.manage.sync()
+    def init_manage(self):
+        self.manage = self['manage'] = pyFile('manage')
+        self.mksrc(self.manage)
+        self.diroot // self.manage
+        self.manage.top //\
+            pyImport('os') // pyImport('sys') // pyImport('config')
+        self.manage.main = Fn('main')
+        self.manage.mid // self.manage.main
+        self.manage.main //\
+            "os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'proj.settings')" //\
+            "from django.core.management import execute_from_command_line" //\
+            "execute_from_command_line(sys.argv)"
+        self.manage.bot // (S("if __name__ == '__main__':") // 'main()')
+        self.manage.sync()
 
 
 # # MODULE = djModule('dja')

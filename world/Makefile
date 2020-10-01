@@ -27,7 +27,6 @@ PIP      = $(CWD)/bin/pip3
 PY       = $(CWD)/bin/python3
 PYT      = $(CWD)/bin/pytest
 PEP      = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402
-
 # / <section:tools>
 # / <section:top>
 # \ <section:mid>
@@ -38,50 +37,47 @@ SRC += $(MODULE).py
 .PHONY: all
 all: TM_WORLD_BORDERS_SIMPL-0.3.readme \
 	TM_WORLD_BORDERS_SIMPL-0.3.shp Regions.shp location.json
-
-location.json: Orenburg.shp Penza.shp Samara.shp Saratov.shp Ulianovsk.shp
+location.json: $(MODULE).py \
+	Orenburg.shp Penza.shp Samara.shp Saratov.shp Ulianovsk.shp
 	$(PY) $(MODULE).py [
-	$(PY) $(MODULE).py Orenburg.shp  "Оренбургская область" 1
-	$(PY) $(MODULE).py Penza.shp     "Пензенская область"   2
-	$(PY) $(MODULE).py Samara.shp    "Самарская область"    3
-	$(PY) $(MODULE).py Saratov.shp   "Саратовская область"  4
-	$(PY) $(MODULE).py Ulianovsk.shp "Ульяновская область"  5
+	$(PY) $(MODULE).py Orenburg.shp   1 "Оренбургская область" "53000000000" "5600000000000"
+	$(PY) $(MODULE).py Penza.shp      2 "Пензенская область"   "" ""
+	$(PY) $(MODULE).py Samara.shp     3 "Самарская область"    "36000000000" "6300000000000"
+	$(PY) $(MODULE).py Saratov.shp    4 "Саратовская область"  "" ""
+	$(PY) $(MODULE).py Ulianovsk.shp  5 "Ульяновская область"  "" ""
 	$(PY) $(MODULE).py ]
+
 # / <section:all>
+# \ <section:doc>
+.PHONY: doc
+doc:
+# / <section:doc>
 %.shp: tmp/%.zip
 	unzip $< && touch $@ && ogrinfo $@
 	mv Readme.txt TM_WORLD_BORDERS_SIMPL-0.3.readme
-
 tmp/TM_WORLD_BORDERS_SIMPL-0.3.zip:
 	$(WGET) -O $@ https://thematicmapping.org/downloads/TM_WORLD_BORDERS_SIMPL-0.3.zip
-
 tmp/Regions.zip:
 	$(WGET) -O $@ http://gisgeo.org/assets/files/Regions.zip
-
 Orenburg.shp: Regions.shp Makefile
 	ogr2ogr -where "NAME='Оренбургская область'" -lco ENCODING=UTF-8 $@ $<
-
 Penza.shp: Regions.shp Makefile
 	ogr2ogr -where "NAME='Пензенская область'" -lco ENCODING=UTF-8 $@ $<
-
 Samara.shp: Regions.shp Makefile
 	ogr2ogr -where "NAME='Самарская область'" -lco ENCODING=UTF-8 $@ $<
-
 Saratov.shp: Regions.shp Makefile
 	ogr2ogr -where "NAME='Саратовская область'" -lco ENCODING=UTF-8 $@ $<
-
 Ulianovsk.shp: Regions.shp Makefile
 	ogr2ogr -where "NAME='Ульяновская область'" -lco ENCODING=UTF-8 $@ $<
-
 # / <section:mid>
 # \ <section:bot>
 # \ <section:install>
 .PHONY: install
 install:
 	$(MAKE) $(OS)_install
+	$(MAKE) doc
 	$(MAKE) $(PIP)
 	$(PIP)  install    -r requirements.pip
-
 # / <section:install>
 # \ <section:update>
 .PHONY: update
@@ -89,7 +85,6 @@ update:
 	$(MAKE) $(OS)_update
 	$(PIP)  install -U    pip
 	$(PIP)  install -U -r requirements.pip
-
 # \ <section:py/install>
 $(PIP) $(PY):
 	python3 -m venv .
@@ -106,8 +101,8 @@ Linux_install Linux_update:
 # / <section:linux/install>
 # \ <section:merge>
 MERGE  = Makefile apt.txt .gitignore .vscode
-MERGE += README.md
-MERGE += requirements.pip $(MODULE).py
+MERGE += doc src tmp README.md
+MERGE += requirements.pip $(MODULE).py test_$(MODULE).py
 # / <section:merge>
 .PHONY: master shadow release zip
 
@@ -127,8 +122,6 @@ release:
 
 zip:
 	git archive --format zip \
-		--output ~/tmp/$(MODULE)_src_$(NOW)_$(REL).zip \
-		HEAD
-	
-
+	--output ~/tmp/$(MODULE)_src_$(NOW)_$(REL).zip \
+	HEAD
 # / <section:bot>

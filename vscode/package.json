@@ -1,0 +1,9 @@
+
+{
+	"name":"vscode",
+	"description": "VSCode Language Server for live `metaL`",
+	"version": "0.0.1",
+	"publisher": "Dmitry Ponyatov <dponyatov@gmail.com>",
+	"repository": "https://github.com/ponyatov/metaL/tree/master/vscode",
+	"main":"./extension.js"
+}

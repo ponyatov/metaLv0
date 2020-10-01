@@ -1,5 +1,6 @@
 <map id="metaL.Class" name="metaL.Class">
-<area shape="rect" id="node4" href="$classmetaL_1_1pyClass.html" title="metaL.pyClass" alt="" coords="5,229,116,256"/>
-<area shape="rect" id="node2" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="15,80,106,107"/>
-<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="11,5,111,32"/>
+<area shape="rect" id="node4" href="$classdistill_1_1mClass.html" title="tagged class " alt="" coords="5,229,107,256"/>
+<area shape="rect" id="node5" href="$classmetaL_1_1pyClass.html" title="metaL.pyClass" alt="" coords="131,229,242,256"/>
+<area shape="rect" id="node2" href="$classmetaL_1_1Meta.html" title="metaL.Meta" alt="" coords="76,80,167,107"/>
+<area shape="rect" id="node3" href="$classmetaL_1_1Object.html" title="base object graph node " alt="" coords="71,5,171,32"/>
 </map>

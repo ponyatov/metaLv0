@@ -1,0 +1,4 @@
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+leaflet.*
+images/marker-*
+images/layers*.png
