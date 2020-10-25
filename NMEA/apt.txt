@@ -1,0 +1,3 @@
+git make wget
+build-essential tcc
+ragel

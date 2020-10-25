@@ -1,0 +1,60 @@
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+#include <NMEA.h>
+// / <section:top>
+// \ <section:mid>
+%%{
+    machine NMEA;
+    alphtype unsigned char;
+    eol = '\r'?'\n';
+    ws  = [ \t];
+    
+    comment  = '#'[^\r\n]*;
+
+    conventional =       '$'         >{s=p;} @{token("conventional",s,p+1);}       ;
+    special      =       '!'         >{s=p;} @{token("special"     ,s,p+1);}       ;
+    crc          = '*' ( [0-9A-F]{2} >{s=p;} @{token("crc"         ,s,p+1);} )     ;
+    nmeatoken    =     ( [A-Z]+      >{s=p;} @{token("nmeatoken"   ,s,p+1);} ) ',' ;
+
+    generic =
+        (conventional|special)
+        (nmeatoken [^\r\n]+    >{crc_count=0;} ${crc_count ^= *p;}                                                      )
+        (crc                                                       @{printf("\ncrc check: crc_count= %.2x",crc_count);} )
+    ;
+        
+    NMEA := |*
+        comment  => {token("comment" ,ts,te);};
+        generic => {token("generic",ts,te);};
+        eol => {token("eol",ts,ts);};
+    *|;
+}%%
+void parse(unsigned char *p, unsigned char *pe) {
+    assert(p<pe);
+    printf("\nchars:%i",pe-p);
+    %%write data;
+    
+        unsigned char* ts  = (unsigned char*) NULL;
+        unsigned char* te  = ts;
+        unsigned char*  s  = p;
+        unsigned char* eof = pe;
+        unsigned int
+            cs  = NMEA_start,
+            act = 0;
+
+        uint8_t crc_count  = 0;
+        
+    %%write init;
+    %%write exec;
+}
+// / <section:mid>
+// \ <section:bot>
+
+void token(char *name, unsigned char *ts, unsigned char *te) {
+    assert(ts); assert(te); assert(ts<=te);
+    printf("\n%s:{",name);
+    printf(" %x %x ",ts,te);
+    for (unsigned char *c=ts;c<te;c++)
+        printf("%c",*c);
+    printf("}");
+}
+// / <section:bot>

@@ -214,6 +214,19 @@ class TestIntMath():
 ## @ingroup test
 class TestFn:
 
+    def test_args(self):
+        assert Args([]).test() == '\n<args:>'
+        assert argc.test() == '\n<cint:argc>'
+        assert argc.file() == 'int argc'
+        assert argv.test() == '\n<arg:char *argv[]>'
+        assert argv.file() == 'char *argv[]'
+        assert main.test() ==\
+            '\n<cfn:main>' +\
+            '\n\targs = <args:>' +\
+            '\n\t\t0: <cint:argc>' +\
+            '\n\t\t1: <arg:char *argv[]>' +\
+            '\n\tret = <cint:0>'
+
     def test_empty(self):
         ast = parser.parse('{}')
         assert ast.test() == \

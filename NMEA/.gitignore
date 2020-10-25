@@ -1,0 +1,12 @@
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+# \ <section:top>
+*~
+*.swp
+*.log
+# / <section:top>
+# \ <section:mid>
+*.exe
+*.o
+/bin/NMEA
+# / <section:mid>
+/tmp/ragel.c

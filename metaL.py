@@ -294,7 +294,10 @@ class Object:
         self.nest.insert(index, that)
         return self
 
-    def drop(self): self.nest.pop(); return self
+    def drop(self, count=1):
+        for i in range(count):
+            self.nest.pop()
+        return self
 
     ## find index of subgraph
     def index(self, that):
@@ -401,7 +404,8 @@ class String(Primitive):
 
     def _val(self):
         s = ''
-        for c in self.val:
+        v = '' if self.val == None else self.val
+        for c in v:
             if c == '\n':
                 s += r'\n'
             elif c == '\r':
@@ -414,8 +418,10 @@ class String(Primitive):
 
     def file(self, depth=0, tab=None):
         assert tab
-        assert len(self.par) == 1
+        # assert len(self.par) == 1
         ret = self.pad(depth, self.par[0].block, tab) + f'{self.val}'
+        if self.val is None:
+            ret = ''
         ret += f' {self.rem}' if self.rem else ''
         for i in self.nest:
             ret += i.file(depth + 1, tab)
@@ -528,7 +534,17 @@ class Vector(Container):
 
 ## @ingroup cont
 class Tuple(Vector):
-    pass
+    def __init__(self, nest=[]):
+        super().__init__('')
+        for i in nest:
+            self // i
+
+    def file(self, depth=0, tab=None):
+        return f'{self}'
+
+    def __format__(self, spec):
+        assert not spec
+        return ', '.join(f'{i.__format__(spec)}' for i in self.nest)
 
 ## @ingroup cont
 ## FIFO stack
@@ -552,10 +568,10 @@ class Active(Object):
 ## function
 class Fn(Active):
 
-    def __init__(self, V, args=[]):
+    def __init__(self, V, args=[], returns=Nil()):
         super().__init__(V)
-        self['args'] = self.args = Args(nest=args)
-        self['ret'] = self.ret = Nil()
+        self['args'] = self.args = Args(args)
+        self['ret'] = self.ret = returns
         self.block = True
 
     def eval(self, ctx): return self
@@ -639,7 +655,7 @@ class Meta(Object):
 ## @ingroup meta
 ## source code
 class S(Meta, String):
-    def __init__(self, start='', end=None, block=True, **kwargs):
+    def __init__(self, start=None, end=None, block=True, **kwargs):
         if 'doc' in kwargs:
             String.__init__(self, kwargs['doc'], block, tab=0)
         else:
@@ -694,6 +710,7 @@ class H(S):
         ret = self.pad(depth, self.par[0].block, tab) + f'<{self.val}'
         for i in sorted(self.slot.keys()):
             j = 'class' if i == 'clazz' else i
+            j = re.sub(r'_', r'-', j)
             ret += f' {j}="{self.slot[i]}"'
         ret += '>'
         for j in self.nest:
@@ -710,24 +727,15 @@ class Return(S):
 class Arg(Meta, Name):
     def __int__(self): return self.val
 
-    def file(self, depth=0, tab=None):
+    def file(self, depth=0, tab=' '):
         assert tab
         return f'{self}'
 
 ## @ingroup meta
 class Args(Meta, Tuple):
-    def __init__(self, V='', nest=[]):
-        Tuple.__init__(self, V)
+    def __init__(self, nest=[]):
+        Tuple.__init__(self, nest=nest)
         self.block = False
-        for i in nest:
-            self // i
-
-    def file(self, depth=0, tab=None):
-        assert tab
-        return f'{self}'
-
-    def __format__(self, spec):
-        return ', '.join(f'{i.__format__(spec)}' for i in self.nest)
 
 ## @ingroup meta
 class Class(Meta):
@@ -738,7 +746,7 @@ class Class(Meta):
         else:
             super().__init__(C)
         if sup:
-            self['sup'] = self.sup = Args('super', nest=sup)
+            self['sup'] = self.sup = Args(sup)
         self.block = True
 
     def colon(self, that, ctx):
@@ -832,7 +840,6 @@ class Section(Meta):
             ret += f'{comment} / {head}{commend}'
         return ret
 
-    # def py(self): return self.file()
 
 ## @defgroup io IO
 ## @ingroup object
@@ -1119,12 +1126,18 @@ class README(File):
         self.github = Section('github')
         self // self.github
         self.github // '' // f"github: {module['GITHUB']}" // ''
-        self // '### Install' // f'''
-```
-~$ git clone --depth 1 -o gh {self.module.GITHUB} ~/metaL
-~$ cd ~/metaL/{self.module}
-~/metaL$ make install
-```'''
+        # install
+        self.install = Section('install')
+        self // self.install
+        self.install // '## Install' //\
+            self.module.readme.install
+        # tutorial
+        self.tutorial = Section('tutorial')
+        self // self.tutorial
+        self.tutorial // '## Tutorial' //\
+            self.module.readme.tutorial
+        # self.module.init_readme_tutorial()
+
 
 ## @ingroup prj
 class Makefile(File):
@@ -1195,6 +1208,8 @@ class dirModule(Module):
         self.init_dirs()
         # Makefile
         self.init_mk()
+        # README
+        self.init_readme()
 
     def init_first(self): pass
 
@@ -1203,6 +1218,7 @@ class dirModule(Module):
         self.diroot // self.tmp
         self.tmp.giti = File('.gitignore')
         self.tmp // self.tmp.giti
+        self.tmp.giti // '*.zip'
         self.tmp.giti.sync()
 
     ## create defaut Makefile
@@ -1229,8 +1245,10 @@ class dirModule(Module):
         self.mk.dirs //\
             f'{"CWD":<8} = $(CURDIR)' //\
             f'{"BIN":<8} = $(CWD)/bin' //\
+            f'{"LIB":<8} = $(CWD)/lib' //\
             f'{"TMP":<8} = $(CWD)/tmp' //\
-            f'{"SRC":<8} = $(CWD)/src'
+            f'{"SRC":<8} = $(CWD)/src' //\
+            f'{"GZ":<8} = $(HOME)/gz'
         # tools
         self.mk['tools'] = self.mk.tools = Section('tools')
         self.mk.top // self.mk.tools
@@ -1241,6 +1259,9 @@ class dirModule(Module):
             f'{"CORES":<8} = $(shell grep proc /proc/cpuinfo|wc -l)' //\
             self.mk.xpath //\
             f'{"XMAKE":<8} = $(XPATH) $(MAKE) -j$(CORES)'
+        # lib
+        self.mk.lib = self['lib'] = Section('lib')
+        self.mk.mid // self.mk.lib
         # src
         self.mk.src = self['src'] = Section('src')
         self.mk.mid // self.mk.src
@@ -1249,13 +1270,35 @@ class dirModule(Module):
         self.mk.mid // self.mk.obj
         # all
         self.mk.all = self['all'] = Section('all')
-        self.mk.mid // self.mk.all
+        self.mk.all.targets = S('all:', block=False)
+        self.mk.mid // ((D('.PHONY: all') //
+                         self.mk.all.targets //
+                         (S() //
+                          self.mk.all //
+                          '$(MAKE) test'
+                          )))
+        # test
+        self.mk.test = self['test'] = Section('test', comment=None) // '$^'
+        self.mk.test.targets = S('test:', block=False)
+        self.mk.mid // ((D('.PHONY: test') //
+                         self.mk.test.targets //
+                         (S() //
+                          self.mk.test)))
+        # repl
+        self.mk.repl = self['repl'] = Section('repl')
+        self.mk.repl.targets = S('repl:', block=False)
+        self.mk.mid // ((D('.PHONY: repl') //
+                         self.mk.repl.targets //
+                         (S() //
+                          '$(MAKE) test' //
+                          self.mk.repl //
+                          '$(MAKE) $@')))
         # rules
         self.mk.rules = self['rules'] = Section('rules')
         self.mk.mid // self.mk.rules
         # doc
         self.mk.doc = Section('doc')
-        self.mk.doc.doc = S('.PHONY: doc\ndoc:')
+        self.mk.doc.doc = S('.PHONY: doc\ndoc:', '', 0)
         self.mk.mid // (self.mk.doc // self.mk.doc.doc)
         # install
         install = Section('install')
@@ -1316,6 +1359,25 @@ class dirModule(Module):
         self.giti.top // '*~' // '*.swp' // '*.log'
         return self.giti.sync()
 
+    def init_readme(self):
+        self.readme = Section('readme')
+        self.readme.preinstall = Section(
+            'preinstall') // self.readme_preinstall()
+        self.readme.postinstall = Section(
+            'postinstall') // self.readme_postinstall()
+        self.readme.install = Section('install') //\
+            self.readme.preinstall //\
+            (S("\n```", "```\n") //
+             f"~$ git clone --depth 1 -o gh https://github.com/ponyatov/metaL ~/metaL" //
+             f"~$ cd ~/metaL/{self}" //
+             f"~/metaL/{self}$ make install") //\
+            self.readme.postinstall
+        self.readme.tutorial = Section('tutorial') // self.readme_tutorial()
+
+    def readme_preinstall(self): return ''
+    def readme_postinstall(self): return ''
+    def readme_tutorial(self): return ''
+
 ## @ingroup prj
 ## extended project template includes some IDE configs and build script extensions
 ##
@@ -1326,6 +1388,24 @@ class anyModule(dirModule):
         self.init_lic()
         self.init_vscode()
         self.init_doc()
+        self.init_config()
+
+    def init_config(self):
+        self.config = Dict('config')
+        #
+        import uuid
+        secret_key = xxhash.xxh64(str((uuid.getnode(), self))).hexdigest()
+        self.config['secret_key'] = self.config.secret_key = secret_key
+        #
+        self.config['host'] = self.config.host = Ip('127.0.0.1')
+        #
+        import crc16
+
+        def port_scale(port):
+            return int(1024 + ((0xBFFF - 1024) / (0xFFFF)) * port)
+        self.config['port'] = self.config.port = port_scale(
+            crc16.crc16xmodem(self.val.encode('utf8')))
+        assert self.config.port in range(1024, 0xBFFF)
 
     def init_doc(self):
         self['doc'] = self.doc = Dir('doc')
@@ -1363,8 +1443,16 @@ class anyModule(dirModule):
         self.mk.mid // self.mk.rules
         self.mk.sync()
 
+    def init_bin(self):
+        self.bin = Dir('bin')
+        self.diroot // self.bin
+        self.bin.giti = File('.gitignore')
+        self.bin // self.bin.giti
+        self.bin.giti.sync()
+
     def init_dirs(self):
         super().init_dirs()
+        self.init_bin()
         #
         self['src'] = self.src = Dir('src')
         self.diroot // self.src
@@ -1407,10 +1495,13 @@ class anyModule(dirModule):
         assoc = Section('assoc')
         self.vscode['assoc'] = self.vscode.assoc = assoc
         settings.mid // (S('"files.associations": {', '},') // assoc)
+        assoc //\
+            '"*{rc,sh}": "shellscript",' //\
+            '"ws.?":"json",'
         #
         settings.sync()
 
-    def vs_make(self, target, group='make'):
+    def vs_task(self, target, group='make'):
         return (S('{', '},') //
                 f'"label": "{group}: {target}",' //
                 '"type": "shell",' //
@@ -1418,13 +1509,11 @@ class anyModule(dirModule):
                 '"problemMatcher": [],'
                 )
 
+    def vs_make(self, target, group='make'):
+        return self.vs_task(target, group)
+
     def vs_git(self, target, group='git'):
-        return (S('{', '},') //
-                f'"label": "{group}: {target}",' //
-                '"type": "shell",' //
-                f'"command": "make {target}",' //
-                '"problemMatcher": [],'
-                )
+        return self.vs_task(target, group)
 
     def init_vscode_tasks(self):
         self.vscode['tasks'] = self.tasks = File('tasks.json', comment='//')
@@ -1478,16 +1567,44 @@ class CC(Object):
     pass
 
 ## @ingroup cc
-## cross-compiler module / embedded C/C++
-##
-##
-class ccModule(anyModule):
-    def init_mk(self):
-        super().init_mk()
-        self.init_h()
-        self.init_c()
+## generic ANSI C module (POSIX)
+class cModule(anyModule):
 
-    def init_mk(self):
+    def __init__(self, V=None):
+        super().__init__(V)
+        self.init_c()
+        self.init_h()
+
+    def init_c(self):
+        self.c = cFile(self)
+        self.src // self.c
+        self.c.top // cInclude(f'{self}')
+        self.c.sync()
+
+    def init_h(self):
+        self.h = hFile(self)
+        self.h.top // stdlib // stdio // stdass
+        self.src // self.h
+        self.h.sync()
+
+    def mixin_apt(self):
+        self.apt // 'build-essential tcc'
+        self.apt.sync()
+
+    def init_apt(self):
+        super().init_apt()
+        self.mixin_apt()
+
+    def init_giti(self):
+        super().init_giti()
+        self.giti.mid // '*.exe' // '*.o' // f'/bin/{self:m}'
+        return self.giti.sync()
+
+    def __mixin__(self):
+        cModule.mixin_mk(self)
+        cModule.mixin_apt(self)
+
+    def mixin_mk(self):
         #
         self.mk.tools // f'{"TCC":<8} = tcc'
         self.mk.tools // f'{"CC":<8} = $(TCC)'
@@ -1497,12 +1614,181 @@ class ccModule(anyModule):
         self.mk.tools // f'{"OBJDUMP":<8} = objdump'
         self.mk.tools // f'{"SIZE":<8} = size'
         #
+        self.mk.sync()
+
+    def init_mk(self):
+        super().init_mk()
+        self.mixin_mk()
+        #
         self.mk['flags'] = self.mk.flags = Section('flags')
         self.mk.top // self.mk.flags
-        self.mk.flags // f'{"OPT":<8} = -O0 -g2 '
-        self.mk.flags // f'{"CFLAGS":<8} = $(OPT) -I.'
+        self.mk.flags // f'{"OPT":<8} = -O0 -g2'
+        self.mk.flags // f'{"CFLAGS":<8} = $(OPT) -I$(SRC) -I$(TMP)'
         #
-        self.mk.obj // ('OBJ += %s' % self.val)
+        self.mk.obj // f'{"OBJ":<7} += $(TMP)/{self}.o'
+        #
+        # self.mk.all.targets // ' $(BIN)/$(MODULE)'
+        self.mk.test.targets // ' $(BIN)/$(MODULE)'
+        #
+        self.mk.rules //\
+            (S('$(BIN)/$(MODULE): $(OBJ)') //
+             '$(CC) $(CFLAGS) -o $@ $^'
+             )
+        for i in ['SRC', 'TMP']:
+            cc = '$(CC) $(CFLAGS) -o $@ -c $<'
+            mh = '$(SRC)/$(MODULE).h'
+            self.mk.rules //\
+                (S(f'$(TMP)/%.o: $({i})/%.c {mh} $({i})/%.h') // cc) //\
+                (S(f'$(TMP)/%.o: $({i})/%.c {mh}') // cc)
+        #
+        self.mk.sync()
+
+    def mixin_ragel(self):
+        (self.apt // 'ragel').sync()
+        (self.giti // '/tmp/ragel.c').sync()
+        #
+        self.mk.tools // f'{"RAGEL":<8} = ragel'
+        self.mk.obj // f'{"OBJ":<7} += $(TMP)/ragel.o'
+        self.mk.rules //\
+            (S('$(SRC)/ragel.c: $(SRC)/$(MODULE).ragel') //
+                '$(RAGEL) -G2 -o $@ $<')
+        self.mk.mid //\
+            '.PHONY: ragel\nragel: $(SRC)/ragel.c'
+        self.mk.sync()
+        #
+        self.h.mid //\
+            'extern void parse(unsigned char *p , unsigned char *pe);' //\
+            'extern void token(char *name, unsigned char *ts, unsigned char *te);'
+        self.h.sync()
+        #
+        self.ragel = cFile(f'{self:m}', ext='.ragel', comment='//')
+        self.src // self.ragel
+        self.ragel.top //\
+            f'#include <{self:m}.h>'
+        self.ragel.rex = Section('rex', comment=None) //\
+            r"eol = '\r'?'\n';" //\
+            r'ws  = [ \t];'
+        self.ragel.scan = Section('scanner', comment=None)
+        self.ragel.mid //\
+            (S('%%{', '}%%') //
+             f'machine {self:m};' //
+             'alphtype unsigned char;' //
+             self.ragel.rex //
+             (S(f'{self:m} := |*', '*|;') //
+              self.ragel.scan //
+              'eol => {token("eol",ts,ts);};'
+              )
+             )
+        self.ragel.sync()
+
+    def mixin_skelex(self):
+        self.mk.skelex = Section('skelex')
+        self.mk.rules // self.mk.skelex
+        self.mk.tools //\
+            f'{"LEX":<8} = flex' //\
+            f'{"YACC":<8} = bison'
+        self.mk.obj //\
+            'OBJ += $(TMP)/lexer.o' //\
+            'OBJ += $(TMP)/parser.o'
+        self.mk.skelex //\
+            (S('$(TMP)/lexer.c: $(SRC)/lexer.lex') //
+                '$(LEX) -o $@ $<') //\
+            (S('$(TMP)/parser.c: $(SRC)/parser.yacc') //
+                '$(YACC) -o $@ $<') //\
+            '$(TMP)/parser.h: $(TMP)/parser.c' //\
+            '$(SRC)/$(MODULE).h: $(TMP)/parser.h'
+        self.mk.sync()
+        #
+        lexinc = (S('%{', '%}') // (S() // cInclude(f'{self}')))
+        self.lex = lexFile('lexer')
+        self.src // self.lex
+        self.lex.comments = Section('comments')
+        self.lex //\
+            lexinc //\
+            '%option yylineno noyywrap' //\
+            '%%' //\
+            self.lex.comments //\
+            f'{".":<8} {{yyerror("lexer");}}' //\
+            '%%'
+        self.lex.sync()
+        #
+        self.yacc = yaccFile('parser')
+        self.src // self.yacc
+        self.yacc.union = Section('union')
+        YYERR = '"\\n\\n%i: %s [%s]\\n\\n",yylineno,msg,yytext'
+        self.yacc //\
+            lexinc //\
+            '%defines' //\
+            (S('%union {', '}') // self.yacc.union) //\
+            '%%' //\
+            'REPL:' //\
+            '%%' //\
+            (S('void yyerror(char *msg) {', '}') //
+             f'fprintf(stderr,{YYERR});' //
+             'fflush(stderr);' //
+             'exit(-1);'
+             )
+        self.yacc.sync()
+        #
+        self.h // (Section('parser') //
+                   'extern int yylex();' //
+                   'extern char* yytext;' //
+                   'extern FILE* yyin;' //
+                   'extern int yyparse();' //
+                   'extern void yyerror(char*);' //
+                   'extern int yylineno;' //
+                   cInclude(f'parser'))
+        self.h.sync()
+        #
+        (self.tmp.giti // 'lexer.*' // 'parser.*').sync()
+
+    def init_vscode_ext(self):
+        super().init_vscode_ext()
+        self.vscode.ext.ext //\
+            '"ms-vscode.cpptools",'
+        #  // '"tintinweb.vscode-decompiler",'
+        self.vscode.ext.sync()
+
+    def init_vscode_settings(self):
+        super().init_vscode_settings()
+        #
+        self.vscode.cpp = jsonFile('c_cpp_properties')
+        self.vscode // self.vscode.cpp
+        include = \
+            '"includePath": ["${workspaceFolder}/src/**", "${workspaceFolder}/tmp/**"],'
+        linux = \
+            (S('{', '}') //
+             '"name": "Linux",' //
+             '"compilerPath": "/usr/bin/tcc",' //
+             include //
+             '"cStandard": "c99"'
+             )
+        self.vscode.cpp //\
+            '// https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference' //\
+            (S('{', '}') //
+             (S('"configurations": [', '],') //
+                 linux
+              ) //
+             '"version": 4'
+             )
+        self.vscode.cpp.sync()
+        #
+        self.vscode.watcher //\
+            '"**/*.o":true,' //\
+            f'"bin/{self:m}":true,'
+        self.vscode.assoc //\
+            '"*.[c|h]":"c",'
+        self.vscode.settings.sync()
+
+## @ingroup cc
+## cross-compiler module / embedded C/C++
+class ccModule(cModule):
+
+    def __mixin__(self):
+        cModule.mixin(self)
+
+    def init_mk(self):
+        super().init_mk()
         #
         self.mk.all // 'all: $(MODULE)'
         self.mk.all // "\t./$^"
@@ -1514,8 +1800,7 @@ class ccModule(anyModule):
     def init_h(self):
         self['h'] = self.h = hFile(self.val)
         self.diroot // self.h
-        self.h.top // stdlib // stdio
-        self.h.top // ccInclude('assert.h')
+        self.h.top // "ccInclude('assert.h')"
         self.h.sync()
         self.mk.src // ('H += %s' % self.h.file())
 
@@ -1526,33 +1811,23 @@ class ccModule(anyModule):
         self.c.sync()
         self.mk.src // ('C += %s' % self.c.file())
 
-    def init_apt(self):
-        super().init_apt()
-        self.apt // 'tcc binutils'
-        return self.apt.sync()
-
-    def init_giti(self):
-        super().init_giti()
-        self.giti.mid // '*.exe' // '*.o'
-        return self.giti.sync()
 
 ## @ingroup cc
-class cFile(CC, File):
+class cFile(File):
     def __init__(self, V, ext='.c', comment='//'):
-        super().__init__(V, ext=ext, comment=comment)
-        self.top // ccInclude(self)
+        super().__init__(V, ext=ext, comment=comment, tab=' ' * 4)
 
 ## @ingroup cc
-class hFile(CC, File):
-    def __init__(self, V, ext='.h', comment='//'):
-        super().__init__(V, ext=ext, comment=comment)
-        self.top // ('#ifndef _%s_H' % V.upper())
-        self.top // stdint
-        self.bot // ('#endif %s _%s_H' % (comment, V.upper()))
-
+class lexFile(File):
+    def __init__(self, V, ext='.lex'):
+        super().__init__(V, ext=ext, comment=None, tab=' ' * 4)
+## @ingroup cc
+class yaccFile(File):
+    def __init__(self, V, ext='.yacc', comment='/*'):
+        super().__init__(V, ext=ext, comment=comment, tab=' ' * 4)
 
 ## @ingroup cc
-class ccInclude(CC, Module):
+class cInclude(CC, Module):
     def __init__(self, V):
         if isinstance(V, File):
             V = V.file()
@@ -1560,62 +1835,95 @@ class ccInclude(CC, Module):
 
     def file(self, depth=0, tab=None):
         assert tab
-        return '#include <%s>' % self.val
+        return f'\n#include <{self}.h>'
 
 
-stdint = ccInclude('stdint.h')
-stdlib = ccInclude('stdlib.h')
-stdio = ccInclude('stdio.h')
+## @ingroup cc
+stdint = cInclude('stdint')
+## @ingroup cc
+stdlib = cInclude('stdlib')
+## @ingroup cc
+stdio = cInclude('stdio')
+## @ingroup cc
+stdass = cInclude('assert')
+
+## @ingroup cc
+class hFile(CC, File):
+    def __init__(self, V, ext='.h', comment='//'):
+        super().__init__(V, ext=ext, comment=comment)
+        self.top //\
+            f'#ifndef _{V:u}_H'
+        self.bot //\
+            f'#endif {comment} _{V:u}_H'
 
 ## @ingroup cc
 ## C type
-class ccType(CC):
+class cType(CC):
     def file(self, depth=0, tab=None):
         assert tab
         return '%s %s' % (self.cc_type(), self.cc_val())
-    ## C type (without first `cc` prefix)
-    def cc_type(self): return self._type()[2:]
-    ## object value
-    def cc_val(self): return '%s' % self.val
 
-class ccInt(ccType):
-    pass
+    def __format__(self, spec):
+        if spec in ['']:
+            return f'{self:t} {self:v}'
+        if spec in ['v']:
+            return f'{self.val}'
+        if spec in ['t']:
+            return f'{self._type()[1:]}'
+        raise TypeError(spec)
+
+    def file(self, depth=0, tab=None):
+        return f'{self:t} {self:v}'
+
+class cInt(cType):
+    def __init__(self, V=0):
+        super().__init__(V)
 
 
-ccint = ccInt(0)
+cint = cInt()
 
 ## @ingroup cc
-class ccVoid(ccType):
+class cVoid(cType):
+    def __init__(self, V=''):
+        super().__init__(V)
+
     def cc_arg(self): return ''
 
 
-ccvoid = ccVoid('')
+cvoid = cVoid()
 
+## @ingroup cc
+class cArgs(Tuple):
+    pass
 
 ## @ingroup cc
 ## function
-class ccFn(CC, Fn):
-    def __init__(self, name, args=ccvoid, returns=ccvoid):
-        super().__init__(name)
-        assert isinstance(args, Object)
-        self['args'] = args
-        assert isinstance(returns, Object)
-        self['ret'] = returns
+class cFn(CC, Fn):
 
     def file(self, depth=0, tab=None):
         assert tab
-        ret = '\n%s %s(%s) {' % (
-            self['ret'].cc_type(), self.val, self['args'].cc_arg())
+        ret = self.pad(depth, self.par[0].block, tab) + \
+            f'{self["ret"]:t} {self}({self["args"]}) {{'
         for j in self.nest:
-            ret += '\n\t%s;' % j.cc_call()
-        ret += '\n\treturn %s;\n}' % self['ret'].cc_val()
+            ret += j.file(depth + 1, tab)
+        ret += self.pad(depth + 1,
+                        self.par[0].block, tab) + f'return {self["ret"]:v};'
+        ret += self.pad(depth, self.par[0].block, tab) + f'}}'
         return ret
 
-    def cc_call(self):
-        return '%s(%s)' % (self.val, self['args'].cc_arg())
+    # # def cc_call(self):
+    # #     return '%s(%s)' % (self.val, self['args'].cc_arg())
 
-    def cc_arg(self):
-        return self._val()
+    # # def cc_arg(self):
+    # #     return self._val()
+
+
+## @ingroup cc
+argc = cInt('argc')
+## @ingroup cc
+argv = Arg('char *argv[]')
+## @ingroup cc
+main = cFn('main', [argc, argv], returns=cint)
 
 
 ## @defgroup py Python
@@ -1676,13 +1984,12 @@ class pyTest(pyFn):
         super().__init__(f'test_{V}')
 
 ## @ingroup py
-class minpyModule(anyModule):
+class pyModule(anyModule):
     def __init__(self, V=None):
         self.reqs = File('requirements.pip', comment=None)
         super().__init__(V)
         self.init_reqs()
         self.init_py()
-        self.init_config()
 
     def init_apt(self):
         super().init_apt()
@@ -1692,6 +1999,7 @@ class minpyModule(anyModule):
     def init_reqs(self):
         self.diroot['reqs'] = self.reqs
         self.diroot // self.reqs
+        self.reqs // 'xxhash' // 'ply'
         self.reqs.sync()
 
     def init_giti(self):
@@ -1705,15 +2013,18 @@ class minpyModule(anyModule):
         super().init_mk()
         #
         self.mk.tools // '' //\
-            f'{"PIP":<8} = $(CWD)/bin/pip3' //\
-            f'{"PY":<8} = $(CWD)/bin/python3' //\
-            f'{"PYT":<8} = $(CWD)/bin/pytest' //\
-            f'{"PEP":<8} = $(CWD)/bin/autopep8 --ignore=E26,E302,E401,E402'
+            f'{"PIP":<8} = $(BIN)/pip3' //\
+            f'{"PY":<8} = $(BIN)/python3' //\
+            f'{"PYT":<8} = $(BIN)/pytest' //\
+            f'{"PEP":<8} = $(BIN)/autopep8 --ignore=E26,E302,E401,E402'
         #
-        self.mk.all //\
-            (S('.PHONY: all\nall: $(PY) $(MODULE).py', '') // "$^")
-        self.mk.all //\
-            (S('.PHONY: test\ntest: $(PYT) test_$(MODULE).py', '') // '$^')
+        self.mk.all.targets // ' $(PY) $(MODULE).py'
+        self.mk.all // '$^'
+        self.mk.repl.targets // ' $(PY) $(MODULE).py'
+        self.mk.repl // '$(PY) -i $(MODULE).py'
+        self.mk.test.targets // ' $(PYT) test_$(MODULE).py'
+        self.mk.test // '$^'
+        # (S('.PHONY: test\ntest: $(PYT) test_$(MODULE).py', '') // '$^')
         #
         self.mk.install //\
             f'$(MAKE) $(PIP)' //\
@@ -1796,16 +2107,19 @@ class minpyModule(anyModule):
         return self.py.sync()
 
     def init_config(self):
-        self['config'] = self.config = pyFile('config')
-        self['dir'] // self.config
-        import uuid
-        uid = xxhash.xxh64(str((uuid.getnode(), self))).hexdigest()
-        self.config // f'SECRET_KEY = "{uid}"'
-        return self.config.sync()
+        super().init_config()
+        self.config.py = pyFile('config')
+        self['dir'] // self.config.py
+        self.config.py //\
+            f'{"SECRET_KEY":<11} = "{self.config.secret_key}"' //\
+            f'{"HOST":<11} = "{self.config.host}"' //\
+            f'{"PORT":<11} = {self.config.port}' //\
+            "assert PORT in range(1024,0xBFFF)"
+        return self.config.py.sync()
 
 
 ## @ingroup py
-class pyModule(minpyModule):
+class metalpyModule(pyModule):
 
     def init_py(self):
         try:
@@ -1867,7 +2181,7 @@ class pyModule(minpyModule):
         return ret
 
 ## @ingroup py
-class replModule(minpyModule):
+class replModule(pyModule):
 
     def init_py(self):
         super().init_py()
@@ -1885,7 +2199,7 @@ class replModule(minpyModule):
         self.mk.sync()
 
 ## @ingroup py
-class bountyModule(minpyModule):
+class bountyModule(pyModule):
     def __init__(self, V=None):
         pyModule.__init__(self, V)
         self.github = self['GITHUB'] = Url(
@@ -1908,7 +2222,7 @@ class watFile(File):
     def __init__(self, V, ext='.wat', comment=';;'):
         super().__init__(V, ext, comment)
 
-class webModule(minpyModule):
+class webModule(pyModule):
 
     def __init__(self, V=None):
         super().__init__(V)
@@ -1952,22 +2266,6 @@ class webModule(minpyModule):
         #
         self.src.hello.sync()
 
-    def init_config(self):
-        super().init_config()
-        import crc16
-        self['host'] = self.host = Ip('127.0.0.1')
-
-        def port_scale(port):
-            return int(1024 + ((0xBFFF - 1024) / (0xFFFF)) * port)
-        self['port'] = self.port = port_scale(
-            crc16.crc16xmodem(self.val.encode('utf8')))
-        assert self.port in range(1024, 0xBFFF + 1)
-        self.config //\
-            f"HOST = '{self.host}'" //\
-            f"PORT = {self.port}" //\
-            "assert PORT in range(1024,0xBFFF)"
-        return self.config.sync()
-
     def init_static(self):
         self['static'] = self.static = static = Dir('static')
         self.diroot // static
@@ -1991,9 +2289,9 @@ class webModule(minpyModule):
                                    integrity=css_crc)#, crossorigin="")
         leaf['js'] = leaf.js = H('script', 1, src=self.static_url("leaflet.js"),
                                  integrity=js_crc)#, crossorigin="")
-        leaf['id'] = leaf.id = f'{leaf}_{leaf.gid:8x}'
-        leaf['div'] = leaf.div = \
-            H('div', clazz='leaflet', id=leaf.id) // f"{leaf.id}"
+        leaf['id'] = leaf.id = f'leaf'
+        leaf['div'] = leaf.div = H('div', clazz='leaflet',
+                                   id=leaf.id) // f"{leaf.id}"
         leaf.sync()
         self.tmp.giti // 'leaflet.*' // 'images/marker-*' // 'images/layers*.png'
         self.tmp.giti.sync()
@@ -2045,7 +2343,7 @@ class webModule(minpyModule):
         return f'{filename}'
 
     def init_templates_css(self):
-        self.static['css'] = self.static.css = self.css = File('css.css', comment='/*')
+        self.static['css'] = self.static.css = self.css = cssFile('css')
         self.static // self.static.css
         self.static.css.print = (S('@media print {', '}') //
                                  (CSS("@page", 0) //
@@ -2057,13 +2355,14 @@ class webModule(minpyModule):
                                  )
         self.static.css //\
             (CSS('*', 0) // f'background:{self.back} !important; color:{self.fore};') //\
-            (CSS('pre',0)// f'color:{self.fore};') //\
+            (CSS('pre', 0) // f'color:{self.fore};') //\
             (CSS("body", 0) // "padding:4mm;") //\
             (CSS('.center', 0) // 'text-align: center;') //\
             (CSS('.required', 0) // 'color:orange !important;') //\
             (CSS('a:hover', 0) // 'color:lightblue;') //\
             (CSS('label', 0) // 'color: white !important;') //\
-            (CSS('input,select,option,button') //
+            S('select,option,button,') //\
+            (CSS('input,textarea') //
              'background-color: lightyellow !important; ' //
              'color: black !important;'
              ) //\
@@ -2071,22 +2370,29 @@ class webModule(minpyModule):
         # (CSS('.login', 0) // f'background:{self.back};') //\
         self.static.css.sync()
 
+    def templates_load_static(self):
+        return '{% load static %}'
+
     def templates_all_head(self):
         return (Section('templates_all_head') //
-                '{% load static %}' //
                 '<meta charset="utf-8">' //
                 '<meta http-equiv="X-UA-Compatible" content="IE=edge">' //
                 '<meta name="viewport" content="width=device-width, initial-scale=1">' //
                 f'<title>{{% block title %}}&lt;{self.head(test=True)[1:-1]}&gt;{{% endblock %}}</title>' //
-                '<link rel="manifest" href="/static/manifest">' //
+                f'<link rel="manifest" href="{self.static_url("manifest")}">' //
                 f'<link href="{self.static_url("bootstrap.css")}" rel="stylesheet">' //
                 f'<link rel="shortcut icon" href="{self.static_url("logo.png")}" type="image/png">' //
                 f'<link href="{self.static_url("css.css")}" rel="stylesheet">')
 
+    def if_authenticated(self, code):
+        return code
+
     def init_templates_all(self):
         self.templates['all'] = self.templates.all = htFile('all')
         self.templates // self.templates.all
-        self.templates.all.top // '<!doctype html>'
+        self.templates.all.top //\
+            self.templates_load_static() //\
+            '<!doctype html>'
         #
         self.templates.all.jinja = jinja = Section('jinja')
         html = H('html', lang='ru')
@@ -2105,18 +2411,21 @@ class webModule(minpyModule):
         #
         body = H('body')
         self.templates.all.mid // body
-        body //\
-            (S('{% if user.is_authenticated %}', '{% endif %}') //
-             S('{% block body %}', '{% endblock %}', 0) //
-             (S('{% else %}') // '<a href="/admin/login/?next={{request.path}}">тук-тук! войдите {{user}} @ {{loc}}</a>'))
+        body // self.if_authenticated(S('{% block body %}',
+                                        '{% endblock %}', 0))
+        # body //\
+        #
+        #      S('{% block body %}', '{% endblock %}', 0) //
+        #
         #
         self.templates.all.bot //\
             '</html>' //\
             (Section('script') //
              f'<script src="{self.static_url("jquery.js")}"></script>' //
              f'<script src="{self.static_url("bootstrap.js")}"></script>' //
-             (S('{% if user.is_authenticated %}', '{% endif %}') //
-              '{% block script %}{% endblock %}'))
+             self.if_authenticated('{% block script %}{% endblock %}'))
+        #  (S('{% if user.is_authenticated %}', '{% endif %}') //
+        #   '{% block script %}{% endblock %}'))
         #
         return self.templates.all.sync()
 
@@ -2124,7 +2433,8 @@ class webModule(minpyModule):
         self.templates['index'] = self.templates.index = htFile('index')
         self.templates // self.templates.index
         self.templates.index.top //\
-            "{% extends 'all.html' %}"
+            "{% extends 'all.html' %}" //\
+            self.templates_load_static()
         return self.templates.index.sync()
 
     def init_vscode_settings(self):
@@ -2144,13 +2454,15 @@ class webModule(minpyModule):
     def init_mk(self):
         super().init_mk()
         # js
+        self.mk.install // '$(MAKE) js'
         self.mk.js = Section('js/install')
+        self.mk.js.static = S("js:", '', 0)
         self.mk.update.after(self.mk.js)
         self.mk.js //\
-            ".PHONY: js" // (S("js: \\") //
-                             "static/jquery.js \\" //
-                             "static/bootstrap.css static/bootstrap.js \\" //
-                             "static/leaflet.js")
+            ".PHONY: js" // (self.mk.js.static //
+                             " static/jquery.js" //
+                             " static/bootstrap.css static/bootstrap.js" //
+                             " \\\n\tstatic/leaflet.js")
         self.mk.js // (Section('js/jquery') //
                        "JQUERY_VER = 3.5.0" //
                        (S("static/jquery.js:") //
@@ -2189,6 +2501,9 @@ rexKLADR = [r"(63|56)\d{11,15}", 'КЛАДР: 13..17 цифр']
 class htFile(File):
     def __init__(self, V):
         super().__init__(V, ext='.html', comment='<!--')
+class cssFile(File):
+    def __init__(self, V):
+        super().__init__(V, ext='.css', comment='/*')
 
 ## @}
 

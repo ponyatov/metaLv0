@@ -1,20 +1,38 @@
 *~
 *.swp
-*.log
 
+*.log
+*.exe
 *.o
 
 *.pyc
-bin/
-include/
-lib/
-lib64
+/bin/
+/include/
+/lib/
+/lib64
+/share/
 pyvenv.cfg
-share/
-config.py
 
+/docs/ref/
 poetry.lock
-bully*
 
 /home/
 /litres/
+
+/python-xml-to-dict-parser/
+/eLLVM/
+/metaLang/
+/exwm/
+/excamp/
+
+/bully/
+
+/camp/
+/jupy/
+/bcx/
+/hashplay/
+/melixir/
+/stm32/
+/IoPT/
+/beowulf/
+/SCADA/

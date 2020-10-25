@@ -1,0 +1,12 @@
+// https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference
+{
+	"configurations": [
+		{
+			"name": "Linux",
+			"compilerPath": "/usr/bin/tcc",
+			"includePath": ["${workspaceFolder}/src/**", "${workspaceFolder}/tmp/**"],
+			"cStandard": "c99"
+		}
+	],
+	"version": 4
+}

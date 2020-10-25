@@ -45,7 +45,7 @@ pep:
 .PHONY: doxy
 doxy: doc/tutorial.svg doc/taxonomy.svg doc/hosttarget.svg doc/quora.svg
 #	doxygen -g doxy.gen
-	doxygen doxy.gen 1>/dev/null
+	rm -rf docs/ref ; doxygen doxy.gen 1>/dev/null
 doc/%.svg: doc/%.dot
 	dot -Tsvg -o $@ $<
 
@@ -98,43 +98,46 @@ Linux_install Linux_update:
 
 MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen do
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
-MERGE += requirements.txt pyproject.toml .replit doc
-MERGE += $(MODULE) metacircular.py license.py
-MERGE += distill distill.py
-MERGE += tcc tcc.py
-MERGE += Smalltalk Smalltalk/doc/.gitignore Smalltalk.py
-MERGE += dja dja.py fl.py html.py
-MERGE += demos demos.py
-MERGE += webook webook.py
-MERGE += rdbms rdbms.py
-MERGE += llvm llvm.py
+MERGE += requirements.txt doc license.py
+# MERGE += pyproject.toml .replit 
+# MERGE += $(MODULE) metacircular.py
+# MERGE += distill distill.py
+# MERGE += tcc tcc.py
+# MERGE += Smalltalk Smalltalk/doc/.gitignore Smalltalk.py
+# MERGE += dja dja.py fl.py html.py
+# MERGE += demos demos.py
+# MERGE += docs book.py
+# MERGE += webook webook.py
+# MERGE += rdbms rdbms.py
+# MERGE += llvm llvm.py
 # MERGE += home home.py
-MERGE += mony mony.py
-MERGE += bcx bcx.py
-MERGE += AkkaLA.py
-MERGE += clojure clojure.py
-MERGE += AlexML AlexML.py
-MERGE += DRTK DRTK.py drtos.py
-MERGE += WebRTCos WebRTCos.py
-MERGE += debian debian.py
-MERGE += cross cross/tmp/.gitignore cross/src/.gitignore cross.py
-MERGE += world world.py
-MERGE += vscode vscode.py
-MERGE += laguna laguna.py
-MERGE += melixir melixir.py
+# MERGE += mony mony.py
+# MERGE += bcx bcx.py
+# MERGE += AkkaLA.py
+# MERGE += clojure clojure.py
+# MERGE += AlexML AlexML.py
+# MERGE += DRTK DRTK.py drtos.py
+# MERGE += WebRTCos WebRTCos.py
+# MERGE += debian debian.py
+# MERGE += cross cross/tmp/.gitignore cross/src/.gitignore cross.py
+# MERGE += world world.py
+# MERGE += vscode vscode.py
+# MERGE += laguna laguna.py
+# MERGE += melixir melixir.py
 MERGE += erlang.py elixir.py phoenix.py
-MERGE += lv lv.py
+# MERGE += lv lv.py
+MERGE += NMEA NMEA.py
 
 master:
-	rm -rf docs
+	rm -rf docs/ref
 	git checkout $@
 	git pull -v
 	git checkout shadow -- $(MERGE)
 	$(MAKE) doxy
 
 shadow:
-	rm -rf docs
-	git checkout docs
+	rm -rf docs/ref
+	git checkout docs/ref
 	git checkout $@
 	git pull -v
 	$(MAKE) doxy
