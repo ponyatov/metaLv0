@@ -1,0 +1,44 @@
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+{
+// / <section:top>
+// \ <section:mid>
+// \ <section:multiCommand>
+"multiCommand.commands": [
+	{"command": "multiCommand.f9", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake all\u000D"}
+			}
+		]
+	},
+	{"command": "multiCommand.f11", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dmake repl\u000D"}
+			}
+		]
+	},
+	{"command": "multiCommand.f12", 
+		"sequence":[
+			"workbench.action.files.saveAll",
+			{"command": "workbench.action.terminal.sendSequence",
+				"args": {"text": "\u000Dexit()\u000D"}
+			}
+		]
+	},
+],
+// / <section:multiCommand>
+"files.watcherExclude": {
+},
+"files.exclude": {
+},
+"files.associations": {
+},
+// / <section:mid>
+// \ <section:bot>
+	"editor.tabSize": 4,
+}
+// / <section:bot>
