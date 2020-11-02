@@ -1,0 +1,14 @@
+#  powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+# \ <section:top>
+*~
+*.swp
+*.log
+# / <section:top>
+# \ <section:mid>
+*.dump
+*.beam
+/deps/
+/*.lock
+/_build/
+erl_crash.dump
+# / <section:mid>

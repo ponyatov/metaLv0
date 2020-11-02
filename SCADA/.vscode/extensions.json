@@ -1,0 +1,16 @@
+// powered by metaL: https://github.com/ponyatov/metaL/wiki/metaL-manifest
+// \ <section:top>
+{
+// / <section:top>
+// \ <section:mid>
+"recommendations": [
+	// \ <section:ext>
+	"stkb.rewrap",
+	"mjmcloug.vscode-elixir",
+	"sammkj.vscode-elixir-formatter",
+	// / <section:ext>
+]
+// / <section:mid>
+// \ <section:bot>
+}
+// / <section:bot>

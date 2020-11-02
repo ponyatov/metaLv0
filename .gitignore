@@ -5,6 +5,8 @@
 *.exe
 *.o
 
+_build
+
 *.pyc
 /bin/
 /include/
@@ -32,7 +34,11 @@ poetry.lock
 /bcx/
 /hashplay/
 /melixir/
+/metaLixir/
 /stm32/
 /IoPT/
 /beowulf/
 /SCADA/
+/ectoplasma/
+/JS/doc/
+

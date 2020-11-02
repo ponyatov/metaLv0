@@ -98,7 +98,10 @@ Linux_install Linux_update:
 
 MERGE  = Makefile README.md .vscode/tasks.json apt.txt doxy.gen do
 MERGE += $(MODULE).py test_$(MODULE).py $(MODULE).ini static
-MERGE += requirements.txt doc license.py
+MERGE += requirements.txt doc docs license.py
+MERGE += JS JS.py
+MERGE += SHED SHED.py
+MERGE += SCADA SCADA.py
 # MERGE += pyproject.toml .replit 
 # MERGE += $(MODULE) metacircular.py
 # MERGE += distill distill.py
